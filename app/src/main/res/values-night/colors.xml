@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="display_small">#FFFFFFFF</color>
+    <color name="text_medium">#FFB0B3B8</color>
+    <color name="text_title">#E4E6EB</color>
+    <color name="body">#B0B3B8</color>
+    <color name="input_background">#3A3B3C</color>
+    <color name="placeholder">#DDDDDD</color>
+    <color name="shimmer">#414243</color>
+    <color name="error_color">#FF5252</color>
+    <color name="light_gray_background">#FF1E1E1E</color>
+
+    <color name="winner_label_text">#C62828</color>
+    <color name="winner_label_background">#FFFFFFFF</color>
+
+    <color name="completed_label_text">#2E7D32</color>
+    <color name="completed_label_background">#FFFFFFFF</color>
+
+    <color name="card_background_color">#121212</color>
+    <color name="card_background_color2">#2E2E38</color>
+    <color name="card_background_color3">#2B2B2B</color>
+
+    <color name="selected_tab_button_background">#BB86FC</color>
+    <color name="selected_tab_button_text">#FFFFFF</color>
+
+    <color name="unselected_tab_button_background">#2A2A2A</color>
+    <color name="unselected_tab_button_text">#BB86FC</color>
+
+    <color name="button_delete_background">#ff8906</color>
+    <color name="button_delete_text">#fffffe</color>
+
+    <color name="button_detail_background">#eebbc3</color>
+    <color name="button_detail_text">#232946</color>
+
+    <color name="choice_badge_background">#FEBA17</color>
+
+    <color name="top_app_bar_background_color">#24272B</color>
+
+    <color name="card_information_background1">#1B3C53</color>
+</resources>

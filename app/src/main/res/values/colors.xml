@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="gold">#F3C623</color>
+    <color name="display_small">#000000</color>
+    <color name="text_medium">#FF4E4B66</color>
+    <color name="text_title">#000000</color>
+    <color name="body">#4E4B66</color>
+    <color name="input_background">#fff</color>
+    <color name="placeholder">#A0A3BD</color>
+    <color name="shimmer">#C3C3C3</color>
+    <color name="error_color">#C62828</color>
+    <color name="light_gray_background">#FFF5F5F5</color>
+
+    <color name="winner_label_text">#FFFFFFFF</color>
+    <color name="winner_label_background">#C62828</color>
+
+    <color name="completed_label_text">#FFFFFFFF</color>
+    <color name="completed_label_background">#2E7D32</color>
+
+    <color name="card_background_color">#F5F5F5FF</color>
+    <color name="card_background_color2">#F5F5F9</color>
+    <color name="card_background_color3">#F2F2F2</color>
+
+    <color name="selected_tab_button_background">#6200EE</color>
+    <color name="selected_tab_button_text">#FFFFFF</color>
+
+    <color name="unselected_tab_button_background">#EDE7F6</color>
+    <color name="unselected_tab_button_text">#6200EE</color>
+
+    <color name="selected_pager_indicator">#ff6e6c</color>
+    <color name="unselected_pager_indicator">#67568c</color>
+
+    <color name="button_delete_background">#f582ae</color>
+    <color name="button_delete_text">#001858</color>
+
+    <color name="button_detail_background">#078080</color>
+    <color name="button_detail_text">#232323</color>
+
+    <color name="delete_background_dialog_confirmation">#e53170</color>
+    <color name="delete_background_dialog_confirmation_positive_button_background">#F96E2A</color>
+
+    <color name="color_palette1_dialog_background">#004643</color>
+    <color name="color_palette1_dialog_headline">#fffffe</color>
+    <color name="color_palette1_dialog_paragraph">#abd1c6</color>
+    <color name="color_palette1_dialog_stroke">#001e1d</color>
+    <color name="color_palette1_dialog_button_background">#f9bc60</color>
+    <color name="color_palette1_dialog_button_text">#001e1d</color>
+
+    <color name="loading_dialog_background">#f9f4ef</color>
+    <color name="loading_dialog_text">#020826</color>
+
+    <color name="error_dialog_background">#F72C5B</color>
+    <color name="error_dialog_text">#FBF6E9</color>
+
+    <color name="next_button_background">#8EB486</color>
+    <color name="next_button_text">#FDF7F4</color>
+
+    <color name="success_dialog_background">#8EB486</color>
+    <color name="success_dialog_text">#FDF7F4</color>
+
+    <color name="choice_badge_background">#F3C623</color>
+
+    <color name="top_app_bar_background_color">#F5F5F5</color>
+
+    <color name="review_top_bar_color">#1F2833</color>
+
+    <color name="excellent_start">#B390EE80</color>
+    <color name="excellent_end">#B3ADFF2F</color>
+
+    <color name="good_start">#B3ADFF2F</color>
+    <color name="good_end">#B3FFFF00</color>
+
+    <color name="average_start">#B3FFFF00</color>
+    <color name="average_end">#B3FFA500</color>
+
+    <color name="bad_start">#B3FFA500</color>
+    <color name="bad_end">#B3FF6347</color>
+
+    <color name="very_bad_start">#B3FF6347</color>
+    <color name="very_bad_end">#B3B22222</color>
+
+    <color name="access_tag_background_color">#363636</color>
+    <color name="access_tag_text_color">#D3D3D3</color>
+    <color name="access_tag_accent_color">#708090</color>
+
+    <color name="other_tag_background_color">#D3D3D3</color>
+    <color name="other_tag_text_color">#363636</color>
+    <color name="other_tag_accent_color">#FF8C94</color>
+
+    <color name="open_hour_selected_day_background_color">#2563EB</color>
+    <color name="open_hour_selected_day_text_color">#FFFFFF</color>
+
+    <color name="open_hour_unselected_day_background_color">#1E293B</color>
+    <color name="open_hour_unselected_day_primary_text_color">#E2E8F0</color>
+    <color name="open_hour_unselected_day_secondary_text_color">#94A3B8</color>
+
+    <color name="cruise_ship_header_color">#2E3A4D</color>
+
+    <color name="time_line_card_color1">#446A87</color>
+    <color name="time_line_card_color2">#5E8CA8</color>
+    <color name="time_line_card_color3">#1E2B38</color>
+    <color name="time_line_card_color4">#58A55C</color>
+    <color name="time_line_card_color5">#D66C6C</color>
+    <color name="time_line_card_color6">#FFD166</color>
+
+    <color name="card_information_background1">#647FBC</color>
+</resources>
