@@ -8,11 +8,9 @@ sealed class Routes(
 
     object MovieRecommendationRoutes : Routes(route = "movie-recommendation-routes")
     object SearchMovieCriticsRoutes : Routes(route = "search-movie-critics-routes")
-    object SearchTvShowsRoutes : Routes(route = "search-tv-shows-routes")
-    object ShowSoonTheaterRoutes : Routes(route = "show-soon-theater-routes")
-    object SearchPostersRoutes : Routes(route = "search-posters-route")
     object ListPostersDetailRoutes : Routes(route = "list-posters-detail-route")
 
-    object reviewMovieCriticsLocalRoutes : Routes(route = "review-movie-critics-local-route")
-    object BookmarkMovieRecommendationRoutes : Routes(route = "bookmark-movie-recommendation-route")
+    object AuthPageRoutes : Routes(route = "auth-page-route")
+    object LoginPageRoutes : Routes(route = "login-page-route")
+    object RegisterPageRoutes : Routes(route = "register-page-route")
 }

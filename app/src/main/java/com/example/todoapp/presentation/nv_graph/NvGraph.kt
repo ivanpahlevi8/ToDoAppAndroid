@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.todoapp.presentation.authentication.AuthenticationScreen
 import com.example.todoapp.presentation.main_navigation.MainNavigation
 import com.example.todoapp.presentation.on_board_screen.OnBoardScreen
 import com.example.todoapp.presentation.on_board_screen.OnBoardScreenState
@@ -24,6 +25,12 @@ fun NvGraph(route : String) {
         ) {
             // show main screen routes
             MainNavigation()
+        }
+
+        composable(
+            route = Routes.AuthPageRoutes.route
+        ) {
+            AuthenticationScreen()
         }
 
         composable(

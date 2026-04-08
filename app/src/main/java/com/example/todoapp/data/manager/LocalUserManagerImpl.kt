@@ -28,11 +28,30 @@ class LocalUserManagerImpl(
         }
     }
 
+    override suspend fun setUserLogIn() {
+        application.datastore.edit {
+            preferences -> preferences[PreferencesKey.USER_LOGGED_IN] = true
+        }
+    }
+
+    override suspend fun setUserLogOut() {
+        application.datastore.edit {
+            preferences -> preferences[PreferencesKey.USER_LOGGED_IN] = false
+        }
+    }
+
+    override fun getUserLoggedIn(): Flow<Boolean> {
+        return application.datastore.data.map {
+                preference -> preference[PreferencesKey.USER_LOGGED_IN] ?: false
+        }
+    }
+
     // add data store to application context
     val Context.datastore : DataStore<Preferences> by preferencesDataStore(name = Constants.PREFERENCES_KEYS)
 
     // create preferences key
     object PreferencesKey {
         val APP_ENTRY = booleanPreferencesKey(name = Constants.PREFERENCES_KEYS)
+        val USER_LOGGED_IN = booleanPreferencesKey(name = Constants.USER_LOGIN_KEYS)
     }
 }
