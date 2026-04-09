@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.accompanist.drawablepainter)
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.room.runtime)

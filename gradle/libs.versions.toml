@@ -19,10 +19,12 @@ retrofit-version = "2.9.0"
 datastore-version = "1.0.0"
 compose-foundation = "1.4.3"
 accompanist = "0.31.4-beta"
+accompanist-painter = "0.35.0-alpha"
 paging = "3.1.1"
 paging-compose = "3.2.0-rc01"
 room = "2.5.2"
 osmodroid = "6.1.16"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +57,7 @@ coil-compose = {module="io.coil-kt:coil-compose", version.ref="coil-compose-vers
 androidx-datastore-preferences = {module="androidx.datastore:datastore-preferences", version.ref="datastore-version"}
 androidx-compose-foundation = {module="androidx.compose.foundation:foundation", version.ref="compose-foundation"}
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
+accompanist-drawablepainter = {module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanist-painter"}
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging-compose" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }

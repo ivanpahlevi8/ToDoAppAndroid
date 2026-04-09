@@ -7,15 +7,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.todoapp.presentation.authentication.component.LoginPage
 import com.example.todoapp.presentation.authentication.component.RegisterPage
-import com.example.todoapp.presentation.main_navigation.MainNavigation
 import com.example.todoapp.presentation.nv_graph.Routes
-import com.example.todoapp.presentation.on_board_screen.OnBoardScreen
-import com.example.todoapp.presentation.on_board_screen.OnBoardScreenViewModel
 
 @Composable
 fun AuthenticationScreen(){
     // create nav controller
     val navController = rememberNavController()
+
+    // create auth view mode
+    val authViewModel : AuthViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,
@@ -30,6 +30,20 @@ fun AuthenticationScreen(){
                     navController.navigate(
                         Routes.RegisterPageRoutes.route
                     )
+                },
+                onEvent = {
+                    event -> authViewModel.onEvent(
+                        event = event
+                    )
+                },
+                loginState = authViewModel.loginState.value,
+                onUpdateLoginState = {
+                    newState -> authViewModel.updateLoginState(
+                        newState
+                    )
+                },
+                setUserLogIn = {
+                    authViewModel.setUserLogin()
                 }
             )
         }
@@ -40,6 +54,17 @@ fun AuthenticationScreen(){
             RegisterPage(
                 onCancel = {
                     navController.popBackStack()
+                },
+                onEvent = {
+                    event -> authViewModel.onEvent(
+                        event = event
+                    )
+                },
+                registerState = authViewModel.registerState.value,
+                updateRegisterState = {
+                    newState -> authViewModel.updateRegisterState(
+                        newState
+                    )
                 }
             )
         }

@@ -1,7 +1,6 @@
 package com.example.todoapp.presentation.authentication.component
 
 import android.content.res.Configuration
-import android.provider.CalendarContract.Colors
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,15 +12,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -35,14 +41,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.todoapp.R
 import com.example.todoapp.core.value.Dimension
+import com.example.todoapp.data.dtos.RegisterUserDto
+import com.example.todoapp.presentation.authentication.AuthEvent
+import com.example.todoapp.presentation.authentication.AuthState
 import com.example.todoapp.ui.theme.ToDoAppTheme
 
 @Composable
 fun RegisterPage(
     onCancel : () -> Unit,
+    onEvent : (AuthEvent) -> Unit,
+    registerState : AuthState,
+    updateRegisterState : (AuthState) -> Unit,
 ) {
+    var usernameInput by remember { mutableStateOf("") }
+    var passwordInput by remember { mutableStateOf("") }
+    var emailInput by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -125,8 +145,10 @@ fun RegisterPage(
             )
 
             TextField(
-                value = "",
-                onValueChange = {},
+                value = usernameInput,
+                onValueChange = {
+                    newValue -> usernameInput = newValue
+                },
                 label = {
                     Text(
                         text = "Username"
@@ -147,8 +169,10 @@ fun RegisterPage(
             )
 
             TextField(
-                value = "",
-                onValueChange = {},
+                value = passwordInput,
+                onValueChange = {
+                    newValue -> passwordInput = newValue
+                },
                 label = {
                     Text(
                         text = "Password"
@@ -169,8 +193,10 @@ fun RegisterPage(
             )
 
             TextField(
-                value = "",
-                onValueChange = {},
+                value = emailInput,
+                onValueChange = {
+                    newValue -> emailInput = newValue
+                },
                 label = {
                     Text(
                         text = "Email"
@@ -191,15 +217,17 @@ fun RegisterPage(
             )
 
             TextField(
-                value = "",
-                onValueChange = {},
+                value = phoneNumber,
+                onValueChange = {
+                    newValue -> phoneNumber = newValue
+                },
                 label = {
                     Text(
                         text = "Phone Number"
                     )
                 },
                 shape = RoundedCornerShape(12.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -213,8 +241,10 @@ fun RegisterPage(
             )
 
             TextField(
-                value = "",
-                onValueChange = {},
+                value = firstName,
+                onValueChange = {
+                    newValue -> firstName = newValue
+                },
                 label = {
                     Text(
                         text = "First Name"
@@ -235,8 +265,10 @@ fun RegisterPage(
             )
 
             TextField(
-                value = "",
-                onValueChange = {},
+                value = lastName,
+                onValueChange = {
+                    newValue -> lastName = newValue
+                },
                 label = {
                     Text(
                         text = "Last Name"
@@ -297,7 +329,24 @@ fun RegisterPage(
                 )
 
                 Button(
-                    onClick = {},
+                    onClick = {
+                        onEvent(
+                            // register
+                            AuthEvent.OnRegisterEvent(
+                                registerUserDto = RegisterUserDto(
+                                    userName = usernameInput,
+                                    password = passwordInput,
+                                    email = emailInput,
+                                    phoneNumber = phoneNumber,
+                                    firstName = firstName,
+                                    lastName = lastName,
+                                )
+                            )
+
+                            // set empty
+                            
+                        )
+                    },
                     colors = ButtonColors(
                         containerColor = colorResource(
                             id = R.color.excellent_end
@@ -322,6 +371,156 @@ fun RegisterPage(
                 }
             }
         }
+
+        when(registerState) {
+            is AuthState.LoadingState -> {
+                Dialog(
+                    onDismissRequest = {}
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .size(120.dp),
+                        color = colorResource(
+                            id = R.color.card_background_color2
+                        ),
+                        shape = MaterialTheme.shapes.medium
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(
+                                    Dimension.LARGE_PADDING2
+                                ),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+            }
+            is AuthState.DataState -> {
+                val getData = registerState.data
+
+                Dialog(
+                    onDismissRequest = {
+                        updateRegisterState(
+                            AuthState.IdleState
+                        )
+                    }
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .padding(
+                                Dimension.MEDIUM_PADDING2
+                            ),
+                        color = colorResource(
+                            id = R.color.excellent_end
+                        ),
+                        shape = MaterialTheme.shapes.medium
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    vertical = Dimension.MEDIUM_PADDING2,
+                                    horizontal = Dimension.LARGE_PADDING2
+                                ),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "Success Register As A New User",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.W600,
+                                    fontSize = 18.sp,
+                                ),
+                                color = colorResource(
+                                    id = R.color.text_title
+                                )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.MEDIUM_PADDING1
+                                    )
+                            )
+
+                            Button(
+                                onClick = {
+                                    updateRegisterState(
+                                        AuthState.IdleState
+                                    )
+                                }
+                            ) {
+                                Text(
+                                    text = "OK"
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            is AuthState.ErrorState -> {
+                Dialog(
+                    onDismissRequest = {
+                        updateRegisterState(
+                            AuthState.IdleState
+                        )
+                    }
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .width(180.dp)
+                            .padding(
+                                Dimension.MEDIUM_PADDING2
+                            ),
+                        color = colorResource(
+                            id = R.color.card_background_color2
+                        ),
+                        shape = MaterialTheme.shapes.medium
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "Success Register As A New User",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.W600,
+                                    fontSize = 18.sp,
+                                ),
+                                color = colorResource(
+                                    id = R.color.text_title
+                                )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.MEDIUM_PADDING1
+                                    )
+                            )
+
+                            Button(
+                                onClick = {
+                                    updateRegisterState(
+                                        AuthState.IdleState
+                                    )
+                                }
+                            ) {
+                                Text(
+                                    text = "OK"
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            is AuthState.IdleState -> {}
+        }
     }
 }
 
@@ -340,7 +539,10 @@ fun RegisterPagePreview(){
                 )
         ) {
             RegisterPage(
-                onCancel = {}
+                onCancel = {},
+                onEvent = {},
+                registerState = AuthState.IdleState,
+                updateRegisterState = {}
             )
         }
     }
