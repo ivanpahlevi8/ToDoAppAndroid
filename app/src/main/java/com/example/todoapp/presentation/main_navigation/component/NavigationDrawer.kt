@@ -42,6 +42,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.todoapp.R
 import com.example.todoapp.core.value.Constants
+import com.example.todoapp.core.value.Dimension
 
 @Composable
 fun NavigationDrawer(
@@ -52,6 +53,7 @@ fun NavigationDrawer(
     drawerState: DrawerState,
     onProfile : () -> Unit,
     onLogout : () -> Unit,
+    onFriendsPage : () -> Unit,
 ) {
     val context = LocalContext.current
     val sharedPrefs = remember {
@@ -145,6 +147,54 @@ fun NavigationDrawer(
 
                     Spacer(modifier = Modifier.height(8.dp))
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+                    NavigationDrawerItem(
+                        label = {
+                            Text(
+                                text = "View Teams",
+                                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        },
+                        onClick = {
+                            
+                        },
+                        icon = {
+                            Icon(
+                                painter = painterResource(
+                                    id = R.drawable.people_alt_ic
+                                ),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        },
+                        selected = false
+                    )
+
+                    NavigationDrawerItem(
+                        label = {
+                            Text(
+                                text = "Add Friends",
+                                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        },
+                        onClick = {
+                            onFriendsPage()
+                        },
+                        icon = {
+                            Icon(
+                                painter = painterResource(
+                                    id = R.drawable.person_add_ic
+                                ),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        },
+                        selected = false
+                    )
 
                     NavigationDrawerItem(
                         label = {

@@ -13,4 +13,6 @@ sealed class Routes(
     object AuthPageRoutes : Routes(route = "auth-page-route")
     object LoginPageRoutes : Routes(route = "login-page-route")
     object RegisterPageRoutes : Routes(route = "register-page-route")
+
+    object SearchFriendRoutes : Routes(route = "search-friend-route")
 }

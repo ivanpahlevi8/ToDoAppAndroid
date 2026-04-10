@@ -20,6 +20,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -32,6 +33,7 @@ import com.example.todoapp.R
 import com.example.todoapp.presentation.main_navigation.component.NavBarItem
 import com.example.todoapp.presentation.main_navigation.component.NavigationDrawer
 import com.example.todoapp.presentation.nv_graph.Routes
+import com.example.todoapp.presentation.search_friend.SearchFriendScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,12 +58,16 @@ fun MainNavigation(
     // get index selected route
     val indexSelectedRoute : Int = when(getCurrentRoute) {
         Routes.MovieRecommendationRoutes.route -> {0}
+        Routes.SearchFriendRoutes.route -> {1}
         else -> {0}
     }
 
     // create state for showing top app bar or not
     val showTopAppBar : Boolean = when(getCurrentRoute) {
         Routes.ListPostersDetailRoutes.route -> {
+            false
+        }
+        Routes.SearchFriendRoutes.route -> {
             false
         }
         else -> {
@@ -92,20 +98,6 @@ fun MainNavigation(
                         route = Routes.MovieRecommendationRoutes.route
                     )
                 }
-                1 -> {
-                    // close the drawer
-                    scope.launch {
-                        drawerState.apply {
-                            close()
-                        }
-                    }
-
-                    // navigate to destination tab
-                    onMoveTab(
-                        navController = navController,
-                        route = Routes.SearchMovieCriticsRoutes.route
-                    )
-                }
             }
         },
         drawerState = drawerState,
@@ -132,17 +124,21 @@ fun MainNavigation(
                                 }
                             },
                             navigationIcon = {
-                                IconButton(onClick = {
-                                    scope.launch {
-                                        drawerState.apply {
-                                            if (isClosed) open() else close()
+                                when(indexSelectedRoute) {
+                                    0 -> {
+                                        IconButton(onClick = {
+                                            scope.launch {
+                                                drawerState.apply {
+                                                    if (isClosed) open() else close()
+                                                }
+                                            }
+                                        }) {
+                                            Icon(  //Show Menu Icon on TopBar
+                                                imageVector = Icons.Default.Menu,
+                                                contentDescription = "Menu"
+                                            )
                                         }
                                     }
-                                }) {
-                                    Icon(  //Show Menu Icon on TopBar
-                                        imageVector = Icons.Default.Menu,
-                                        contentDescription = "Menu"
-                                    )
                                 }
                             }
                         )
@@ -175,12 +171,34 @@ fun MainNavigation(
                             )
                         }
                     }
+
+                    // route for search friend
+                    composable(
+                        route = Routes.SearchFriendRoutes.route
+                    ) {
+                        SearchFriendScreen(
+                            onBack = {
+                                navController.popBackStack()
+                            }
+                        )
+                    }
                 }
             }
         },
         onProfile = {},
         onLogout = {
             onLogOut()
+        },
+        onFriendsPage = {
+            navController.navigate(
+                Routes.SearchFriendRoutes.route
+            )
+
+            scope.launch {
+                drawerState.apply {
+                    close()
+                }
+            }
         }
     )
 }
