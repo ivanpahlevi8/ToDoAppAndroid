@@ -36,7 +36,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainNavigation() {
+fun MainNavigation(
+    onLogOut : () -> Unit,
+) {
     // create nav bar item
     val navBarItemList : List<NavBarItem> = listOf(
         NavBarItem(
@@ -175,6 +177,10 @@ fun MainNavigation() {
                     }
                 }
             }
+        },
+        onProfile = {},
+        onLogout = {
+            onLogOut()
         }
     )
 }

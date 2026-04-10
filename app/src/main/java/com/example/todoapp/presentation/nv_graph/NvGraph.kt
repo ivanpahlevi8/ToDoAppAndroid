@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.todoapp.presentation.authentication.AuthenticationScreen
 import com.example.todoapp.presentation.main_navigation.MainNavigation
+import com.example.todoapp.presentation.main_navigation.MainNavigationViewModel
 import com.example.todoapp.presentation.on_board_screen.OnBoardScreen
 import com.example.todoapp.presentation.on_board_screen.OnBoardScreenState
 import com.example.todoapp.presentation.on_board_screen.OnBoardScreenViewModel
@@ -23,8 +24,14 @@ fun NvGraph(route : String) {
         composable(
             route = Routes.MainScreenRoutes.route
         ) {
+            val mainNavigationViewModel : MainNavigationViewModel = hiltViewModel()
+
             // show main screen routes
-            MainNavigation()
+            MainNavigation(
+                onLogOut = {
+                    mainNavigationViewModel.onLogout()
+                }
+            )
         }
 
         composable(

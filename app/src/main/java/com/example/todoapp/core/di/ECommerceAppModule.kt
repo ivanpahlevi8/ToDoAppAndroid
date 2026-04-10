@@ -1,6 +1,8 @@
 package com.example.todoapp.core.di
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import com.example.todoapp.core.value.Constants
 import com.example.todoapp.data.manager.LocalUserManagerImpl
 import com.example.todoapp.data.remote.AuthRemoteAPI
@@ -29,6 +31,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class ECommerceAppModule {
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(application: Application) : SharedPreferences {
+        return application.getSharedPreferences(Constants.AUTH_PREFERENCES, Context.MODE_PRIVATE)
+    }
+
     // provides local user manager
     @Provides
     @Singleton
