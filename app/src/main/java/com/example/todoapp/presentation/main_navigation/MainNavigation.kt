@@ -23,6 +23,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -34,6 +35,7 @@ import com.example.todoapp.presentation.main_navigation.component.NavBarItem
 import com.example.todoapp.presentation.main_navigation.component.NavigationDrawer
 import com.example.todoapp.presentation.nv_graph.Routes
 import com.example.todoapp.presentation.search_friend.SearchFriendScreen
+import com.example.todoapp.presentation.search_friend.SearchFriendViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -176,10 +178,18 @@ fun MainNavigation(
                     composable(
                         route = Routes.SearchFriendRoutes.route
                     ) {
+                        val searchFriendViewModel : SearchFriendViewModel = hiltViewModel()
+
                         SearchFriendScreen(
                             onBack = {
                                 navController.popBackStack()
-                            }
+                            },
+                            onEvent = {
+                                event -> searchFriendViewModel.onEvent(
+                                    event
+                                )
+                            },
+                            searchState = searchFriendViewModel.searchFriendState.value
                         )
                     }
                 }
