@@ -6,9 +6,12 @@ import android.content.SharedPreferences
 import com.example.todoapp.core.value.Constants
 import com.example.todoapp.data.manager.LocalUserManagerImpl
 import com.example.todoapp.data.remote.AuthRemoteAPI
+import com.example.todoapp.data.remote.ConnectionRemoteAPI
 import com.example.todoapp.data.repositories.AuthRemoteRepositoryImpl
+import com.example.todoapp.data.repositories.ConnectionRemoteRepositoryImpl
 import com.example.todoapp.domain.manager.LocalUserManager
 import com.example.todoapp.domain.repositories.AuthRemoteRepository
+import com.example.todoapp.domain.repositories.ConnectionRemoteRepository
 import com.example.todoapp.domain.usecase.authorization_usecase.AuthUseCase
 import com.example.todoapp.domain.usecase.authorization_usecase.GetUserUseCase
 import com.example.todoapp.domain.usecase.authorization_usecase.LoginUserUseCase
@@ -19,6 +22,11 @@ import com.example.todoapp.domain.usecase.local_user_manager_usecase.LocalUserMa
 import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserLogInUseCase
 import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserLogOut
 import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserOnBoardUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.AcceptUserConnectionUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.GetAllConnectionUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.GetRequestConnectionUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.SendUserConnectionUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.UserConnectionUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -111,6 +119,56 @@ class ECommerceAppModule {
             ),
             getUserUseCase = GetUserUseCase(
                 authRemoteRepository = authRemoteRepository,
+            )
+        )
+    }
+
+    // provides connection remote api
+    @Provides
+    @Singleton
+    fun providesConnectionRemoteAPI() : ConnectionRemoteAPI {
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(180, TimeUnit.SECONDS)
+            .readTimeout(180, TimeUnit.SECONDS)
+            .writeTimeout(180, TimeUnit.SECONDS)
+            .build()
+        return Retrofit.Builder()
+            .baseUrl(Constants.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ConnectionRemoteAPI::class.java)
+    }
+
+    // provides connection remote repository
+    @Provides
+    @Singleton
+    fun providesConnectionRemoteRepository(
+        connectionRemoteAPI: ConnectionRemoteAPI
+    ) : ConnectionRemoteRepository {
+        return ConnectionRemoteRepositoryImpl(
+            connectionRemoteAPI = connectionRemoteAPI
+        )
+    }
+
+    // provides connection remote use case
+    @Provides
+    @Singleton
+    fun providesConnectionRemoteUseCase(
+        connectionRemoteRepository: ConnectionRemoteRepository
+    ) : UserConnectionUseCase{
+        return UserConnectionUseCase(
+            sendUserConnectionUseCase = SendUserConnectionUseCase(
+                connectionRemoteRepository = connectionRemoteRepository
+            ),
+            acceptUserConnectionUseCase = AcceptUserConnectionUseCase(
+                connectionRemoteRepository = connectionRemoteRepository
+            ),
+            getRequestConnectionUseCase = GetRequestConnectionUseCase(
+                connectionRemoteRepository = connectionRemoteRepository
+            ),
+            getAllConnectionUseCase = GetAllConnectionUseCase(
+                connectionRemoteRepository = connectionRemoteRepository
             )
         )
     }

@@ -189,7 +189,8 @@ fun MainNavigation(
                                     event
                                 )
                             },
-                            searchState = searchFriendViewModel.searchFriendState.value
+                            searchState = searchFriendViewModel.searchFriendState.value,
+                            addFriendState = searchFriendViewModel.addFriendState.value,
                         )
                     }
                 }

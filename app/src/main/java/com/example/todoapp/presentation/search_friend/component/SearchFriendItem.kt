@@ -1,6 +1,7 @@
 package com.example.todoapp.presentation.search_friend.component
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +37,8 @@ import com.example.todoapp.ui.theme.ToDoAppTheme
 
 @Composable
 fun SearchFriendItem(
-    userItem : UserModel
+    userItem : UserModel,
+    onAddFriend : (String) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -122,7 +124,11 @@ fun SearchFriendItem(
             }
 
             IconButton(
-                onClick = {},
+                onClick = {
+                    onAddFriend(
+                        userItem.userId
+                    )
+                },
                 Modifier
                     .clip(
                         shape = CircleShape
@@ -164,7 +170,8 @@ fun SearchFriendItemPreview(){
                     userId = "d6f7b560-3469-4742-9ae0-be4bfdadbdca",
                     userEmail = "wqerew@aree.com",
                     userPhoneNumber = "2534563"
-                )
+                ),
+                onAddFriend = {}
             )
         }
     }

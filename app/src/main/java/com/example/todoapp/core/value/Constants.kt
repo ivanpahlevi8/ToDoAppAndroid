@@ -13,4 +13,6 @@ object Constants {
     const val EMAIL = "email"
     const val JWT_TOKE = "jwtToken"
     const val USER_ID = "userId"
+    const val FIRST_NAME = "firstName"
+    const val LAST_NAME = "lastName"
 }

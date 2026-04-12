@@ -1,6 +1,7 @@
 package com.example.todoapp.presentation.search_friend.component
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +46,8 @@ import com.example.todoapp.ui.theme.ToDoAppTheme
 fun SearchFriendPage(
     userItem : List<UserModel>,
     onBack : () -> Unit,
-    onSearch : (String) -> Unit
+    onSearch : (String) -> Unit,
+    onAddFriend : (String) -> Unit,
 ){
     var searchText by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
@@ -180,7 +182,10 @@ fun SearchFriendPage(
             ) {
                 index : Int ->
                 SearchFriendItem(
-                    userItem = userItem[index]
+                    userItem = userItem[index],
+                    onAddFriend = {
+                        friendId -> onAddFriend(friendId)
+                    }
                 )
             }
         }
@@ -211,7 +216,8 @@ fun SearchFriendPagePreview() {
                     )
                 ),
                 onBack = {},
-                onSearch = {}
+                onSearch = {},
+                onAddFriend = {}
             )
         }
     }
