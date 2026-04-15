@@ -8,4 +8,5 @@ interface AuthRemoteRepository {
     suspend fun RegisterUser(registerUserDto: RegisterUserDto) : UserModel
     suspend fun LoginUser(loginUserDto: LoginUserDto) : UserModel
     suspend fun GetUserByName(userName : String) : UserModel
+    suspend fun GetUserById(userId : String) : UserModel
 }

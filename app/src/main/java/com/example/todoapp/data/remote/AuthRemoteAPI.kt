@@ -24,4 +24,9 @@ interface AuthRemoteAPI {
     suspend fun GetUserByName(
         @Query("userName") userName : String
     ) : ResponseDto<UserModel>
+
+    @GET("api/Auth/get-userid")
+    suspend fun GetUserById(
+        @Query("userId") userId : String
+    ) : ResponseDto<UserModel>
 }

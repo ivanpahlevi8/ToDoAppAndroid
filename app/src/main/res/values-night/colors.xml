@@ -37,4 +37,16 @@
     <color name="top_app_bar_background_color">#24272B</color>
 
     <color name="card_information_background1">#1B3C53</color>
+
+    <color name="average_start">#FFFFD54F</color>
+    <color name="average_end">#FFFFB74D</color>
+
+    <color name="excellent_start">#FF81C784</color>
+    <color name="excellent_end">#FFDCE775</color>
+
+    <color name="tab_container_bg">#1F2937</color>
+    <color name="tab_active_bg">#374151</color>
+    <color name="tab_active_text">#F9FAFB</color>
+    <color name="tab_inactive_text">#9CA3AF</color>
+    <color name="tab_indicator_tint">#60A5FA</color>
 </resources>

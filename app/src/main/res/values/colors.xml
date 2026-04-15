@@ -72,14 +72,14 @@
 
     <color name="review_top_bar_color">#1F2833</color>
 
-    <color name="excellent_start">#B390EE80</color>
-    <color name="excellent_end">#B3ADFF2F</color>
+    <color name="excellent_start">#FF90EE80</color>
+    <color name="excellent_end">#FFADFF2F</color>
 
     <color name="good_start">#B3ADFF2F</color>
     <color name="good_end">#B3FFFF00</color>
 
-    <color name="average_start">#B3FFFF00</color>
-    <color name="average_end">#B3FFA500</color>
+    <color name="average_start">#FFFFFF00</color>
+    <color name="average_end">#FFFFA500</color>
 
     <color name="bad_start">#B3FFA500</color>
     <color name="bad_end">#B3FF6347</color>
@@ -110,6 +110,12 @@
     <color name="time_line_card_color4">#58A55C</color>
     <color name="time_line_card_color5">#D66C6C</color>
     <color name="time_line_card_color6">#FFD166</color>
+
+    <color name="tab_container_bg">#F3F4F6</color>
+    <color name="tab_active_bg">#FFFFFF</color>
+    <color name="tab_active_text">#111827</color>
+    <color name="tab_inactive_text">#6B7280</color>
+    <color name="tab_indicator_tint">#3B82F6</color>
 
     <color name="card_information_background1">#647FBC</color>
 </resources>

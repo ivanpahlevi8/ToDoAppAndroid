@@ -1,5 +1,6 @@
 package com.example.todoapp.data.repositories
 
+import android.util.Log
 import com.example.todoapp.data.dtos.ResponseDto
 import com.example.todoapp.data.dtos.SendConnectionRequestDto
 import com.example.todoapp.data.remote.ConnectionRemoteAPI
@@ -104,6 +105,7 @@ class ConnectionRemoteRepositoryImpl(
             val response = connectionRemoteAPI.getAllConnection(
                 userId = userId
             )
+            Log.d("CHECK", "Done get all connection, ${response}")
 
             return response.responseResult
         } catch (e: HttpException) {

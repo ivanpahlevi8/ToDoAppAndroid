@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName
 
 data class ResponseDto<T>(
     @SerializedName("message")
-    val responseMessage : String,
+    val responseMessage : String?,
 
     @SerializedName("isSuccess")
-    val responseIsSuccess : Boolean,
+    val responseIsSuccess : Boolean?,
 
     @SerializedName("result")
     val responseResult : T,

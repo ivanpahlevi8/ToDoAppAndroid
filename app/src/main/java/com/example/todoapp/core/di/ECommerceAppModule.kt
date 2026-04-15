@@ -13,6 +13,7 @@ import com.example.todoapp.domain.manager.LocalUserManager
 import com.example.todoapp.domain.repositories.AuthRemoteRepository
 import com.example.todoapp.domain.repositories.ConnectionRemoteRepository
 import com.example.todoapp.domain.usecase.authorization_usecase.AuthUseCase
+import com.example.todoapp.domain.usecase.authorization_usecase.GetUserIdUseCase
 import com.example.todoapp.domain.usecase.authorization_usecase.GetUserUseCase
 import com.example.todoapp.domain.usecase.authorization_usecase.LoginUserUseCase
 import com.example.todoapp.domain.usecase.authorization_usecase.RegisterUserUseCase
@@ -119,6 +120,9 @@ class ECommerceAppModule {
             ),
             getUserUseCase = GetUserUseCase(
                 authRemoteRepository = authRemoteRepository,
+            ),
+            getUserIdUseCase = GetUserIdUseCase(
+                authRemoteRepository = authRemoteRepository
             )
         )
     }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerValue
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -36,6 +38,8 @@ import com.example.todoapp.presentation.main_navigation.component.NavigationDraw
 import com.example.todoapp.presentation.nv_graph.Routes
 import com.example.todoapp.presentation.search_friend.SearchFriendScreen
 import com.example.todoapp.presentation.search_friend.SearchFriendViewModel
+import com.example.todoapp.presentation.user_connection.UserConnectionScreen
+import com.example.todoapp.presentation.user_connection.UserConnectionViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,6 +65,7 @@ fun MainNavigation(
     val indexSelectedRoute : Int = when(getCurrentRoute) {
         Routes.MovieRecommendationRoutes.route -> {0}
         Routes.SearchFriendRoutes.route -> {1}
+        Routes.UserConnectionRoutes.route -> {2}
         else -> {0}
     }
 
@@ -141,6 +146,39 @@ fun MainNavigation(
                                             )
                                         }
                                     }
+                                    2 -> {
+                                        IconButton(onClick = {
+                                            navController.popBackStack()
+                                        }) {
+                                            Icon(  //Show Menu Icon on TopBar
+                                                painter = painterResource(
+                                                    id = R.drawable.arrow_back_ic
+                                                ),
+                                                contentDescription = "Back"
+                                            )
+                                        }
+                                    }
+                                }
+                            },
+                            actions = {
+                                IconButton(
+                                    onClick = {
+                                        navController.navigate(
+                                            Routes.UserConnectionRoutes.route
+                                        )
+                                    }
+                                ) {
+                                    Icon(
+                                        painter = painterResource(
+                                            id = R.drawable.people_alt_ic
+                                        ),
+                                        modifier = Modifier
+                                            .size(20.dp),
+                                        tint = colorResource(
+                                            id = R.color.text_title
+                                        ),
+                                        contentDescription = "People Icon"
+                                    )
                                 }
                             }
                         )
@@ -191,6 +229,23 @@ fun MainNavigation(
                             },
                             searchState = searchFriendViewModel.searchFriendState.value,
                             addFriendState = searchFriendViewModel.addFriendState.value,
+                        )
+                    }
+
+                    // route for connection user
+                    composable(
+                        route = Routes.UserConnectionRoutes.route
+                    ) {
+                        val userConnectionViewModel : UserConnectionViewModel = hiltViewModel()
+
+                        UserConnectionScreen(
+                            requestConnectionState = userConnectionViewModel.requestConnectionState.value,
+                            currentConnection = userConnectionViewModel.connectedUserState.value,
+                            onEvent = {
+                                event -> userConnectionViewModel.onEvent(
+                                    event = event
+                                )
+                            }
                         )
                     }
                 }

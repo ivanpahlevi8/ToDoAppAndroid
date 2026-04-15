@@ -15,4 +15,5 @@ sealed class Routes(
     object RegisterPageRoutes : Routes(route = "register-page-route")
 
     object SearchFriendRoutes : Routes(route = "search-friend-route")
+    object UserConnectionRoutes : Routes(route = "user-connection-route")
 }
