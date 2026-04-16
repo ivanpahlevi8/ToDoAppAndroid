@@ -19,7 +19,9 @@ import com.example.todoapp.ui.theme.ToDoAppTheme
 
 @Composable
 fun ConnectionUserPage(
-    userItems : List<UserConnectionModel>
+    userItems : List<UserConnectionModel>,
+    onUnfriend : (String) -> Unit,
+    onAcceptFriend : (String) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -35,7 +37,14 @@ fun ConnectionUserPage(
 
             ConnectionUserItem(
                 userItem = getData.userConnection,
-                isRequest = false
+                isRequest = false,
+                onUnfriend = {
+                    onUnfriend(it)
+                },
+                onAcceptFriend = {
+                    onAcceptFriend(it)
+                },
+                connectionId = getData.connectionId
             )
         }
     }
@@ -93,7 +102,9 @@ fun ConnectionUserPagePreview() {
                             userPhoneNumber = ""
                         ),
                     )
-                )
+                ),
+                onUnfriend = {},
+                onAcceptFriend = {}
             )
         }
     }

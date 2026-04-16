@@ -39,6 +39,9 @@ import com.example.todoapp.ui.theme.ToDoAppTheme
 @Composable
 fun ConnectionUserItem(
     userItem : UserModel,
+    onUnfriend : (String) -> Unit,
+    onAcceptFriend : (String) -> Unit,
+    connectionId : String,
     isRequest : Boolean,
 ) {
     Box(
@@ -165,7 +168,17 @@ fun ConnectionUserItem(
             }
 
             IconButton(
-                onClick = {},
+                onClick = {
+                    if(isRequest) {
+                        onAcceptFriend(
+                            connectionId
+                        )
+                    } else {
+                        onUnfriend(
+                            connectionId
+                        )
+                    }
+                },
                 colors = IconButtonColors(
                     containerColor = colorResource(
                         id = if(isRequest) {
@@ -233,7 +246,10 @@ fun ConnectionUserItemPreview(){
                     userEmail = "ivan.indirsya@gmail.com",
                     userPhoneNumber = ""
                 ),
-                isRequest = false
+                isRequest = false,
+                onUnfriend = {},
+                onAcceptFriend = {},
+                connectionId = ""
             )
         }
     }

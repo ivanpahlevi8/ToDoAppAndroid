@@ -24,9 +24,15 @@ import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserLogI
 import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserLogOut
 import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserOnBoardUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.AcceptUserConnectionUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.DeclineUserUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.GetAllConnectionUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.GetConnectionDisconnectToUserUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.GetConnectionDisconnectedByUserUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.GetConnectionRejectToUserUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.GetConnectionRejectedByUserUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.GetRequestConnectionUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.SendUserConnectionUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.UnConnectUserUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.UserConnectionUseCase
 import dagger.Module
 import dagger.Provides
@@ -172,6 +178,24 @@ class ECommerceAppModule {
                 connectionRemoteRepository = connectionRemoteRepository
             ),
             getAllConnectionUseCase = GetAllConnectionUseCase(
+                connectionRemoteRepository = connectionRemoteRepository
+            ),
+            unConnectedUserUseCase = UnConnectUserUseCase(
+                connectionRemoteRepository = connectionRemoteRepository
+            ),
+            declineUserUseCase = DeclineUserUseCase(
+                connectionRemoteRepository = connectionRemoteRepository
+            ),
+            getConnectionRejectedByUserUseCase = GetConnectionRejectedByUserUseCase(
+                connectionRemoteRepository = connectionRemoteRepository
+            ),
+            getConnectionRejectToUserUseCase = GetConnectionRejectToUserUseCase(
+                connectionRemoteRepository = connectionRemoteRepository
+            ),
+            getConnectionDisconnectedByUserUseCase = GetConnectionDisconnectedByUserUseCase(
+                connectionRemoteRepository = connectionRemoteRepository
+            ),
+            getConnectionDisconnectToUserUseCase = GetConnectionDisconnectToUserUseCase(
                 connectionRemoteRepository = connectionRemoteRepository
             )
         )

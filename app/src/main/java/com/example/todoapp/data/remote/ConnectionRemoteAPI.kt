@@ -33,4 +33,40 @@ interface ConnectionRemoteAPI {
     suspend fun getRequestConnection(
         @Query("requesterId") requesterId : String
     ) : ResponseDto<List<SendConnectionModel>>
+
+    // function to un connect user
+    @PUT("api/Connection/unconnect-user")
+    suspend fun unConnectUser(
+        @Query("connectionId") connectionId : String
+    ) : ResponseDto<String>
+
+    // function to decline connection
+    @PUT("api/Connection/declined-connection")
+    suspend fun declineConnectionUser(
+        @Query("connectionId") connectionId: String
+    ) : ResponseDto<String>
+
+    // function to get connection rejected by user
+    @GET("api/Connection/connection-rejected-byuser")
+    suspend fun getConnectionRejectedByUser(
+        @Query("userId") userId: String
+    ) : ResponseDto<List<SendConnectionModel>>
+
+    // function to get connection reject to user
+    @GET("api/Connection/connection-reject-touser")
+    suspend fun getConnectionRejectToUser(
+        @Query("userId") userId : String
+    ) : ResponseDto<List<SendConnectionModel>>
+
+    // function to get connection disconnect by user
+    @GET("api/Connection/connection-disconnected-byuser")
+    suspend fun getConnectionDisconnectByUser(
+        @Query("userId") userId: String
+    ) : ResponseDto<List<SendConnectionModel>>
+
+    // function to get connection disconnect to user
+    @GET("api/Connection/connection-disconnect-touser")
+    suspend fun getConnectionDisconnectToUser(
+        @Query("userId") userId: String
+    ) : ResponseDto<List<SendConnectionModel>>
 }

@@ -32,6 +32,10 @@ class UserConnectionViewModel @Inject constructor(
 
     val connectedUserState : State<UserConnectionState> get() = derivedStateOf { _connectedUserState }
 
+    private var _acceptConnectionState by mutableStateOf<UserConnectionState>(UserConnectionState.IdleState)
+
+    val acceptConnectionState : State<UserConnectionState> get() = derivedStateOf { _acceptConnectionState }
+
     init {
         viewModelScope.launch {
             delay(600)
@@ -123,6 +127,22 @@ class UserConnectionViewModel @Inject constructor(
                             userRequesterId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
                         )
 
+                        // get connection user
+                        val userConnections : MutableList<UserConnectionModel> = mutableListOf()
+
+                        for (item in getData){
+                            val getUser = authUseCase.getUserIdUseCase(
+                                userId = item.connectionUserConnectionId
+                            )
+
+                            userConnections.add(
+                                UserConnectionModel(
+                                    connectionId = item.connectionId.toString(),
+                                    userConnection = getUser
+                                )
+                            )
+                        }
+
                         _requestConnectionState = UserConnectionState.DataState(
                             data = getData
                         )
@@ -135,6 +155,39 @@ class UserConnectionViewModel @Inject constructor(
                     }
                 }
             }
+            is UserConnectionEvent.OnAcceptConnection -> {
+                val connectionId = event.connectionId
+
+                _acceptConnectionState = UserConnectionState.LoadingState
+
+                viewModelScope.launch {
+                    delay(600)
+
+                    try{
+                        val response = userConnectionUseCase.acceptUserConnectionUseCase(
+                            connectionId = connectionId.toInt()
+                        )
+
+                        val getUser = authUseCase.getUserIdUseCase(
+                            userId = response.connectionUserConnectionId
+                        )
+
+                        _requestConnectionState = UserConnectionState.DataState(
+                            data = getUser
+                        )
+                    } catch (e : Exception) {
+                        val errMsg = "Error Happen : ${e.message}"
+
+                        _acceptConnectionState = UserConnectionState.ErrorState(
+                            errMsg = errMsg
+                        )
+                    }
+                }
+            }
         }
+    }
+
+    fun updateAcceptConnectionState(newState : UserConnectionState) {
+        _acceptConnectionState = newState
     }
 }

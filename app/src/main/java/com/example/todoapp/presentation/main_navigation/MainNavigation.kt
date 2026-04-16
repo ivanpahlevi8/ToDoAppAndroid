@@ -245,6 +245,12 @@ fun MainNavigation(
                                 event -> userConnectionViewModel.onEvent(
                                     event = event
                                 )
+                            },
+                            acceptRequestState = userConnectionViewModel.acceptConnectionState.value,
+                            updateAcceptConnectionState = {
+                                newState -> userConnectionViewModel.updateAcceptConnectionState(
+                                    newState = newState
+                                )
                             }
                         )
                     }

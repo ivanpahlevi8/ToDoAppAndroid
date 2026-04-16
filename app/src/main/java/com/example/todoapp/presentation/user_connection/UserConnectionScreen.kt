@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,13 +18,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -33,12 +42,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.core.content.ContextCompat.getDrawable
 import com.example.todoapp.R
 import com.example.todoapp.core.value.Dimension
 import com.example.todoapp.domain.models.UserConnectionModel
@@ -48,6 +61,7 @@ import com.example.todoapp.presentation.user_connection.component.ConnectionUser
 import com.example.todoapp.presentation.user_connection.component.RequestConnectionUserPage
 import com.example.todoapp.presentation.user_connection.component.RequestConnectionUserPageShimmer
 import com.example.todoapp.ui.theme.ToDoAppTheme
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 enum class ConnectionTab {
     REQUESTS, CURRENT
@@ -57,7 +71,9 @@ enum class ConnectionTab {
 fun UserConnectionScreen(
     requestConnectionState : UserConnectionState,
     currentConnection : UserConnectionState,
+    acceptRequestState : UserConnectionState,
     onEvent : (UserConnectionEvent) -> Unit,
+    updateAcceptConnectionState : (UserConnectionState) -> Unit
 ){
     var showRequestConnection by remember { mutableStateOf(true) }
 
@@ -266,7 +282,17 @@ fun UserConnectionScreen(
                             val getData = requestConnectionState.data
 
                             RequestConnectionUserPage(
-                                connectionUserItems = getData as List<UserConnectionModel>
+                                connectionUserItems = getData as List<UserConnectionModel>,
+                                onUnfriend = {
+
+                                },
+                                onAcceptFriend = {
+                                    connectionId -> onEvent(
+                                        UserConnectionEvent.OnAcceptConnection(
+                                            connectionId = connectionId
+                                        )
+                                    )
+                                }
                             )
                         }
 
@@ -308,7 +334,15 @@ fun UserConnectionScreen(
                             val getData = currentConnection.data
 
                             ConnectionUserPage(
-                                userItems = getData as List<UserConnectionModel>
+                                userItems = getData as List<UserConnectionModel>,
+                                onUnfriend = {},
+                                onAcceptFriend = {
+                                        connectionId -> onEvent(
+                                    UserConnectionEvent.OnAcceptConnection(
+                                        connectionId = connectionId
+                                    )
+                                )
+                                }
                             )
                         }
 
@@ -344,6 +378,228 @@ fun UserConnectionScreen(
                 }
             }
         }
+
+        when(acceptRequestState) {
+            is UserConnectionState.DataState<*> -> {
+                val getUser = acceptRequestState.data as UserModel
+
+                Dialog(
+                    onDismissRequest = {
+                        updateAcceptConnectionState(
+                            UserConnectionState.IdleState
+                        )
+                    }
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .width(180.dp),
+                        color = colorResource(
+                            id = R.color.card_background_color2
+                        ),
+                        shape = MaterialTheme.shapes.medium,
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = rememberDrawablePainter(
+                                    drawable = getDrawable(
+                                        LocalContext.current,
+                                        R.drawable.check_ok
+                                    ),
+                                ),
+                                contentDescription = "Check Gift",
+                                modifier = Modifier
+                                    .size(70.dp)
+                                    .clip(
+                                        shape = CircleShape
+                                    )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.SMALL_PADDING2
+                                    )
+                            )
+
+                            Text(
+                                "Connect With ${getUser.userName}",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.W800,
+                                    fontSize = 18.sp
+                                ),
+                                color = colorResource(
+                                    id = R.color.text_title
+                                )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.SMALL_PADDING2
+                                    )
+                            )
+
+                            Button(
+                                onClick = {
+                                    updateAcceptConnectionState(
+                                        UserConnectionState.IdleState
+                                    )
+                                },
+                                colors = ButtonColors(
+                                    containerColor = colorResource(
+                                        id = R.color.excellent_end
+                                    ),
+                                    disabledContentColor = colorResource(
+                                        id = R.color.white
+                                    ),
+                                    contentColor = colorResource(
+                                        id = R.color.white
+                                    ),
+                                    disabledContainerColor = colorResource(
+                                        id = R.color.white
+                                    )
+                                )
+                            ) {
+                                Text(
+                                    text = "OK",
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontWeight = FontWeight.W800,
+                                        fontSize = 18.sp
+                                    ),
+                                    color = colorResource(
+                                        id = R.color.text_title
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            is UserConnectionState.ErrorState -> {
+                val errMsg = acceptRequestState.errMsg
+
+                Dialog(
+                    onDismissRequest = {
+                        updateAcceptConnectionState(
+                            UserConnectionState.IdleState
+                        )
+                    }
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .width(180.dp),
+                        color = colorResource(
+                            id = R.color.card_background_color2
+                        ),
+                        shape = MaterialTheme.shapes.medium,
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = rememberDrawablePainter(
+                                    drawable = getDrawable(
+                                        LocalContext.current,
+                                        R.drawable.x_error
+                                    ),
+                                ),
+                                contentDescription = "Check Gift",
+                                modifier = Modifier
+                                    .size(70.dp)
+                                    .clip(
+                                        shape = CircleShape
+                                    )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.SMALL_PADDING2
+                                    )
+                            )
+
+                            Text(
+                                errMsg,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.W800,
+                                    fontSize = 18.sp
+                                ),
+                                color = colorResource(
+                                    id = R.color.text_title
+                                )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.SMALL_PADDING2
+                                    )
+                            )
+
+                            Button(
+                                onClick = {
+                                    updateAcceptConnectionState(
+                                        UserConnectionState.IdleState
+                                    )
+                                },
+                                colors = ButtonColors(
+                                    containerColor = colorResource(
+                                        id = R.color.error_color
+                                    ),
+                                    disabledContentColor = colorResource(
+                                        id = R.color.white
+                                    ),
+                                    contentColor = colorResource(
+                                        id = R.color.error_color
+                                    ),
+                                    disabledContainerColor = colorResource(
+                                        id = R.color.white
+                                    )
+                                )
+                            ) {
+                                Text(
+                                    text = "OK",
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontWeight = FontWeight.W800,
+                                        fontSize = 18.sp
+                                    ),
+                                    color = colorResource(
+                                        id = R.color.text_title
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            is UserConnectionState.LoadingState -> {
+                Dialog(
+                    onDismissRequest = {}
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .size(120.dp),
+                        shape = MaterialTheme.shapes.medium,
+                        color = colorResource(
+                            id = R.color.card_background_color2
+                        )
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
+            is UserConnectionState.IdleState -> {
+
+            }
+        }
     }
 }
 
@@ -364,7 +620,9 @@ fun UserConnectionScreenPreview(){
             UserConnectionScreen(
                 requestConnectionState = UserConnectionState.IdleState,
                 currentConnection = UserConnectionState.IdleState,
-                onEvent = {}
+                onEvent = {},
+                acceptRequestState = UserConnectionState.IdleState,
+                updateAcceptConnectionState = {}
             )
         }
     }
