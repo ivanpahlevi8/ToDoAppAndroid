@@ -36,6 +36,14 @@ class UserConnectionViewModel @Inject constructor(
 
     val acceptConnectionState : State<UserConnectionState> get() = derivedStateOf { _acceptConnectionState }
 
+    private var _disconnectConnectionState by mutableStateOf<UserConnectionState>(UserConnectionState.IdleState)
+
+    val disconnectConnectionState  : State<UserConnectionState> get() = derivedStateOf { _disconnectConnectionState }
+
+    private var _declineConnectionState by mutableStateOf<UserConnectionState>(UserConnectionState.IdleState)
+
+    val declineConnectionState : State<UserConnectionState> get() = derivedStateOf { _declineConnectionState }
+
     init {
         viewModelScope.launch {
             delay(600)
@@ -87,13 +95,21 @@ class UserConnectionViewModel @Inject constructor(
                             userId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
                         )
 
+                        val getLoginUserId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
+
                         // get connection user
                         val userConnections : MutableList<UserConnectionModel> = mutableListOf()
 
                         for (item in getData){
-                            val getUser = authUseCase.getUserIdUseCase(
-                                userId = item.connectionUserConnectionId
-                            )
+                            val getUser : UserModel = if(getLoginUserId == item.connectionUserOwnerId){
+                                authUseCase.getUserIdUseCase(
+                                    userId = item.connectionUserConnectionId
+                                )
+                            } else {
+                                authUseCase.getUserIdUseCase(
+                                    userId = item.connectionUserOwnerId
+                                )
+                            }
 
                             userConnections.add(
                                 UserConnectionModel(
@@ -144,7 +160,7 @@ class UserConnectionViewModel @Inject constructor(
                         }
 
                         _requestConnectionState = UserConnectionState.DataState(
-                            data = getData
+                            data = userConnections
                         )
                     } catch (e : Exception) {
                         val errMsg = "Error Happen : ${e.message}"
@@ -172,7 +188,7 @@ class UserConnectionViewModel @Inject constructor(
                             userId = response.connectionUserConnectionId
                         )
 
-                        _requestConnectionState = UserConnectionState.DataState(
+                        _acceptConnectionState = UserConnectionState.DataState(
                             data = getUser
                         )
                     } catch (e : Exception) {
@@ -184,10 +200,75 @@ class UserConnectionViewModel @Inject constructor(
                     }
                 }
             }
+            is UserConnectionEvent.OnDisconnectUserConnection -> {
+                val connectionId = event.connectionId
+
+                viewModelScope.launch {
+                    _disconnectConnectionState = UserConnectionState.LoadingState
+
+                    delay(500)
+
+                    try{
+                        val getData = userConnectionUseCase.unConnectedUserUseCase(
+                            connectionId = connectionId.toInt()
+                        )
+
+                        val getUser = authUseCase.getUserIdUseCase(
+                            getData.connectionUserConnectionId
+                        )
+
+                        _disconnectConnectionState = UserConnectionState.DataState(
+                            data = getUser
+                        )
+                    } catch (e : Exception) {
+                        val errMsg = "Error Happen : ${e.message}"
+
+                        _disconnectConnectionState = UserConnectionState.ErrorState(
+                            errMsg = errMsg
+                        )
+                    }
+                }
+            }
+
+            is UserConnectionEvent.OnDeclineUserConnection -> {
+                _declineConnectionState = UserConnectionState.LoadingState
+
+                viewModelScope.launch {
+                    delay(600)
+
+                    try{
+                        val data = userConnectionUseCase.declineUserUseCase(
+                            connectionId = event.connectionId.toInt()
+                        )
+
+                        val userModel = authUseCase.getUserIdUseCase(
+                            userId = data.connectionUserConnectionId
+                        )
+
+                        _declineConnectionState = UserConnectionState.DataState(
+                            data = userModel
+                        )
+                    } catch (e : Exception) {
+                        val errMsg : String = "Error Happen : ${e.message}"
+
+                        _declineConnectionState = UserConnectionState.ErrorState(
+                            errMsg = errMsg
+                        )
+                    }
+                }
+            }
         }
     }
 
     fun updateAcceptConnectionState(newState : UserConnectionState) {
         _acceptConnectionState = newState
+    }
+
+    fun updateDisconnectConnectionState(newState : UserConnectionState) {
+        _disconnectConnectionState = newState
+    }
+
+    fun updateDeclineConnectionState(newState : UserConnectionState) {
+        _declineConnectionState = newState
     }
 }

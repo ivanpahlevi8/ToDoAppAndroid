@@ -1,5 +1,6 @@
 package com.example.todoapp.domain.usecase.user_connection_usecase
 
+import com.example.todoapp.domain.models.SendConnectionModel
 import com.example.todoapp.domain.repositories.ConnectionRemoteRepository
 
 class UnConnectUserUseCase(
@@ -7,7 +8,7 @@ class UnConnectUserUseCase(
 ) {
     suspend operator fun invoke(
         connectionId : Int
-    ) : String {
+    ) : SendConnectionModel {
         return connectionRemoteRepository.unConnectUser(
             connectionId = connectionId
         )

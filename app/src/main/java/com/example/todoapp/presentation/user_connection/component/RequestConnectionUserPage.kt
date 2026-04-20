@@ -25,6 +25,7 @@ fun RequestConnectionUserPage(
     connectionUserItems : List<UserConnectionModel>,
     onUnfriend : (String) -> Unit,
     onAcceptFriend : (String) -> Unit,
+    onDecline : (String) -> Unit,
 ){
     LazyColumn(
         modifier = Modifier
@@ -47,6 +48,9 @@ fun RequestConnectionUserPage(
                 },
                 onAcceptFriend = {
                     onAcceptFriend(it)
+                },
+                onDecline = {
+                    onDecline(it)
                 }
             )
         }
@@ -119,7 +123,8 @@ fun RequestConnectionUserPagePreview() {
                     )
                 ),
                 onUnfriend = {},
-                onAcceptFriend = {}
+                onAcceptFriend = {},
+                onDecline = {}
             )
         }
     }

@@ -130,7 +130,7 @@ class ConnectionRemoteRepositoryImpl(
         }
     }
 
-    override suspend fun unConnectUser(connectionId: Int): String {
+    override suspend fun unConnectUser(connectionId: Int): SendConnectionModel {
         try{
             val response = connectionRemoteAPI.unConnectUser(
                 connectionId = connectionId.toString()
@@ -159,7 +159,7 @@ class ConnectionRemoteRepositoryImpl(
         }
     }
 
-    override suspend fun declineUser(connectionId: Int): String {
+    override suspend fun declineUser(connectionId: Int): SendConnectionModel {
         try{
             val response = connectionRemoteAPI.declineConnectionUser(
                 connectionId = connectionId.toString()

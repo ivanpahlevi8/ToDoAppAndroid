@@ -38,13 +38,13 @@ interface ConnectionRemoteAPI {
     @PUT("api/Connection/unconnect-user")
     suspend fun unConnectUser(
         @Query("connectionId") connectionId : String
-    ) : ResponseDto<String>
+    ) : ResponseDto<SendConnectionModel>
 
     // function to decline connection
     @PUT("api/Connection/declined-connection")
     suspend fun declineConnectionUser(
         @Query("connectionId") connectionId: String
-    ) : ResponseDto<String>
+    ) : ResponseDto<SendConnectionModel>
 
     // function to get connection rejected by user
     @GET("api/Connection/connection-rejected-byuser")

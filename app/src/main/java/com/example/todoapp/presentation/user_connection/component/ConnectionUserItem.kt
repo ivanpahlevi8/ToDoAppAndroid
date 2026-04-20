@@ -1,6 +1,7 @@
 package com.example.todoapp.presentation.user_connection.component
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,6 +42,7 @@ fun ConnectionUserItem(
     userItem : UserModel,
     onUnfriend : (String) -> Unit,
     onAcceptFriend : (String) -> Unit,
+    onDecline : (String) -> Unit,
     connectionId : String,
     isRequest : Boolean,
 ) {
@@ -167,56 +169,101 @@ fun ConnectionUserItem(
                 )
             }
 
-            IconButton(
-                onClick = {
-                    if(isRequest) {
-                        onAcceptFriend(
-                            connectionId
+            Column {
+                IconButton(
+                    onClick = {
+                        if(isRequest) {
+                            onAcceptFriend(
+                                connectionId
+                            )
+                        } else {
+                            onUnfriend(
+                                connectionId
+                            )
+                        }
+                    },
+                    colors = IconButtonColors(
+                        containerColor = colorResource(
+                            id = if(isRequest) {
+                                R.color.excellent_end
+                            } else {
+                                R.color.error_color
+                            }
+                        ),
+                        contentColor = colorResource(
+                            id = R.color.white
+                        ),
+                        disabledContainerColor = colorResource(
+                            id = if(isRequest) {
+                                R.color.excellent_end
+                            } else {
+                                R.color.error_color
+                            }
+                        ),
+                        disabledContentColor = colorResource(
+                            id = R.color.white
+                        ),
+                    )
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            id = if(isRequest) {
+                                R.drawable.person_add_ic
+                            } else {
+                                R.drawable.unfriend_ic
+                            }
+                        ),
+                        contentDescription = "Person Add Icon",
+                        modifier = Modifier
+                            .size(20.dp),
+                        tint = colorResource(
+                            id = R.color.black
                         )
-                    } else {
-                        onUnfriend(
-                            connectionId
+                    )
+                }
+
+                if(isRequest) {
+                    Spacer(
+                        modifier = Modifier
+                            .height(
+                                Dimension.SMALL_PADDING2
+                            )
+                    )
+
+                    IconButton(
+                        onClick = {
+                            onDecline(
+                                connectionId
+                            )
+                        },
+                        colors = IconButtonColors(
+                            containerColor = colorResource(
+                                id = R.color.error_color
+                            ),
+                            contentColor = colorResource(
+                                id = R.color.white
+                            ),
+                            disabledContainerColor = colorResource(
+                                id = R.color.error_color
+                            ),
+                            disabledContentColor = colorResource(
+                                id = R.color.white
+                            ),
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                id = R.drawable.cancel_ic
+                            ),
+                            contentDescription = "Person Add Icon",
+                            modifier = Modifier
+                                .size(20.dp),
+                            tint = colorResource(
+                                id = R.color.white
+                            )
                         )
                     }
-                },
-                colors = IconButtonColors(
-                    containerColor = colorResource(
-                        id = if(isRequest) {
-                            R.color.excellent_end
-                        } else {
-                            R.color.error_color
-                        }
-                    ),
-                    contentColor = colorResource(
-                        id = R.color.white
-                    ),
-                    disabledContainerColor = colorResource(
-                        id = if(isRequest) {
-                            R.color.excellent_end
-                        } else {
-                            R.color.error_color
-                        }
-                    ),
-                    disabledContentColor = colorResource(
-                        id = R.color.white
-                    ),
-                )
-            ) {
-                Icon(
-                    painter = painterResource(
-                        id = if(isRequest) {
-                            R.drawable.person_add_ic
-                        } else {
-                            R.drawable.unfriend_ic
-                        }
-                    ),
-                    contentDescription = "Person Add Icon",
-                    modifier = Modifier
-                        .size(20.dp),
-                    tint = colorResource(
-                        id = R.color.black
-                    )
-                )
+                }
             }
         }
     }
@@ -246,10 +293,11 @@ fun ConnectionUserItemPreview(){
                     userEmail = "ivan.indirsya@gmail.com",
                     userPhoneNumber = ""
                 ),
-                isRequest = false,
+                isRequest = true,
                 onUnfriend = {},
                 onAcceptFriend = {},
-                connectionId = ""
+                connectionId = "",
+                onDecline = {}
             )
         }
     }

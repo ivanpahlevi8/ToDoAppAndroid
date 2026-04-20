@@ -1,6 +1,7 @@
 package com.example.todoapp.presentation.user_connection.component
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ fun ConnectionUserPage(
     userItems : List<UserConnectionModel>,
     onUnfriend : (String) -> Unit,
     onAcceptFriend : (String) -> Unit,
+    onDecline : (String) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -44,7 +46,10 @@ fun ConnectionUserPage(
                 onAcceptFriend = {
                     onAcceptFriend(it)
                 },
-                connectionId = getData.connectionId
+                connectionId = getData.connectionId,
+                onDecline = {
+                    onDecline(it)
+                }
             )
         }
     }
@@ -104,7 +109,8 @@ fun ConnectionUserPagePreview() {
                     )
                 ),
                 onUnfriend = {},
-                onAcceptFriend = {}
+                onAcceptFriend = {},
+                onDecline = {}
             )
         }
     }

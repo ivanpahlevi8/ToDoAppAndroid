@@ -8,8 +8,8 @@ interface ConnectionRemoteRepository {
     suspend fun acceptUserConnection(connectionId : Int) : SendConnectionModel
     suspend fun getRequestConnection(userRequesterId : String) : List<SendConnectionModel>
     suspend fun getAllRequestConnection(userId : String) : List<SendConnectionModel>
-    suspend fun unConnectUser(connectionId : Int) : String
-    suspend fun declineUser(connectionId: Int) : String
+    suspend fun unConnectUser(connectionId : Int) : SendConnectionModel
+    suspend fun declineUser(connectionId: Int) : SendConnectionModel
     suspend fun getConnectionRejectedByUser(userId : String) : List<SendConnectionModel>
     suspend fun getConnectionRejectToUser(userId: String) : List<SendConnectionModel>
     suspend fun getConnectionDisconnectedByUser(userId: String) : List<SendConnectionModel>

@@ -3,6 +3,7 @@
 package com.example.todoapp.presentation.user_connection
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -72,8 +73,12 @@ fun UserConnectionScreen(
     requestConnectionState : UserConnectionState,
     currentConnection : UserConnectionState,
     acceptRequestState : UserConnectionState,
+    disconnectionState : UserConnectionState,
+    declineState : UserConnectionState,
     onEvent : (UserConnectionEvent) -> Unit,
-    updateAcceptConnectionState : (UserConnectionState) -> Unit
+    updateAcceptConnectionState : (UserConnectionState) -> Unit,
+    updateDisconnectConnectionState : (UserConnectionState) -> Unit,
+    updateDeclineConnectionState : (UserConnectionState) -> Unit,
 ){
     var showRequestConnection by remember { mutableStateOf(true) }
 
@@ -284,11 +289,24 @@ fun UserConnectionScreen(
                             RequestConnectionUserPage(
                                 connectionUserItems = getData as List<UserConnectionModel>,
                                 onUnfriend = {
-
+                                    connectionId ->
+                                    Log.d("CHECK", "On Unfriend clicked on screen")
+                                    onEvent(
+                                        UserConnectionEvent.OnDisconnectUserConnection(
+                                            connectionId = connectionId
+                                        )
+                                    )
                                 },
                                 onAcceptFriend = {
                                     connectionId -> onEvent(
                                         UserConnectionEvent.OnAcceptConnection(
+                                            connectionId = connectionId
+                                        )
+                                    )
+                                },
+                                onDecline = {
+                                    connectionId -> onEvent(
+                                        UserConnectionEvent.OnDeclineUserConnection(
                                             connectionId = connectionId
                                         )
                                     )
@@ -335,10 +353,23 @@ fun UserConnectionScreen(
 
                             ConnectionUserPage(
                                 userItems = getData as List<UserConnectionModel>,
-                                onUnfriend = {},
+                                onUnfriend = {
+                                    connectionId -> onEvent(
+                                        UserConnectionEvent.OnDisconnectUserConnection(
+                                            connectionId = connectionId
+                                        )
+                                    )
+                                },
                                 onAcceptFriend = {
                                         connectionId -> onEvent(
                                     UserConnectionEvent.OnAcceptConnection(
+                                        connectionId = connectionId
+                                    )
+                                )
+                                },
+                                onDecline = {
+                                        connectionId -> onEvent(
+                                    UserConnectionEvent.OnDeclineUserConnection(
                                         connectionId = connectionId
                                     )
                                 )
@@ -592,7 +623,481 @@ fun UserConnectionScreen(
                             id = R.color.card_background_color2
                         )
                     ) {
-                        CircularProgressIndicator()
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(
+                                    horizontal = Dimension.MEDIUM_PADDING1
+                                ),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+            }
+            is UserConnectionState.IdleState -> {
+
+            }
+        }
+
+        when(disconnectionState) {
+            is UserConnectionState.DataState<*> -> {
+                val getUser = disconnectionState.data as UserModel
+
+                Dialog(
+                    onDismissRequest = {
+                        updateDisconnectConnectionState(
+                            UserConnectionState.IdleState
+                        )
+                    }
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .width(180.dp),
+                        color = colorResource(
+                            id = R.color.card_background_color2
+                        ),
+                        shape = MaterialTheme.shapes.medium,
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = rememberDrawablePainter(
+                                    drawable = getDrawable(
+                                        LocalContext.current,
+                                        R.drawable.check_ok
+                                    ),
+                                ),
+                                contentDescription = "Check Gift",
+                                modifier = Modifier
+                                    .size(70.dp)
+                                    .clip(
+                                        shape = CircleShape
+                                    )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.SMALL_PADDING2
+                                    )
+                            )
+
+                            Text(
+                                "Unfriend With ${getUser.userName}",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.W800,
+                                    fontSize = 18.sp
+                                ),
+                                color = colorResource(
+                                    id = R.color.text_title
+                                )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.SMALL_PADDING2
+                                    )
+                            )
+
+                            Button(
+                                onClick = {
+                                    updateDisconnectConnectionState(
+                                        UserConnectionState.IdleState
+                                    )
+                                },
+                                colors = ButtonColors(
+                                    containerColor = colorResource(
+                                        id = R.color.excellent_end
+                                    ),
+                                    disabledContentColor = colorResource(
+                                        id = R.color.white
+                                    ),
+                                    contentColor = colorResource(
+                                        id = R.color.white
+                                    ),
+                                    disabledContainerColor = colorResource(
+                                        id = R.color.white
+                                    )
+                                )
+                            ) {
+                                Text(
+                                    text = "OK",
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontWeight = FontWeight.W800,
+                                        fontSize = 18.sp
+                                    ),
+                                    color = colorResource(
+                                        id = R.color.text_title
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            is UserConnectionState.ErrorState -> {
+                val errMsg = disconnectionState.errMsg
+
+                Dialog(
+                    onDismissRequest = {
+                        updateDisconnectConnectionState(
+                            UserConnectionState.IdleState
+                        )
+                    }
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .width(180.dp),
+                        color = colorResource(
+                            id = R.color.card_background_color2
+                        ),
+                        shape = MaterialTheme.shapes.medium,
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = rememberDrawablePainter(
+                                    drawable = getDrawable(
+                                        LocalContext.current,
+                                        R.drawable.x_error
+                                    ),
+                                ),
+                                contentDescription = "Check Gift",
+                                modifier = Modifier
+                                    .size(70.dp)
+                                    .clip(
+                                        shape = CircleShape
+                                    )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.SMALL_PADDING2
+                                    )
+                            )
+
+                            Text(
+                                errMsg,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.W800,
+                                    fontSize = 18.sp
+                                ),
+                                color = colorResource(
+                                    id = R.color.text_title
+                                )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.SMALL_PADDING2
+                                    )
+                            )
+
+                            Button(
+                                onClick = {
+                                    updateDisconnectConnectionState(
+                                        UserConnectionState.IdleState
+                                    )
+                                },
+                                colors = ButtonColors(
+                                    containerColor = colorResource(
+                                        id = R.color.error_color
+                                    ),
+                                    disabledContentColor = colorResource(
+                                        id = R.color.white
+                                    ),
+                                    contentColor = colorResource(
+                                        id = R.color.error_color
+                                    ),
+                                    disabledContainerColor = colorResource(
+                                        id = R.color.white
+                                    )
+                                )
+                            ) {
+                                Text(
+                                    text = "OK",
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontWeight = FontWeight.W800,
+                                        fontSize = 18.sp
+                                    ),
+                                    color = colorResource(
+                                        id = R.color.text_title
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            is UserConnectionState.LoadingState -> {
+                Dialog(
+                    onDismissRequest = {}
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .size(120.dp),
+                        shape = MaterialTheme.shapes.medium,
+                        color = colorResource(
+                            id = R.color.card_background_color2
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(
+                                    horizontal = Dimension.MEDIUM_PADDING1
+                                ),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+            }
+            is UserConnectionState.IdleState -> {
+
+            }
+        }
+
+        when(declineState) {
+            is UserConnectionState.DataState<*> -> {
+                val getUser = declineState.data as UserModel
+
+                Dialog(
+                    onDismissRequest = {
+                        updateDeclineConnectionState(
+                            UserConnectionState.IdleState
+                        )
+                    }
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .width(180.dp),
+                        color = colorResource(
+                            id = R.color.card_background_color2
+                        ),
+                        shape = MaterialTheme.shapes.medium,
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = rememberDrawablePainter(
+                                    drawable = getDrawable(
+                                        LocalContext.current,
+                                        R.drawable.check_ok
+                                    ),
+                                ),
+                                contentDescription = "Check Gift",
+                                modifier = Modifier
+                                    .size(70.dp)
+                                    .clip(
+                                        shape = CircleShape
+                                    )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.SMALL_PADDING2
+                                    )
+                            )
+
+                            Text(
+                                "Decline Request From ${getUser.userName}",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.W800,
+                                    fontSize = 18.sp
+                                ),
+                                color = colorResource(
+                                    id = R.color.text_title
+                                )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.SMALL_PADDING2
+                                    )
+                            )
+
+                            Button(
+                                onClick = {
+                                    updateDeclineConnectionState(
+                                        UserConnectionState.IdleState
+                                    )
+                                },
+                                colors = ButtonColors(
+                                    containerColor = colorResource(
+                                        id = R.color.excellent_end
+                                    ),
+                                    disabledContentColor = colorResource(
+                                        id = R.color.white
+                                    ),
+                                    contentColor = colorResource(
+                                        id = R.color.white
+                                    ),
+                                    disabledContainerColor = colorResource(
+                                        id = R.color.white
+                                    )
+                                )
+                            ) {
+                                Text(
+                                    text = "OK",
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontWeight = FontWeight.W800,
+                                        fontSize = 18.sp
+                                    ),
+                                    color = colorResource(
+                                        id = R.color.text_title
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            is UserConnectionState.ErrorState -> {
+                val errMsg = declineState.errMsg
+
+                Dialog(
+                    onDismissRequest = {
+                        updateDeclineConnectionState(
+                            UserConnectionState.IdleState
+                        )
+                    }
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .width(180.dp),
+                        color = colorResource(
+                            id = R.color.card_background_color2
+                        ),
+                        shape = MaterialTheme.shapes.medium,
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = rememberDrawablePainter(
+                                    drawable = getDrawable(
+                                        LocalContext.current,
+                                        R.drawable.x_error
+                                    ),
+                                ),
+                                contentDescription = "Check Gift",
+                                modifier = Modifier
+                                    .size(70.dp)
+                                    .clip(
+                                        shape = CircleShape
+                                    )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.SMALL_PADDING2
+                                    )
+                            )
+
+                            Text(
+                                errMsg,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.W800,
+                                    fontSize = 18.sp
+                                ),
+                                color = colorResource(
+                                    id = R.color.text_title
+                                )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.SMALL_PADDING2
+                                    )
+                            )
+
+                            Button(
+                                onClick = {
+                                    updateDeclineConnectionState(
+                                        UserConnectionState.IdleState
+                                    )
+                                },
+                                colors = ButtonColors(
+                                    containerColor = colorResource(
+                                        id = R.color.error_color
+                                    ),
+                                    disabledContentColor = colorResource(
+                                        id = R.color.white
+                                    ),
+                                    contentColor = colorResource(
+                                        id = R.color.error_color
+                                    ),
+                                    disabledContainerColor = colorResource(
+                                        id = R.color.white
+                                    )
+                                )
+                            ) {
+                                Text(
+                                    text = "OK",
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontWeight = FontWeight.W800,
+                                        fontSize = 18.sp
+                                    ),
+                                    color = colorResource(
+                                        id = R.color.text_title
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            is UserConnectionState.LoadingState -> {
+                Dialog(
+                    onDismissRequest = {}
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .size(120.dp),
+                        shape = MaterialTheme.shapes.medium,
+                        color = colorResource(
+                            id = R.color.card_background_color2
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(
+                                    horizontal = Dimension.MEDIUM_PADDING1
+                                ),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
                 }
             }
@@ -622,7 +1127,11 @@ fun UserConnectionScreenPreview(){
                 currentConnection = UserConnectionState.IdleState,
                 onEvent = {},
                 acceptRequestState = UserConnectionState.IdleState,
-                updateAcceptConnectionState = {}
+                updateAcceptConnectionState = {},
+                disconnectionState = UserConnectionState.IdleState,
+                updateDisconnectConnectionState = {},
+                declineState = UserConnectionState.IdleState,
+                updateDeclineConnectionState = {}
             )
         }
     }
