@@ -22,8 +22,6 @@ import com.example.todoapp.ui.theme.ToDoAppTheme
 fun ConnectionUserPage(
     userItems : List<UserConnectionModel>,
     onUnfriend : (String) -> Unit,
-    onAcceptFriend : (String) -> Unit,
-    onDecline : (String) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -39,17 +37,10 @@ fun ConnectionUserPage(
 
             ConnectionUserItem(
                 userItem = getData.userConnection,
-                isRequest = false,
                 onUnfriend = {
                     onUnfriend(it)
                 },
-                onAcceptFriend = {
-                    onAcceptFriend(it)
-                },
                 connectionId = getData.connectionId,
-                onDecline = {
-                    onDecline(it)
-                }
             )
         }
     }
@@ -109,8 +100,6 @@ fun ConnectionUserPagePreview() {
                     )
                 ),
                 onUnfriend = {},
-                onAcceptFriend = {},
-                onDecline = {}
             )
         }
     }

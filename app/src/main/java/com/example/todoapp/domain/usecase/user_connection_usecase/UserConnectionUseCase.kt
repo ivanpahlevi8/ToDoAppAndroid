@@ -10,5 +10,7 @@ data class UserConnectionUseCase(
     val getConnectionRejectedByUserUseCase: GetConnectionRejectedByUserUseCase,
     val getConnectionRejectToUserUseCase: GetConnectionRejectToUserUseCase,
     val getConnectionDisconnectedByUserUseCase: GetConnectionDisconnectedByUserUseCase,
-    val getConnectionDisconnectToUserUseCase: GetConnectionDisconnectToUserUseCase
+    val getConnectionDisconnectToUserUseCase: GetConnectionDisconnectToUserUseCase,
+    val removeConnectionUseCase: RemoveConnectionUseCase,
+    val getRequestConnectionToUserUseCase: GetRequestConnectionToUserUseCase,
 )

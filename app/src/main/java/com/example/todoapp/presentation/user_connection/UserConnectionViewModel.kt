@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.todoapp.core.value.Constants
 import com.example.todoapp.domain.models.UserConnectionModel
 import com.example.todoapp.domain.models.UserModel
+import com.example.todoapp.domain.models.UserRequestConnectionModel
 import com.example.todoapp.domain.usecase.authorization_usecase.AuthUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.UserConnectionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,132 +45,23 @@ class UserConnectionViewModel @Inject constructor(
 
     val declineConnectionState : State<UserConnectionState> get() = derivedStateOf { _declineConnectionState }
 
+    private var _unFollowConnectionState by mutableStateOf<UserConnectionState>(UserConnectionState.IdleState)
+
+    val unFollowConnectionState : State<UserConnectionState> get() = derivedStateOf { _unFollowConnectionState }
+
     init {
         viewModelScope.launch {
-            delay(600)
-
-            try{
-                val getData = userConnectionUseCase.getRequestConnectionUseCase(
-                    userRequesterId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
-                )
-
-                // get connection user
-                val userConnections : MutableList<UserConnectionModel> = mutableListOf()
-
-                for (item in getData){
-                    val getUser = authUseCase.getUserIdUseCase(
-                        userId = item.connectionUserConnectionId
-                    )
-
-                    userConnections.add(
-                        UserConnectionModel(
-                            connectionId = item.connectionId.toString(),
-                            userConnection = getUser
-                        )
-                    )
-                }
-
-                _requestConnectionState = UserConnectionState.DataState(
-                    data = userConnections
-                )
-            } catch (e : Exception) {
-                val errMsg = "Error Happen : ${e.message}"
-
-                _requestConnectionState = UserConnectionState.ErrorState(
-                    errMsg = errMsg
-                )
-            }
+            getRequestConnectionData()
         }
     }
 
     fun onEvent(event : UserConnectionEvent) {
         when(event) {
             is UserConnectionEvent.OnGetUserConnection -> {
-                _connectedUserState = UserConnectionState.LoadingState
-
-                viewModelScope.launch {
-                    delay(600)
-
-                    try{
-                        val getData = userConnectionUseCase.getAllConnectionUseCase(
-                            userId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
-                        )
-
-                        val getLoginUserId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
-
-                        // get connection user
-                        val userConnections : MutableList<UserConnectionModel> = mutableListOf()
-
-                        for (item in getData){
-                            val getUser : UserModel = if(getLoginUserId == item.connectionUserOwnerId){
-                                authUseCase.getUserIdUseCase(
-                                    userId = item.connectionUserConnectionId
-                                )
-                            } else {
-                                authUseCase.getUserIdUseCase(
-                                    userId = item.connectionUserOwnerId
-                                )
-                            }
-
-                            userConnections.add(
-                                UserConnectionModel(
-                                    connectionId = item.connectionId.toString(),
-                                    userConnection = getUser
-                                )
-                            )
-                        }
-
-
-                        _connectedUserState = UserConnectionState.DataState(
-                            data = userConnections
-                        )
-                    } catch (e : Exception) {
-                        val errMsg = "Error Happen : ${e.message}"
-
-                        _connectedUserState = UserConnectionState.ErrorState(
-                            errMsg = errMsg
-                        )
-                    }
-                }
+                getUserConnection()
             }
             is UserConnectionEvent.OnGetRequestConnection -> {
-                _requestConnectionState = UserConnectionState.LoadingState
-
-                viewModelScope.launch {
-                    delay(600)
-
-                    try{
-                        val getData = userConnectionUseCase.getRequestConnectionUseCase(
-                            userRequesterId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
-                        )
-
-                        // get connection user
-                        val userConnections : MutableList<UserConnectionModel> = mutableListOf()
-
-                        for (item in getData){
-                            val getUser = authUseCase.getUserIdUseCase(
-                                userId = item.connectionUserConnectionId
-                            )
-
-                            userConnections.add(
-                                UserConnectionModel(
-                                    connectionId = item.connectionId.toString(),
-                                    userConnection = getUser
-                                )
-                            )
-                        }
-
-                        _requestConnectionState = UserConnectionState.DataState(
-                            data = userConnections
-                        )
-                    } catch (e : Exception) {
-                        val errMsg = "Error Happen : ${e.message}"
-
-                        _requestConnectionState = UserConnectionState.ErrorState(
-                            errMsg = errMsg
-                        )
-                    }
-                }
+                getRequestConnectionData()
             }
             is UserConnectionEvent.OnAcceptConnection -> {
                 val connectionId = event.connectionId
@@ -257,18 +149,166 @@ class UserConnectionViewModel @Inject constructor(
                     }
                 }
             }
+            is UserConnectionEvent.OnUnFollowConnection -> {
+                _unFollowConnectionState = UserConnectionState.LoadingState
+
+                viewModelScope.launch {
+                    delay(600)
+
+                    try{
+                        val response = userConnectionUseCase.removeConnectionUseCase(
+                            connectionId = event.connectionId.toInt()
+                        )
+
+                        val getUser = authUseCase.getUserIdUseCase(
+                            userId = response.connectionUserConnectionId
+                        )
+
+                        _unFollowConnectionState = UserConnectionState.DataState(
+                            data = getUser
+                        )
+                    } catch (e : Exception) {
+                        val errMsg = "Error Happen : ${e.message}"
+
+                        _unFollowConnectionState = UserConnectionState.ErrorState(
+                            errMsg = errMsg
+                        )
+                    }
+                }
+            }
         }
     }
 
     fun updateAcceptConnectionState(newState : UserConnectionState) {
         _acceptConnectionState = newState
+
+        getRequestConnectionData()
     }
 
     fun updateDisconnectConnectionState(newState : UserConnectionState) {
         _disconnectConnectionState = newState
+
+        getUserConnection()
     }
 
     fun updateDeclineConnectionState(newState : UserConnectionState) {
         _declineConnectionState = newState
+
+        getRequestConnectionData()
+    }
+
+    fun updateUnFollowConnectionState(newState : UserConnectionState) {
+        _unFollowConnectionState = newState
+
+        // refresh request state
+        getRequestConnectionData()
+    }
+
+    private fun getRequestConnectionData(){
+        _requestConnectionState = UserConnectionState.LoadingState
+
+        viewModelScope.launch {
+            delay(600)
+
+            try{
+                val getData = userConnectionUseCase.getRequestConnectionUseCase(
+                    userRequesterId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
+                )
+
+                // get connection user
+                val userConnections : MutableList<UserRequestConnectionModel> = mutableListOf()
+
+                for (item in getData){
+                    val getUser = authUseCase.getUserIdUseCase(
+                        userId = item.connectionUserOwnerId
+                    )
+
+                    userConnections.add(
+                        UserRequestConnectionModel(
+                            isFromUser = false,
+                            connectionId = item.connectionId.toString(),
+                            userConnection = getUser
+                        )
+                    )
+                }
+
+                // get request connection to user
+                val getRequestConnectionData = userConnectionUseCase.getRequestConnectionToUserUseCase(
+                    userId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
+                )
+
+                for(item in getRequestConnectionData) {
+                    val getUser = authUseCase.getUserIdUseCase(
+                        userId = item.connectionUserConnectionId
+                    )
+
+                    userConnections.add(
+                        UserRequestConnectionModel(
+                            isFromUser = true,
+                            connectionId = item.connectionId.toString(),
+                            userConnection = getUser
+                        )
+                    )
+                }
+
+                _requestConnectionState = UserConnectionState.DataState(
+                    data = userConnections
+                )
+            } catch (e : Exception) {
+                val errMsg = "Error Happen : ${e.message}"
+
+                _requestConnectionState = UserConnectionState.ErrorState(
+                    errMsg = errMsg
+                )
+            }
+        }
+    }
+    private fun getUserConnection(){
+        _connectedUserState = UserConnectionState.LoadingState
+
+        viewModelScope.launch {
+            delay(600)
+
+            try{
+                val getData = userConnectionUseCase.getAllConnectionUseCase(
+                    userId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
+                )
+
+                val getLoginUserId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
+
+                // get connection user
+                val userConnections : MutableList<UserConnectionModel> = mutableListOf()
+
+                for (item in getData){
+                    val getUser : UserModel = if(getLoginUserId == item.connectionUserOwnerId){
+                        authUseCase.getUserIdUseCase(
+                            userId = item.connectionUserConnectionId
+                        )
+                    } else {
+                        authUseCase.getUserIdUseCase(
+                            userId = item.connectionUserOwnerId
+                        )
+                    }
+
+                    userConnections.add(
+                        UserConnectionModel(
+                            connectionId = item.connectionId.toString(),
+                            userConnection = getUser
+                        )
+                    )
+                }
+
+
+                _connectedUserState = UserConnectionState.DataState(
+                    data = userConnections
+                )
+            } catch (e : Exception) {
+                val errMsg = "Error Happen : ${e.message}"
+
+                _connectedUserState = UserConnectionState.ErrorState(
+                    errMsg = errMsg
+                )
+            }
+        }
     }
 }

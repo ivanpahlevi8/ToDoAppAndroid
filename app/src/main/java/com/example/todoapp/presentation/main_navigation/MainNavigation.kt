@@ -263,6 +263,12 @@ fun MainNavigation(
                                 newState -> userConnectionViewModel.updateDeclineConnectionState(
                                     newState = newState
                                 )
+                            },
+                            unFollowState = userConnectionViewModel.unFollowConnectionState.value,
+                            updateUnFollowState = {
+                                newState -> userConnectionViewModel.updateUnFollowConnectionState(
+                                    newState = newState
+                                )
                             }
                         )
                     }

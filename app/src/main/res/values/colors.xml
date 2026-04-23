@@ -81,8 +81,8 @@
     <color name="average_start">#FFFFFF00</color>
     <color name="average_end">#FFFFA500</color>
 
-    <color name="bad_start">#B3FFA500</color>
-    <color name="bad_end">#B3FF6347</color>
+    <color name="bad_start">#FFFFA500</color>
+    <color name="bad_end">#FFFF6347</color>
 
     <color name="very_bad_start">#B3FF6347</color>
     <color name="very_bad_end">#B3B22222</color>

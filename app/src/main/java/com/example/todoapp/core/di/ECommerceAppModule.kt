@@ -30,7 +30,9 @@ import com.example.todoapp.domain.usecase.user_connection_usecase.GetConnectionD
 import com.example.todoapp.domain.usecase.user_connection_usecase.GetConnectionDisconnectedByUserUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.GetConnectionRejectToUserUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.GetConnectionRejectedByUserUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.GetRequestConnectionToUserUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.GetRequestConnectionUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.RemoveConnectionUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.SendUserConnectionUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.UnConnectUserUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.UserConnectionUseCase
@@ -197,6 +199,12 @@ class ECommerceAppModule {
             ),
             getConnectionDisconnectToUserUseCase = GetConnectionDisconnectToUserUseCase(
                 connectionRemoteRepository = connectionRemoteRepository
+            ),
+            removeConnectionUseCase = RemoveConnectionUseCase(
+                connectionRemoteRepository = connectionRemoteRepository,
+            ),
+            getRequestConnectionToUserUseCase = GetRequestConnectionToUserUseCase(
+                connectionRemoteRepository = connectionRemoteRepository,
             )
         )
     }

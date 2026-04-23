@@ -4,6 +4,7 @@ import com.example.todoapp.data.dtos.ResponseDto
 import com.example.todoapp.data.dtos.SendConnectionRequestDto
 import com.example.todoapp.domain.models.SendConnectionModel
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -29,7 +30,7 @@ interface ConnectionRemoteAPI {
     ) : ResponseDto<List<SendConnectionModel>>
 
     // function to get requested connection
-    @GET("api/Connection/get-request-connection")
+    @GET("api/Connection/get-requested-connection")
     suspend fun getRequestConnection(
         @Query("requesterId") requesterId : String
     ) : ResponseDto<List<SendConnectionModel>>
@@ -69,4 +70,12 @@ interface ConnectionRemoteAPI {
     suspend fun getConnectionDisconnectToUser(
         @Query("userId") userId: String
     ) : ResponseDto<List<SendConnectionModel>>
+
+    // function to delete connection
+    @DELETE("api/Connection/remove-connection")
+    suspend fun deleteConnection(@Query("connectionId") connectionId: String) : ResponseDto<SendConnectionModel>
+
+    // function to get requested user connection
+    @GET("api/Connection/get-reques-connection")
+    suspend fun getRequestConnectionToUser(@Query("userId") userId: String) : ResponseDto<List<SendConnectionModel>>
 }
