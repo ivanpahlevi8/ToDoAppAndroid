@@ -16,4 +16,5 @@ interface ConnectionRemoteRepository {
     suspend fun getConnectionDisconnectedToUser(userId : String) : List<SendConnectionModel>
     suspend fun removeConnection(connectionId: Int) : SendConnectionModel
     suspend fun getRequestConnectionToUser(userId : String) : List<SendConnectionModel>
+    suspend fun getIsConnectedStatus(userId : String, userConnectionId : String) : Boolean
 }

@@ -229,6 +229,16 @@ fun MainNavigation(
                             },
                             searchState = searchFriendViewModel.searchFriendState.value,
                             addFriendState = searchFriendViewModel.addFriendState.value,
+                            updateAddFriendState = {
+                                newState -> searchFriendViewModel.updateAddFriendState(
+                                    newState = newState
+                                )
+                            },
+                            updateSearchFriendState = {
+                                newState -> searchFriendViewModel.updateSearchFriendState(
+                                    newState = newState
+                                )
+                            }
                         )
                     }
 

@@ -39,6 +39,7 @@ import com.example.todoapp.ui.theme.ToDoAppTheme
 fun SearchFriendItem(
     userItem : UserModel,
     onAddFriend : (String) -> Unit,
+    isConnect : Boolean
 ) {
     Box(
         modifier = Modifier
@@ -121,6 +122,52 @@ fun SearchFriendItem(
                         id = R.color.text_title,
                     )
                 )
+
+                Spacer(
+                    modifier = Modifier
+                        .height(
+                            Dimension.SMALL_PADDING2
+                        )
+                )
+
+                Box(
+                    modifier = Modifier
+                        .clip(
+                            shape = MaterialTheme.shapes.medium
+                        )
+                        .shadow(
+                            elevation = 2.dp,
+                            shape = MaterialTheme.shapes.medium
+                        )
+                        .background(
+                            color = colorResource(
+                                id = if(isConnect) {
+                                    R.color.excellent_start
+                                } else {
+                                    R.color.error_color
+                                }
+                            )
+                        )
+                        .padding(
+                            vertical = Dimension.SMALL_PADDING1,
+                            horizontal = Dimension.MEDIUM_PADDING1
+                        )
+                ) {
+                    Text(
+                        text = if(isConnect){
+                            "Followed/Connected"
+                        } else {
+                            "No Connection"
+                        },
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.W800,
+                            fontSize = 15.sp
+                        ),
+                        color = colorResource(
+                            id = R.color.white
+                        )
+                    )
+                }
             }
 
             IconButton(
@@ -171,7 +218,8 @@ fun SearchFriendItemPreview(){
                     userEmail = "wqerew@aree.com",
                     userPhoneNumber = "2534563"
                 ),
-                onAddFriend = {}
+                onAddFriend = {},
+                isConnect = false
             )
         }
     }

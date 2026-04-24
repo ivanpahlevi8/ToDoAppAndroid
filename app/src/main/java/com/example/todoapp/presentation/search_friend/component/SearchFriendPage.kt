@@ -39,12 +39,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.todoapp.R
 import com.example.todoapp.core.value.Dimension
+import com.example.todoapp.domain.models.SearchFriendModel
 import com.example.todoapp.domain.models.UserModel
 import com.example.todoapp.ui.theme.ToDoAppTheme
 
 @Composable
 fun SearchFriendPage(
-    userItem : List<UserModel>,
+    userItem : List<SearchFriendModel>,
     onBack : () -> Unit,
     onSearch : (String) -> Unit,
     onAddFriend : (String) -> Unit,
@@ -182,10 +183,11 @@ fun SearchFriendPage(
             ) {
                 index : Int ->
                 SearchFriendItem(
-                    userItem = userItem[index],
+                    userItem = userItem[index].userModel,
                     onAddFriend = {
                         friendId -> onAddFriend(friendId)
-                    }
+                    },
+                    isConnect = userItem[index].isConnected
                 )
             }
         }
@@ -205,14 +207,17 @@ fun SearchFriendPagePreview() {
         ) {
             SearchFriendPage(
                 userItem = listOf(
-                    UserModel(
-                        userFirstName = "ivan",
-                        userName = "ivanpahlevi8",
-                        userLastName = "indirsyah",
-                        userCreatedAt = "2026-03-31T06:51:02.3742565",
-                        userId = "d6f7b560-3469-4742-9ae0-be4bfdadbdca",
-                        userEmail = "wqerew@aree.com",
-                        userPhoneNumber = "2534563"
+                    SearchFriendModel(
+                        userModel = UserModel(
+                            userFirstName = "ivan",
+                            userName = "ivanpahlevi8",
+                            userLastName = "indirsyah",
+                            userCreatedAt = "2026-03-31T06:51:02.3742565",
+                            userId = "d6f7b560-3469-4742-9ae0-be4bfdadbdca",
+                            userEmail = "wqerew@aree.com",
+                            userPhoneNumber = "2534563"
+                        ),
+                        isConnected = true
                     )
                 ),
                 onBack = {},

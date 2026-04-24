@@ -78,4 +78,11 @@ interface ConnectionRemoteAPI {
     // function to get requested user connection
     @GET("api/Connection/get-reques-connection")
     suspend fun getRequestConnectionToUser(@Query("userId") userId: String) : ResponseDto<List<SendConnectionModel>>
+
+    // function to get is connected status
+    @GET("api/Connection/get-is-connected")
+    suspend fun getIsConnectedStatus(
+        @Query("userId") userId : String,
+        @Query("userConnectedId") userConnectedId : String
+    ) : ResponseDto<Boolean>
 }

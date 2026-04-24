@@ -32,6 +32,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat.getDrawable
 import com.example.todoapp.R
 import com.example.todoapp.core.value.Dimension
+import com.example.todoapp.domain.models.SearchFriendModel
 import com.example.todoapp.domain.models.UserModel
 import com.example.todoapp.presentation.search_friend.component.SearchFriendPage
 import com.example.todoapp.presentation.search_friend.component.SearchFriendPageShimmer
@@ -43,6 +44,8 @@ fun SearchFriendScreen(
     onEvent : (SearchFriendEvent) -> Unit,
     searchState : SearchFriendState,
     addFriendState : SearchFriendState,
+    updateAddFriendState : (SearchFriendState) -> Unit,
+    updateSearchFriendState : (SearchFriendState) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -50,11 +53,11 @@ fun SearchFriendScreen(
     ) {
         when(searchState){
             is SearchFriendState.DataState<*> -> {
-                val getData = searchState.data
+                val getData = searchState.data as SearchFriendModel
 
                 SearchFriendPage(
                     userItem = listOf(
-                        getData as UserModel
+                        getData as SearchFriendModel
                     ),
                     onBack = {
                         onBack()
@@ -78,22 +81,126 @@ fun SearchFriendScreen(
             is SearchFriendState.ErrorState -> {
                 val errMsg = searchState.errMsg
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = errMsg,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.W600,
-                            fontSize = 18.sp
-                        ),
-                        color = colorResource(
-                            id = R.color.error_color
+                SearchFriendPage(
+                    userItem = listOf(
+                    ),
+                    onBack = {
+                        onBack()
+                    },
+                    onSearch = {
+                            text -> onEvent(
+                        SearchFriendEvent.OnSearch(
+                            userName = text
                         )
                     )
+                    },
+                    onAddFriend = {
+                            friendId -> onEvent(
+                        SearchFriendEvent.OnAddFriend(
+                            friendId
+                        )
+                    )
+                    }
+                )
+
+                Dialog(
+                    onDismissRequest = {
+                        updateSearchFriendState(
+                            SearchFriendState.IdleState
+                        )
+                    }
+                ) {
+                    Surface(
+                        color = colorResource(
+                            id = R.color.card_information_background1
+                        ),
+                        shape = MaterialTheme.shapes.medium
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(
+                                    vertical = Dimension.SMALL_PADDING2,
+                                    horizontal = Dimension.MEDIUM_PADDING2
+                                ),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = rememberDrawablePainter(
+                                    drawable = getDrawable(
+                                        LocalContext.current,
+                                        R.drawable.x_error
+                                    ),
+                                ),
+                                contentDescription = "Check Gift",
+                                modifier = Modifier
+                                    .size(70.dp)
+                                    .clip(
+                                        shape = CircleShape
+                                    )
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.MEDIUM_PADDING1
+                                    )
+                            )
+
+                            Text(
+                                text = errMsg,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.W900,
+                                    fontSize = 20.sp,
+                                ),
+                                color = colorResource(
+                                    id = R.color.text_title
+                                ),
+                                textAlign = TextAlign.Justify,
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        Dimension.MEDIUM_PADDING2
+                                    )
+                            )
+
+                            Button(
+                                onClick = {
+                                    updateSearchFriendState(
+                                        SearchFriendState.IdleState
+                                    )
+                                },
+                                colors = ButtonColors(
+                                    containerColor = colorResource(
+                                        id = R.color.error_color
+                                    ),
+                                    disabledContentColor = colorResource(
+                                        id = R.color.error_color
+                                    ),
+                                    contentColor = colorResource(
+                                        id = R.color.white
+                                    ),
+                                    disabledContainerColor = colorResource(
+                                        id = R.color.white
+                                    )
+                                )
+                            ) {
+                                Text(
+                                    text = "Ok",
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontWeight = FontWeight.W900,
+                                        fontSize = 16.sp,
+                                    ),
+                                    color = colorResource(
+                                        id = R.color.text_title
+                                    ),
+                                    textAlign = TextAlign.Justify,
+                                )
+                            }
+                        }
+                    }
                 }
             }
             is SearchFriendState.LoadingState -> {
@@ -126,7 +233,11 @@ fun SearchFriendScreen(
         when(addFriendState) {
             is SearchFriendState.DataState<*> -> {
                 Dialog(
-                    onDismissRequest = {}
+                    onDismissRequest = {
+                        updateAddFriendState(
+                            SearchFriendState.IdleState
+                        )
+                    }
                 ) {
                     Surface(
                         modifier = Modifier
@@ -187,7 +298,11 @@ fun SearchFriendScreen(
                             )
 
                             Button(
-                                onClick = {},
+                                onClick = {
+                                    updateAddFriendState(
+                                        SearchFriendState.IdleState
+                                    )
+                                },
                                 colors = ButtonColors(
                                     containerColor = colorResource(
                                         id = R.color.excellent_end
@@ -221,7 +336,11 @@ fun SearchFriendScreen(
             }
             is SearchFriendState.ErrorState -> {
                 Dialog(
-                    onDismissRequest = {}
+                    onDismissRequest = {
+                        updateAddFriendState(
+                            SearchFriendState.IdleState
+                        )
+                    }
                 ) {
                     Surface(
                         modifier = Modifier
@@ -282,7 +401,11 @@ fun SearchFriendScreen(
                             )
 
                             Button(
-                                onClick = {},
+                                onClick = {
+                                    updateAddFriendState(
+                                        SearchFriendState.IdleState
+                                    )
+                                },
                                 colors = ButtonColors(
                                     containerColor = colorResource(
                                         id = R.color.error_color

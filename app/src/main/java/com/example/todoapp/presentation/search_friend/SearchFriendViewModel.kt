@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.core.value.Constants
 import com.example.todoapp.data.dtos.SendConnectionRequestDto
+import com.example.todoapp.domain.models.SearchFriendModel
 import com.example.todoapp.domain.usecase.authorization_usecase.AuthUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.UserConnectionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,8 +46,21 @@ class SearchFriendViewModel @Inject constructor(
                             userName = event.userName
                         )
 
+                        Log.d("CHECK", "Current user login : ${sharedPreferences.getString(Constants.USER_ID, "") ?: ""}")
+                        Log.d("CHECK", "Connection user : ${userModel.userId}")
+
+                        val isConnected = userConnectionUseCase.getIsConnectedStatusUseCase(
+                            userId = sharedPreferences.getString(Constants.USER_ID, "") ?: "",
+                            userConnectionId = userModel.userId
+                        )
+
+                        val searchFriend = SearchFriendModel(
+                            userModel = userModel,
+                            isConnected = isConnected
+                        )
+
                         _searchFriendState = SearchFriendState.DataState(
-                            data = userModel
+                            data = searchFriend
                         )
                     } catch (e : Exception) {
                         val errMsg = "Error happen : ${e.message}"
@@ -59,7 +73,6 @@ class SearchFriendViewModel @Inject constructor(
             }
 
             is SearchFriendEvent.OnAddFriend -> {
-                Log.d("CHECK", "Add firend on view mdodel event")
                 _addFriendState = SearchFriendState.LoadingState
 
                 viewModelScope.launch {
@@ -86,5 +99,13 @@ class SearchFriendViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun updateAddFriendState(newState : SearchFriendState){
+        _addFriendState = newState
+    }
+
+    fun updateSearchFriendState(newState: SearchFriendState){
+        _searchFriendState = newState
     }
 }
