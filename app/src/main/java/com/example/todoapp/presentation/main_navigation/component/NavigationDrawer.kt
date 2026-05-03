@@ -54,6 +54,7 @@ fun NavigationDrawer(
     onProfile : () -> Unit,
     onLogout : () -> Unit,
     onFriendsPage : () -> Unit,
+    onTeamPage : () -> Unit,
 ) {
     val context = LocalContext.current
     val sharedPrefs = remember {
@@ -158,7 +159,7 @@ fun NavigationDrawer(
                             )
                         },
                         onClick = {
-                            
+                            onTeamPage()
                         },
                         icon = {
                             Icon(

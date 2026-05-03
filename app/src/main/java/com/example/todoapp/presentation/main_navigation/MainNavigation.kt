@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,11 +35,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.todoapp.R
+import com.example.todoapp.core.value.Dimension
 import com.example.todoapp.presentation.main_navigation.component.NavBarItem
 import com.example.todoapp.presentation.main_navigation.component.NavigationDrawer
 import com.example.todoapp.presentation.nv_graph.Routes
 import com.example.todoapp.presentation.search_friend.SearchFriendScreen
 import com.example.todoapp.presentation.search_friend.SearchFriendViewModel
+import com.example.todoapp.presentation.team_list.TeamListScreen
+import com.example.todoapp.presentation.team_list.TeamListViewModel
 import com.example.todoapp.presentation.user_connection.UserConnectionScreen
 import com.example.todoapp.presentation.user_connection.UserConnectionViewModel
 import kotlinx.coroutines.launch
@@ -66,6 +71,7 @@ fun MainNavigation(
         Routes.MovieRecommendationRoutes.route -> {0}
         Routes.SearchFriendRoutes.route -> {1}
         Routes.UserConnectionRoutes.route -> {2}
+        Routes.TeamListRoutes.route -> {3}
         else -> {0}
     }
 
@@ -79,6 +85,16 @@ fun MainNavigation(
         }
         else -> {
             true
+        }
+    }
+
+    // create state for showing floating action button
+    val showFloatingButton : Boolean = when(getCurrentRoute) {
+        Routes.TeamListRoutes.route -> {
+            true
+        }
+        else -> {
+            false
         }
     }
 
@@ -158,6 +174,18 @@ fun MainNavigation(
                                             )
                                         }
                                     }
+                                    3 -> {
+                                        IconButton(onClick = {
+                                            navController.popBackStack()
+                                        }) {
+                                            Icon(  //Show Menu Icon on TopBar
+                                                painter = painterResource(
+                                                    id = R.drawable.arrow_back_ic
+                                                ),
+                                                contentDescription = "Back"
+                                            )
+                                        }
+                                    }
                                 }
                             },
                             actions = {
@@ -183,7 +211,7 @@ fun MainNavigation(
                             }
                         )
                     }
-                }
+                },
             ){
                 val bottomPaddingValue = it.calculateBottomPadding()
                 val topPaddingValue = it.calculateTopPadding()
@@ -282,6 +310,29 @@ fun MainNavigation(
                             }
                         )
                     }
+
+                    // route for team list
+                    composable(
+                        route = Routes.TeamListRoutes.route
+                    ) {
+                        val teamListViewMode : TeamListViewModel = hiltViewModel()
+
+                        TeamListScreen(
+                            state = teamListViewMode.listTeamState.value,
+                            userId = teamListViewMode.userId,
+                            onEvent = {
+                                event -> teamListViewMode.onEvent(
+                                    event = event
+                                )
+                            },
+                            createTeamState = teamListViewMode.createTeamState.value,
+                            updateCreateTeamState = {
+                                newState -> teamListViewMode.updateCreateTeamState(
+                                    newState = newState
+                                )
+                            }
+                        )
+                    }
                 }
             }
         },
@@ -292,6 +343,17 @@ fun MainNavigation(
         onFriendsPage = {
             navController.navigate(
                 Routes.SearchFriendRoutes.route
+            )
+
+            scope.launch {
+                drawerState.apply {
+                    close()
+                }
+            }
+        },
+        onTeamPage = {
+            navController.navigate(
+                Routes.TeamListRoutes.route
             )
 
             scope.launch {

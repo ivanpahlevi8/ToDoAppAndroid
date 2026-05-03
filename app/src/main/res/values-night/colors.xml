@@ -47,6 +47,9 @@
     <color name="bad_start">#FFCC8400</color>
     <color name="bad_end">#FFCC4F38</color>
 
+    <color name="blue_light_start">#FF1565C0</color>
+    <color name="blue_light_end">#FF002171</color>
+
     **Quick tip:** If you are placing white text (`#FFFFFF`) on top of these colors, the darker/muted set will give you much better contrast in dark mode!
 
     <color name="tab_container_bg">#1F2937</color>

@@ -7,11 +7,14 @@ import com.example.todoapp.core.value.Constants
 import com.example.todoapp.data.manager.LocalUserManagerImpl
 import com.example.todoapp.data.remote.AuthRemoteAPI
 import com.example.todoapp.data.remote.ConnectionRemoteAPI
+import com.example.todoapp.data.remote.TeamRemoteAPI
 import com.example.todoapp.data.repositories.AuthRemoteRepositoryImpl
 import com.example.todoapp.data.repositories.ConnectionRemoteRepositoryImpl
+import com.example.todoapp.data.repositories.TeamRemoteRepositoryImpl
 import com.example.todoapp.domain.manager.LocalUserManager
 import com.example.todoapp.domain.repositories.AuthRemoteRepository
 import com.example.todoapp.domain.repositories.ConnectionRemoteRepository
+import com.example.todoapp.domain.repositories.TeamRemoteRepository
 import com.example.todoapp.domain.usecase.authorization_usecase.AuthUseCase
 import com.example.todoapp.domain.usecase.authorization_usecase.GetUserIdUseCase
 import com.example.todoapp.domain.usecase.authorization_usecase.GetUserUseCase
@@ -23,6 +26,11 @@ import com.example.todoapp.domain.usecase.local_user_manager_usecase.LocalUserMa
 import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserLogInUseCase
 import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserLogOut
 import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserOnBoardUseCase
+import com.example.todoapp.domain.usecase.team_usecase.AssignUserTeamUseCase
+import com.example.todoapp.domain.usecase.team_usecase.CreateTeamUseCase
+import com.example.todoapp.domain.usecase.team_usecase.GetAllTeamUseCase
+import com.example.todoapp.domain.usecase.team_usecase.GetTeamUseCase
+import com.example.todoapp.domain.usecase.team_usecase.TeamUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.AcceptUserConnectionUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.DeclineUserUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.GetAllConnectionUseCase
@@ -209,6 +217,56 @@ class ECommerceAppModule {
             ),
             getIsConnectedStatusUseCase = GetIsConnectedStatusUseCase(
                 connectionRemoteRepository = connectionRemoteRepository
+            )
+        )
+    }
+
+    // provides instance for team remote api
+    @Provides
+    @Singleton
+    fun providesTeamRemoteAPI() : TeamRemoteAPI {
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(180, TimeUnit.SECONDS)
+            .readTimeout(180, TimeUnit.SECONDS)
+            .writeTimeout(180, TimeUnit.SECONDS)
+            .build()
+        return Retrofit.Builder()
+            .baseUrl(Constants.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(TeamRemoteAPI::class.java)
+    }
+
+    // provides instance for team remote repository
+    @Provides
+    @Singleton
+    fun providesTeamRemoteRepository(
+        teamRemoteAPI: TeamRemoteAPI
+    ) : TeamRemoteRepository {
+        return TeamRemoteRepositoryImpl(
+            teamRemoteAPI = teamRemoteAPI
+        )
+    }
+
+    // provides instance for team remote use case
+    @Provides
+    @Singleton
+    fun providesTeamRemoteUseCase(
+        teamRemoteRepository: TeamRemoteRepository
+    ) : TeamUseCase {
+        return TeamUseCase(
+            createTeamUseCase = CreateTeamUseCase(
+                teamRemoteRepository = teamRemoteRepository
+            ),
+            getAllTeamUseCase = GetAllTeamUseCase(
+                teamRemoteRepository = teamRemoteRepository
+            ),
+            getTeamUseCase = GetTeamUseCase(
+                teamRemoteRepository = teamRemoteRepository
+            ),
+            assignUserTeamUseCase = AssignUserTeamUseCase(
+                teamRemoteRepository = teamRemoteRepository
             )
         )
     }

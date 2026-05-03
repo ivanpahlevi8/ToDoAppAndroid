@@ -16,4 +16,6 @@ sealed class Routes(
 
     object SearchFriendRoutes : Routes(route = "search-friend-route")
     object UserConnectionRoutes : Routes(route = "user-connection-route")
+
+    object TeamListRoutes : Routes(route = "team-list-route")
 }
