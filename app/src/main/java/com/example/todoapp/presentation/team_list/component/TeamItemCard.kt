@@ -44,6 +44,7 @@ import com.example.todoapp.ui.theme.ToDoAppTheme
 fun TeamItemCard(
     teamModel: TeamModel,
     isTeamLead : Boolean,
+    onTeamDetail : (Int) -> Unit,
 ){
     Box(
         modifier = Modifier
@@ -206,6 +207,15 @@ fun TeamItemCard(
                 // info button
                 Box(
                     modifier = Modifier
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = rememberRipple()
+                        ){
+                            onTeamDetail(teamModel.teamId ?: 0)
+                        }
+                        .padding(
+                            Dimension.SMALL_PADDING1
+                        )
                         .shadow(
                             elevation = 2.dp,
                             shape = RoundedCornerShape(
@@ -225,12 +235,6 @@ fun TeamItemCard(
                         .padding(
                             Dimension.SMALL_PADDING1
                         )
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple()
-                        ){
-
-                        }
                 ) {
                     Icon(
                         painter = painterResource(
@@ -330,6 +334,7 @@ fun TeamItemListPreview(){
                     ),
                 ),
                 isTeamLead = true,
+                onTeamDetail = {}
             )
         }
     }

@@ -54,7 +54,8 @@ fun TeamListScreen(
     createTeamState : TeamListState,
     userId : String,
     onEvent : (TeamListEvent) -> Unit,
-    updateCreateTeamState : (TeamListState) -> Unit
+    updateCreateTeamState : (TeamListState) -> Unit,
+    onTeamDetail : (Int) -> Unit,
 ){
     // create state for showing the create team dialog
     var showCreateTeamDialog by remember { mutableStateOf(false) }
@@ -108,7 +109,8 @@ fun TeamListScreen(
 
                     TeamItemList(
                         itemList = getData as List<TeamModel>,
-                        userId = userId
+                        userId = userId,
+                        onTeamDetail = onTeamDetail
                     )
                 }
                 is TeamListState.ErrorState -> {

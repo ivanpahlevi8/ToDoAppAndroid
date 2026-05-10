@@ -8,7 +8,7 @@ import com.google.gson.Gson
 import retrofit2.HttpException
 import kotlin.coroutines.cancellation.CancellationException
 
-class TeamRoleRemoteRepository(
+class TeamRoleRemoteRepositoryImpl(
     private val teamRoleRemoteAPI: TeamRoleRemoteAPI
 ) : TeamRoleRemoteRepository {
     override suspend fun CreateTeamRole(teamRoleDto: TeamRoleDto): TeamRoleDto {

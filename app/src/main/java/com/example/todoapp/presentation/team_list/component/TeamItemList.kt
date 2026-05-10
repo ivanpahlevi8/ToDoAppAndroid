@@ -12,6 +12,7 @@ import com.example.todoapp.domain.models.teams.TeamModel
 fun TeamItemList(
     itemList : List<TeamModel>,
     userId : String,
+    onTeamDetail : (Int) -> Unit,
 ){
     LazyColumn(
         modifier = Modifier
@@ -25,7 +26,8 @@ fun TeamItemList(
             index : Int ->
             TeamItemCard(
                 teamModel = itemList[index],
-                isTeamLead = itemList[index].teamLeaderId == userId
+                isTeamLead = itemList[index].teamLeaderId == userId,
+                onTeamDetail = onTeamDetail
             )
         }
     }

@@ -38,18 +38,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todoapp.R
+import com.example.todoapp.core.component.shimmerEffect
 import com.example.todoapp.core.value.Dimension
-import com.example.todoapp.data.dtos.TeamRoleDto
-import com.example.todoapp.domain.models.UserModel
 import com.example.todoapp.ui.theme.ToDoAppTheme
 
 @Composable
-fun TeamMemberItem(
-    userItem : UserModel,
-    teamRoleDto: TeamRoleDto,
-    onInfoUser : (String) -> Unit,
-    onDeleteMember : (String) -> Unit,
-){
+fun TeamMemberItemShimmer(){
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -119,15 +113,18 @@ fun TeamMemberItem(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(
-                    text = "${userItem.userFirstName} ${userItem.userLastName}",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.W800,
-                        fontSize = 16.sp
-                    ),
-                    color = colorResource(
-                        id = R.color.text_title,
-                    )
+                Box(
+                    modifier = Modifier
+                        .height(
+                            30.dp
+                        )
+                        .width(170.dp)
+                        .clip(
+                            shape = RoundedCornerShape(
+                                6.dp
+                            )
+                        )
+                        .shimmerEffect()
                 )
 
                 Spacer(
@@ -161,20 +158,24 @@ fun TeamMemberItem(
                             )
                         )
                         .padding(
-                            vertical = 1.dp,
+                            vertical = 2.dp,
                             horizontal = Dimension.MEDIUM_PADDING1
                         )
                 ) {
-                    Text(
-                        text = teamRoleDto.roleName,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.W700,
-                            fontSize = 9.sp,
-                        ),
-                        color = colorResource(
-                            id = R.color.white,
-                        )
+                    Box(
+                        modifier = Modifier
+                            .height(
+                                23.dp
+                            )
+                            .width(80.dp)
+                            .clip(
+                                shape = RoundedCornerShape(
+                                    8.dp
+                                )
+                            )
+                            .shimmerEffect()
                     )
+
                 }
 
                 Spacer(
@@ -207,16 +208,20 @@ fun TeamMemberItem(
                             )
                     )
 
-                    Text(
-                        text = userItem.userEmail,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.W800,
-                            fontSize = 10.sp
-                        ),
-                        color = colorResource(
-                            id = R.color.text_title
-                        )
+                    Box(
+                        modifier = Modifier
+                            .height(
+                                25.dp
+                            )
+                            .width(120.dp)
+                            .clip(
+                                shape = RoundedCornerShape(
+                                    6.dp
+                                )
+                            )
+                            .shimmerEffect()
                     )
+
                 }
             }
 
@@ -236,9 +241,6 @@ fun TeamMemberItem(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = rememberRipple()
                         ) {
-                            onInfoUser(
-                                userItem.userId
-                            )
                         }
                         .padding(
                             Dimension.SMALL_PADDING2
@@ -282,9 +284,6 @@ fun TeamMemberItem(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = rememberRipple()
                         ) {
-                            onDeleteMember(
-                                userItem.userId
-                            )
                         }
                         .padding(
                             Dimension.SMALL_PADDING2
@@ -329,7 +328,7 @@ fun TeamMemberItem(
 @Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun TeamMemberItemPreview(){
+fun TeamMemberItemShimmerPreview(){
     ToDoAppTheme {
         Box(
             modifier = Modifier
@@ -340,25 +339,7 @@ fun TeamMemberItemPreview(){
                     Dimension.SMALL_PADDING2
                 )
         ) {
-            TeamMemberItem(
-                userItem = UserModel(
-                    userFirstName = "Ivan",
-                    userLastName = "Indirsyah",
-                    userCreatedAt = "",
-                    userId = "",
-                    userName = "",
-                    userEmail = "ivan.indirsya@gmail.com",
-                    userPhoneNumber = ""
-                ),
-                teamRoleDto = TeamRoleDto(
-                    teamRoleId = 1,
-                    roleName = "Front End Developer",
-                    teamId = 5,
-                    createdAt = ""
-                ),
-                onInfoUser = {},
-                onDeleteMember = {}
-            )
+            TeamMemberItemShimmer()
         }
     }
 }

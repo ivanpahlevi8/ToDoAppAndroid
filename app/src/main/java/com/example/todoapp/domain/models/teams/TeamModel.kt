@@ -1,5 +1,6 @@
 package com.example.todoapp.domain.models.teams
 
+import com.example.todoapp.data.dtos.TeamRoleDto
 import com.example.todoapp.domain.models.UserModel
 import com.google.gson.annotations.SerializedName
 
@@ -20,5 +21,11 @@ data class TeamModel(
     var teamLeader : UserModel?,
 
     @SerializedName(value = "userMember")
-    val teamUserMember : List<UserModel>? = listOf()
+    val teamUserMember : List<UserModel>? = listOf(),
+
+    @SerializedName(value = "roleMember")
+    val roleMember : List<TeamRoleDto>? = listOf(),
+
+    @SerializedName(value = "createdAt")
+    val createdAt : String? = "",
 )

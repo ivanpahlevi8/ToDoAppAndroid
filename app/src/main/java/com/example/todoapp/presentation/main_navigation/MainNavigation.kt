@@ -1,5 +1,7 @@
 package com.example.todoapp.presentation.main_navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,10 +32,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.todoapp.R
 import com.example.todoapp.core.value.Dimension
 import com.example.todoapp.presentation.main_navigation.component.NavBarItem
@@ -41,12 +45,15 @@ import com.example.todoapp.presentation.main_navigation.component.NavigationDraw
 import com.example.todoapp.presentation.nv_graph.Routes
 import com.example.todoapp.presentation.search_friend.SearchFriendScreen
 import com.example.todoapp.presentation.search_friend.SearchFriendViewModel
+import com.example.todoapp.presentation.team_detail.TeamDetailScreen
+import com.example.todoapp.presentation.team_detail.TeamDetailViewModel
 import com.example.todoapp.presentation.team_list.TeamListScreen
 import com.example.todoapp.presentation.team_list.TeamListViewModel
 import com.example.todoapp.presentation.user_connection.UserConnectionScreen
 import com.example.todoapp.presentation.user_connection.UserConnectionViewModel
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNavigation(
@@ -330,7 +337,24 @@ fun MainNavigation(
                                 newState -> teamListViewMode.updateCreateTeamState(
                                     newState = newState
                                 )
+                            },
+                            onTeamDetail = {
+                                teamId : Int -> navController.navigate(
+                                    Routes.TeamDetailRoutes.route + "/$teamId"
+                                )
                             }
+                        )
+                    }
+
+                    // route for team detail
+                    composable(
+                        route = Routes.TeamDetailRoutes.route + "/{teamId}",
+                        arguments = listOf(navArgument("teamId"){type= NavType.StringType})
+                    ){
+                        val teamDetailViewModel : TeamDetailViewModel = hiltViewModel()
+
+                        TeamDetailScreen(
+                            state = teamDetailViewModel.teamDetailState.value
                         )
                     }
                 }

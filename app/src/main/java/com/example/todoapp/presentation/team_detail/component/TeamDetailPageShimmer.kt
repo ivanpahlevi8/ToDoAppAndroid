@@ -1,8 +1,6 @@
 package com.example.todoapp.presentation.team_detail.component
 
 import android.content.res.Configuration
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,13 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,27 +31,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todoapp.R
+import com.example.todoapp.core.component.shimmerEffect
 import com.example.todoapp.core.value.Dimension
-import com.example.todoapp.data.dtos.TeamRoleDto
-import com.example.todoapp.domain.models.UserModel
-import com.example.todoapp.domain.models.teams.TeamModel
 import com.example.todoapp.ui.theme.ToDoAppTheme
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TeamDetailPage(
-    teamModel: TeamModel,
-    roleList : List<TeamRoleDto>
-){
+fun TeamDetailPageShimmer(){
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                horizontal = Dimension.SMALL_PADDING1
-            ),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
@@ -122,15 +109,18 @@ fun TeamDetailPage(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(
-                    text = teamModel.teamName ?: "",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.W800,
-                        fontSize = 22.sp
-                    ),
-                    color = colorResource(
-                        id = R.color.text_title
-                    )
+                Box(
+                    modifier = Modifier
+                        .height(
+                            40.dp
+                        )
+                        .width(140.dp)
+                        .clip(
+                            shape = RoundedCornerShape(
+                                8.dp
+                            )
+                        )
+                        .shimmerEffect()
                 )
 
                 Spacer(
@@ -209,27 +199,20 @@ fun TeamDetailPage(
                                 )
                         )
                         .padding(
-                            vertical = Dimension.SMALL_PADDING1,
+                            vertical = Dimension.SMALL_PADDING2,
                             horizontal = Dimension.SMALL_PADDING2
                         )
                 ){
-                    val formattedDate = remember(teamModel.createdAt) {
-                        try {
-                            teamModel.createdAt?.let {
-                                OffsetDateTime.parse(it)
-                                    .format(DateTimeFormatter.ofPattern("EEEE, dd MMM yyyy", Locale.getDefault()))
-                            } ?: "Date unknown" // Fallback text
-                        } catch (e: Exception) {
-                            "Invalid date" // Prevent crash on bad string format
-                        }
-                    }
-                    Text(
-                        text = formattedDate,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.Bold, // Using FontWeight.Bold is more readable than W700
-                            fontSize = 18.sp,
-                        ),
-                        color = colorResource(id = R.color.white)
+                    Box(
+                        modifier = Modifier
+                            .height(25.dp)
+                            .width(100.dp)
+                            .clip(
+                                shape = RoundedCornerShape(
+                                    6.dp
+                                )
+                            )
+                            .shimmerEffect()
                     )
                 }
             }
@@ -242,10 +225,7 @@ fun TeamDetailPage(
                 )
         )
 
-        TeamRoleItemList(
-            roleList = roleList,
-            showTeamRoleDialog = {}
-        )
+        TeamRoleItemListShimmer()
 
         Spacer(
             modifier = Modifier
@@ -258,19 +238,15 @@ fun TeamDetailPage(
             modifier = Modifier
                 .weight(1f)
         ) {
-            TeamMemberItemList(
-                teamMember = teamModel.teamUserMember ?: listOf(),
-                roleMember = teamModel.roleMember ?: listOf(),
-            )
+            TeamMemberItemListShimmer()
         }
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_TYPE_APPLIANCE)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun TeamDetailPagePreview() {
+fun TeamDetailPageShimmerPreview(){
     ToDoAppTheme {
         Box(
             modifier = Modifier
@@ -281,74 +257,7 @@ fun TeamDetailPagePreview() {
                     Dimension.SMALL_PADDING2
                 )
         ) {
-            TeamDetailPage(
-                teamModel = TeamModel(
-                    teamName = "Mobile Developer Team",
-                    teamLeader = null,
-                    createdAt = "2026-05-07T02:10:03.7602489+00:00",
-                    teamUserMember = listOf(
-                        UserModel(
-                            userFirstName = "Ivan",
-                            userLastName = "Indirsyah",
-                            userCreatedAt = "",
-                            userId = "",
-                            userName = "",
-                            userEmail = "ivan.indirsya@gmail.com",
-                            userPhoneNumber = ""
-                        ),
-                        UserModel(
-                            userFirstName = "Ivan",
-                            userLastName = "Indirsyah",
-                            userCreatedAt = "",
-                            userId = "",
-                            userName = "",
-                            userEmail = "ivan.indirsya@gmail.com",
-                            userPhoneNumber = ""
-                        ),
-                        UserModel(
-                            userFirstName = "Ivan",
-                            userLastName = "Indirsyah",
-                            userCreatedAt = "",
-                            userId = "",
-                            userName = "",
-                            userEmail = "ivan.indirsya@gmail.com",
-                            userPhoneNumber = ""
-                        )
-                    ),
-                    roleMember = listOf(
-                        TeamRoleDto(
-                            roleName = "Software Engineer",
-                            teamId = 1
-                        ),
-                        TeamRoleDto(
-                            roleName = "Software Engineer",
-                            teamId = 1
-                        ),
-                        TeamRoleDto(
-                            roleName = "Software Engineer",
-                            teamId = 1
-                        )
-                    )
-                ),
-                roleList = listOf(
-                    TeamRoleDto(
-                        roleName = "Software Engineer",
-                        teamId = 1
-                    ),
-                    TeamRoleDto(
-                        roleName = "Software Engineer",
-                        teamId = 1
-                    ),
-                    TeamRoleDto(
-                        roleName = "Software Engineer",
-                        teamId = 1
-                    ),
-                    TeamRoleDto(
-                        roleName = "Software Engineer",
-                        teamId = 1
-                    ),
-                )
-            )
+            TeamDetailPageShimmer()
         }
     }
 }
