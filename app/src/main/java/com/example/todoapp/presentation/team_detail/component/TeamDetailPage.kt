@@ -242,6 +242,25 @@ fun TeamDetailPage(
                 )
         )
 
+        TeamLeaderItem(
+            teamLead = teamModel.teamLeader ?: UserModel(
+                userFirstName = "Ivan",
+                userLastName = "Indirsyah",
+                userCreatedAt = "",
+                userId = "",
+                userName = "ivanpahlevi8",
+                userEmail = "ivan.indirsya@gmail.com",
+                userPhoneNumber = "234325435"
+            )
+        )
+
+        Spacer(
+            modifier = Modifier
+                .height(
+                    Dimension.MEDIUM_PADDING3
+                )
+        )
+
         TeamRoleItemList(
             roleList = roleList,
             showTeamRoleDialog = {}
@@ -284,7 +303,15 @@ fun TeamDetailPagePreview() {
             TeamDetailPage(
                 teamModel = TeamModel(
                     teamName = "Mobile Developer Team",
-                    teamLeader = null,
+                    teamLeader = UserModel(
+                        userFirstName = "Ivan",
+                        userLastName = "Indirsyah",
+                        userCreatedAt = "",
+                        userId = "",
+                        userName = "ivanpahlevi8",
+                        userEmail = "ivan.indirsya@gmail.com",
+                        userPhoneNumber = "234325435"
+                    ),
                     createdAt = "2026-05-07T02:10:03.7602489+00:00",
                     teamUserMember = listOf(
                         UserModel(
