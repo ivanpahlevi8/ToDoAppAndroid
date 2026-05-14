@@ -69,6 +69,8 @@ fun TeamLeaderItem(
                         ),
                         colorResource(
                             id = R.color.blue_light_end
+                        ).copy(
+                            alpha = 0.6F
                         )
                     ),
                     start = Offset(0F, Float.POSITIVE_INFINITY),
@@ -76,8 +78,8 @@ fun TeamLeaderItem(
                 )
             )
             .padding(
-                vertical = Dimension.SMALL_PADDING2,
-                horizontal = Dimension.MEDIUM_PADDING1,
+                vertical = Dimension.MEDIUM_PADDING1,
+                horizontal = Dimension.SMALL_PADDING2,
             )
     ) {
         Column(
@@ -315,6 +317,9 @@ fun TeamLeaderItem(
 
                     Box(
                         modifier = Modifier
+                            .clip(
+                                shape = CircleShape
+                            )
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = rememberRipple()

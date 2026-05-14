@@ -8,6 +8,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todoapp.domain.models.UserModel
+import com.example.todoapp.domain.usecase.authorization_usecase.AuthUseCase
 import com.example.todoapp.domain.usecase.team_role_usecase.TeamRoleUseCase
 import com.example.todoapp.domain.usecase.team_usecase.TeamUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +21,7 @@ import kotlinx.coroutines.launch
 class TeamDetailViewModel @Inject constructor(
     private val teamUseCase: TeamUseCase,
     private val teamRoleUseCase: TeamRoleUseCase,
+    private val authUseCase: AuthUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     // create state for team detail
@@ -35,11 +38,19 @@ class TeamDetailViewModel @Inject constructor(
                 val data = teamUseCase.getTeamUseCase(
                     teamId = (savedStateHandle.get<String>("teamId") ?: "0").toInt()
                 )
-
+ 
                 // get role model
                 val getTeamRole = teamRoleUseCase.getAllTeamRoleUseCase(
                     teamId = (savedStateHandle.get<String>("teamId") ?: "0").toInt()
                 )
+
+                // get team leader data
+                val getTeamLeader : UserModel = authUseCase.getUserIdUseCase(
+                    userId = data.teamLeaderId ?: ""
+                )
+
+                // update team leader on data
+                data.teamLeader = getTeamLeader
 
                 _teamDetailState = TeamDetailState.DataState(
                     data = data,

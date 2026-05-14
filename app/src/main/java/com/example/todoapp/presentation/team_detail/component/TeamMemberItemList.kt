@@ -139,8 +139,8 @@ fun TeamMemberItemList(
 
                 Box(
                     modifier = Modifier
-                        .padding(
-                            Dimension.SMALL_PADDING2
+                        .clip(
+                            shape = CircleShape
                         )
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
@@ -148,6 +148,9 @@ fun TeamMemberItemList(
                         ) {
 
                         }
+                        .padding(
+                            Dimension.SMALL_PADDING2
+                        )
                         .clip(
                             shape = CircleShape
                         )

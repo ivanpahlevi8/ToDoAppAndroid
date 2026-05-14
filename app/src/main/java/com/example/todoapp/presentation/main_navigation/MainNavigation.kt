@@ -74,12 +74,13 @@ fun MainNavigation(
     val getCurrentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
     // get index selected route
-    val indexSelectedRoute : Int = when(getCurrentRoute) {
-        Routes.MovieRecommendationRoutes.route -> {0}
-        Routes.SearchFriendRoutes.route -> {1}
-        Routes.UserConnectionRoutes.route -> {2}
-        Routes.TeamListRoutes.route -> {3}
-        else -> {0}
+    val indexSelectedRoute: Int = when {
+        getCurrentRoute == Routes.MovieRecommendationRoutes.route -> 0
+        getCurrentRoute == Routes.SearchFriendRoutes.route -> 1
+        getCurrentRoute == Routes.UserConnectionRoutes.route -> 2
+        getCurrentRoute == Routes.TeamListRoutes.route -> 3
+        (getCurrentRoute?.startsWith(Routes.TeamDetailRoutes.route)) ?: false -> 4
+        else -> 0
     }
 
     // create state for showing top app bar or not
@@ -151,6 +152,19 @@ fun MainNavigation(
                                             )
                                         )
                                     }
+                                    4 -> {
+                                        Text(
+                                            text = "Team Detail",
+                                            style = MaterialTheme.typography.titleMedium.copy(
+                                                fontWeight = FontWeight.W600,
+                                                letterSpacing = 1.1.sp,
+                                                fontSize = 20.sp,
+                                            ),
+                                            color = colorResource(
+                                                id = R.color.text_title,
+                                            )
+                                        )
+                                    }
                                 }
                             },
                             navigationIcon = {
@@ -182,6 +196,18 @@ fun MainNavigation(
                                         }
                                     }
                                     3 -> {
+                                        IconButton(onClick = {
+                                            navController.popBackStack()
+                                        }) {
+                                            Icon(  //Show Menu Icon on TopBar
+                                                painter = painterResource(
+                                                    id = R.drawable.arrow_back_ic
+                                                ),
+                                                contentDescription = "Back"
+                                            )
+                                        }
+                                    }
+                                    4 -> {
                                         IconButton(onClick = {
                                             navController.popBackStack()
                                         }) {

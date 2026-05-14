@@ -121,6 +121,9 @@ fun TeamRoleItem(
 
             Box(
                 modifier = Modifier
+                    .clip(
+                        shape = CircleShape
+                    )
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = rememberRipple()

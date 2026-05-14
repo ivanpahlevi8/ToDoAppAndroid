@@ -60,10 +60,10 @@ fun TeamRoleItemList(
                 brush = Brush.linearGradient(
                     colors = listOf(
                         colorResource(
-                            id = R.color.time_line_card_color1
+                            id = R.color.time_line_card_color2
                         ),
                         colorResource(
-                            id = R.color.time_line_card_color2
+                            id = R.color.time_line_card_color3
                         )
                     ),
                     start = Offset(0F, Float.POSITIVE_INFINITY),
@@ -135,8 +135,8 @@ fun TeamRoleItemList(
 
                 Box(
                     modifier = Modifier
-                        .padding(
-                            Dimension.SMALL_PADDING2
+                        .clip(
+                            shape = CircleShape
                         )
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
@@ -144,6 +144,9 @@ fun TeamRoleItemList(
                         ) {
 
                         }
+                        .padding(
+                            Dimension.SMALL_PADDING2
+                        )
                         .clip(
                             shape = CircleShape
                         )
@@ -162,7 +165,10 @@ fun TeamRoleItemList(
                         ),
                         contentDescription = "",
                         modifier = Modifier
-                            .size(18.dp)
+                            .size(18.dp),
+                        tint = colorResource(
+                            id = R.color.black
+                        )
                     )
                 }
             }
