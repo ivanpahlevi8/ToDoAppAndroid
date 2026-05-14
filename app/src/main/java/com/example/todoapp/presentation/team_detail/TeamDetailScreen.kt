@@ -63,5 +63,6 @@ fun TeamDetailScreen(
         is TeamDetailState.LoadingState -> {
             TeamDetailPageShimmer()
         }
+        is TeamDetailState.IdleState -> {}
     }
 }
