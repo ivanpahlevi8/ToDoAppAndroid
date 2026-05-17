@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todoapp.data.dtos.TeamRoleDto
 import com.example.todoapp.domain.models.UserModel
 import com.example.todoapp.domain.usecase.authorization_usecase.AuthUseCase
 import com.example.todoapp.domain.usecase.team_role_usecase.TeamRoleUseCase
@@ -29,6 +30,16 @@ class TeamDetailViewModel @Inject constructor(
 
     val teamDetailState : State<TeamDetailState> get() = derivedStateOf { _teamDetailState }
 
+    // create state for role on team
+    private var _roleOnTeamState by mutableStateOf<TeamDetailState>(TeamDetailState.LoadingState)
+
+    val roleOnTeamState : State<TeamDetailState> get() = derivedStateOf { _roleOnTeamState }
+
+    // create state for team member on team
+    private var _teamMemberState by mutableStateOf<TeamDetailState>(TeamDetailState.LoadingState)
+
+    val teamMemberState : State<TeamDetailState> get() = derivedStateOf { _teamMemberState }
+
     // create state for create team role
     private var _createTeamRoleState by mutableStateOf<TeamDetailState>(TeamDetailState.IdleState)
 
@@ -43,14 +54,10 @@ class TeamDetailViewModel @Inject constructor(
         viewModelScope.launch {
             delay(600)
 
+            // get team role data
             try{
                 // get team detail
                 val data = teamUseCase.getTeamUseCase(
-                    teamId = (savedStateHandle.get<String>("teamId") ?: "0").toInt()
-                )
-
-                // get role model
-                val getTeamRole = teamRoleUseCase.getAllTeamRoleUseCase(
                     teamId = (savedStateHandle.get<String>("teamId") ?: "0").toInt()
                 )
 
@@ -64,7 +71,6 @@ class TeamDetailViewModel @Inject constructor(
 
                 _teamDetailState = TeamDetailState.DataState(
                     data = data,
-                    roleModel = getTeamRole
                 )
             } catch (e : Exception) {
                 val errMsg = "Error Happen : ${e.message}"
@@ -73,6 +79,12 @@ class TeamDetailViewModel @Inject constructor(
                     errMsg = errMsg
                 )
             }
+
+            // add delay
+            delay(400)
+
+            // get role on the team
+            getAllRoleTeam()
         }
     }
 
@@ -89,8 +101,14 @@ class TeamDetailViewModel @Inject constructor(
                         // get role id
                         val getRoleId = event.teamRoleId
 
-                        // remove all user from with with this role
-                        
+                        // delete role
+                        val getRole = teamRoleUseCase.deleteTeamRoleUseCase(
+                            teamRoleId = getRoleId
+                        )
+
+                        _deleteTeamRoleState = TeamDetailState.DataState(
+                            data = getRole,
+                        )
                     } catch (e : Exception) {
                         val errMsg = "Error Happen : ${e.message}, ${e.stackTrace}"
 
@@ -102,7 +120,62 @@ class TeamDetailViewModel @Inject constructor(
             }
 
             is TeamDetailEvent.OnAddTeamRole -> {
+                // update delete state
+                _createTeamRoleState = TeamDetailState.LoadingState
 
+                viewModelScope.launch {
+                    delay(600)
+
+                    try{
+                        // get role id
+                        val getRole = event.teamRoleDto
+
+                        // delete role
+                        val getData = teamRoleUseCase.createTeamRoleUseCase(
+                            teamRoleDto = getRole
+                        )
+
+                        _createTeamRoleState = TeamDetailState.DataState(
+                            data = getData,
+                        )
+                    } catch (e : Exception) {
+                        val errMsg = "Error Happen : ${e.message}, ${e.stackTrace}"
+
+                        _deleteTeamRoleState = TeamDetailState.ErrorState(
+                            errMsg = errMsg
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateCreateTeamRoleState(newState : TeamDetailState) {
+        _createTeamRoleState = newState
+
+        // get role team
+        getAllRoleTeam()
+    }
+
+    private fun getAllRoleTeam(){
+        viewModelScope.launch {
+            delay(600)
+            try{
+                // get role model
+                val getTeamRole = teamRoleUseCase.getAllTeamRoleUseCase(
+                    teamId = (savedStateHandle.get<String>("teamId") ?: "0").toInt()
+                )
+
+                // update team role state
+                _roleOnTeamState = TeamDetailState.DataState(
+                    data = getTeamRole
+                )
+            } catch (e : Exception) {
+                val errMsg = "Error Happen : ${e.message}"
+
+                _roleOnTeamState = TeamDetailState.ErrorState(
+                    errMsg = errMsg
+                )
             }
         }
     }

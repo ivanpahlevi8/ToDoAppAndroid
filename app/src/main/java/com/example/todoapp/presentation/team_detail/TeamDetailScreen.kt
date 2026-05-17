@@ -15,7 +15,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.todoapp.R
+import com.example.todoapp.core.component.ErrorDialog
+import com.example.todoapp.core.component.LoadingDialog
+import com.example.todoapp.core.component.SuccessDialog
 import com.example.todoapp.core.value.Dimension
+import com.example.todoapp.data.dtos.TeamRoleDto
 import com.example.todoapp.domain.models.teams.TeamModel
 import com.example.todoapp.presentation.team_detail.component.TeamDetailPage
 import com.example.todoapp.presentation.team_detail.component.TeamDetailPageShimmer
@@ -23,46 +27,50 @@ import com.example.todoapp.presentation.team_detail.component.TeamDetailPageShim
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TeamDetailScreen(
-    state : TeamDetailState
+    state : TeamDetailState,
+    teamRoleListState : TeamDetailState,
+    createTeamRoleState : TeamDetailState,
+    updateCreateTeamRoleState : (TeamDetailState) -> Unit,
+    onEvent: (TeamDetailEvent) -> Unit,
 ) {
-    when(state) {
-        is TeamDetailState.DataState<*> -> {
-            val getData = state.data as TeamModel
-            val getRole = state.roleModel
+    TeamDetailPage(
+        teamModelState = state,
+        teamRoleState = teamRoleListState,
+        onEvent = onEvent
+    )
 
-            TeamDetailPage(
-                teamModel = getData,
-                roleList = getRole ?: listOf()
+    // check state for create team
+    when(createTeamRoleState) {
+        is TeamDetailState.DataState<*> -> {
+            // get data
+            val getData = createTeamRoleState.data as TeamRoleDto
+
+            // show success dialog
+            SuccessDialog(
+                successTitle = "Success Create Role",
+                successMsg = "Role with role name ${getData.roleName} has been created",
+                onDismiss = {
+                    updateCreateTeamRoleState(TeamDetailState.IdleState)
+                }
             )
         }
         is TeamDetailState.ErrorState -> {
             // get error message
-            val errMsg = state.errMsg
+            val errMsg = createTeamRoleState.errMsg
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        horizontal = Dimension.SMALL_PADDING2
-                    ),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = errMsg,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.W700,
-                        fontSize = 17.sp
-                    ),
-                    color = colorResource(
-                        id = R.color.error_color
-                    )
-                )
-            }
+            // show error message
+            ErrorDialog(
+                errMsg = errMsg,
+                onDismiss = {
+                    updateCreateTeamRoleState(TeamDetailState.IdleState)
+                }
+            )
         }
         is TeamDetailState.LoadingState -> {
-            TeamDetailPageShimmer()
+            LoadingDialog()
         }
-        is TeamDetailState.IdleState -> {}
+        is TeamDetailState.IdleState -> {
+
+        }
     }
 }

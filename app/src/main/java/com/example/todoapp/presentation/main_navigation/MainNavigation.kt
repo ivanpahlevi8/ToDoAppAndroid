@@ -45,6 +45,7 @@ import com.example.todoapp.presentation.main_navigation.component.NavigationDraw
 import com.example.todoapp.presentation.nv_graph.Routes
 import com.example.todoapp.presentation.search_friend.SearchFriendScreen
 import com.example.todoapp.presentation.search_friend.SearchFriendViewModel
+import com.example.todoapp.presentation.team_detail.TeamDetailEvent
 import com.example.todoapp.presentation.team_detail.TeamDetailScreen
 import com.example.todoapp.presentation.team_detail.TeamDetailViewModel
 import com.example.todoapp.presentation.team_list.TeamListScreen
@@ -380,7 +381,19 @@ fun MainNavigation(
                         val teamDetailViewModel : TeamDetailViewModel = hiltViewModel()
 
                         TeamDetailScreen(
-                            state = teamDetailViewModel.teamDetailState.value
+                            state = teamDetailViewModel.teamDetailState.value,
+                            teamRoleListState = teamDetailViewModel.roleOnTeamState.value,
+                            onEvent = {
+                                event : TeamDetailEvent -> teamDetailViewModel.onEvent(
+                                    event = event
+                                )
+                            },
+                            createTeamRoleState = teamDetailViewModel.createTeamRoleState.value,
+                            updateCreateTeamRoleState = {
+                                newState -> teamDetailViewModel.updateCreateTeamRoleState(
+                                    newState = newState
+                                )
+                            }
                         )
                     }
                 }

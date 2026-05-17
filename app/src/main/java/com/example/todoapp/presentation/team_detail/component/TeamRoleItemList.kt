@@ -142,7 +142,7 @@ fun TeamRoleItemList(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = rememberRipple()
                         ) {
-
+                            showTeamRoleDialog()
                         }
                         .padding(
                             Dimension.SMALL_PADDING2
