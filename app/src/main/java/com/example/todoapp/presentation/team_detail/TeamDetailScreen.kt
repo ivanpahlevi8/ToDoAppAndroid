@@ -2,27 +2,12 @@ package com.example.todoapp.presentation.team_detail
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
-import com.example.todoapp.R
 import com.example.todoapp.core.component.ErrorDialog
 import com.example.todoapp.core.component.LoadingDialog
 import com.example.todoapp.core.component.SuccessDialog
-import com.example.todoapp.core.value.Dimension
 import com.example.todoapp.data.dtos.TeamRoleDto
-import com.example.todoapp.domain.models.teams.TeamModel
 import com.example.todoapp.presentation.team_detail.component.TeamDetailPage
-import com.example.todoapp.presentation.team_detail.component.TeamDetailPageShimmer
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -30,7 +15,9 @@ fun TeamDetailScreen(
     state : TeamDetailState,
     teamRoleListState : TeamDetailState,
     createTeamRoleState : TeamDetailState,
+    deleteTeamRoleState : TeamDetailState,
     updateCreateTeamRoleState : (TeamDetailState) -> Unit,
+    updateDeleteTeamRoleState : (TeamDetailState) -> Unit,
     onEvent: (TeamDetailEvent) -> Unit,
 ) {
     TeamDetailPage(
@@ -67,6 +54,46 @@ fun TeamDetailScreen(
             )
         }
         is TeamDetailState.LoadingState -> {
+            LoadingDialog()
+        }
+        is TeamDetailState.IdleState -> {
+
+        }
+    }
+
+    // check state for delete team role
+    when(deleteTeamRoleState) {
+        is TeamDetailState.DataState<*> -> {
+            // get data
+            val getData = deleteTeamRoleState.data as String
+
+            // show success message
+            SuccessDialog(
+                successTitle = "Success",
+                successMsg = "Success remove role name within team with role name ${getData}",
+                onDismiss = {
+                    updateDeleteTeamRoleState(
+                        TeamDetailState.IdleState
+                    )
+                }
+            )
+        }
+        is TeamDetailState.ErrorState -> {
+            // get error message
+            val errNsg = deleteTeamRoleState.errMsg
+
+            // show error dialog
+            ErrorDialog(
+                errMsg = errNsg,
+                onDismiss = {
+                    updateDeleteTeamRoleState(
+                        TeamDetailState.IdleState
+                    )
+                }
+            )
+        }
+        is TeamDetailState.LoadingState -> {
+            // show loading dialog
             LoadingDialog()
         }
         is TeamDetailState.IdleState -> {

@@ -242,7 +242,7 @@ fun TeamItemCard(
                         ),
                         contentDescription = "Info Icon",
                         modifier = Modifier
-                            .size(23.dp),
+                            .size(28.dp),
                         tint = colorResource(
                             id = R.color.white
                         )
@@ -294,7 +294,7 @@ fun TeamItemCard(
                         ),
                         contentDescription = "Info Icon",
                         modifier = Modifier
-                            .size(23.dp),
+                            .size(28.dp),
                         tint = colorResource(
                             id = R.color.white
                         )

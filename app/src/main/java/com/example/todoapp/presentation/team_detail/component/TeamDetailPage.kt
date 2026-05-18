@@ -150,6 +150,13 @@ fun TeamDetailPage(
                     showTeamRoleDialog = {
                         Log.d("CHECK", "Add new team role button clicked")
                         showAddTeamRoleDialog = true
+                    },
+                    onDelete = {
+                        teamRoleId : Int -> onEvent(
+                            TeamDetailEvent.OnDeleteTeamRole(
+                                teamRoleId = teamRoleId
+                            )
+                        )
                     }
                 )
             }

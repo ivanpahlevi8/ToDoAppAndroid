@@ -393,6 +393,12 @@ fun MainNavigation(
                                 newState -> teamDetailViewModel.updateCreateTeamRoleState(
                                     newState = newState
                                 )
+                            },
+                            deleteTeamRoleState = teamDetailViewModel.deleteTeamRoleState.value,
+                            updateDeleteTeamRoleState = {
+                                newState -> teamDetailViewModel.updateDeleteTeamRoleState(
+                                    newState = newState
+                                )
                             }
                         )
                     }

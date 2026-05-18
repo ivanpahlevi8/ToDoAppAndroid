@@ -8,7 +8,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todoapp.data.dtos.TeamRoleDto
 import com.example.todoapp.domain.models.UserModel
 import com.example.todoapp.domain.usecase.authorization_usecase.AuthUseCase
 import com.example.todoapp.domain.usecase.team_role_usecase.TeamRoleUseCase
@@ -157,8 +156,18 @@ class TeamDetailViewModel @Inject constructor(
         getAllRoleTeam()
     }
 
+    fun updateDeleteTeamRoleState(newState : TeamDetailState) {
+        _deleteTeamRoleState = newState
+
+        // update role team
+        getAllRoleTeam()
+    }
+
     private fun getAllRoleTeam(){
         viewModelScope.launch {
+            // update role team into loading
+            _roleOnTeamState = TeamDetailState.LoadingState
+
             delay(600)
             try{
                 // get role model

@@ -42,6 +42,7 @@ import com.example.todoapp.data.dtos.TeamRoleDto
 fun TeamRoleItemList(
     roleList : List<TeamRoleDto>,
     showTeamRoleDialog : () -> Unit,
+    onDelete : (Int) -> Unit,
 ){
     Box(
         modifier = Modifier
@@ -191,8 +192,11 @@ fun TeamRoleItemList(
                     val getData = roleList[index]
 
                     TeamRoleItem(
-                        teamRoleDto = getData
-                    ) { }
+                        teamRoleDto = getData,
+                        onDelete = {
+                            teamRoleId -> onDelete(teamRoleId)
+                        }
+                    )
                 }
             }
         }
@@ -231,7 +235,8 @@ fun TeamRoleItemListPreview(){
                     teamId = 1
                 ),
             ),
-            showTeamRoleDialog = {}
+            showTeamRoleDialog = {},
+            onDelete = {}
         )
     }
 }
