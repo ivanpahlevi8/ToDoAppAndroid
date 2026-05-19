@@ -14,4 +14,5 @@ data class UserConnectionUseCase(
     val removeConnectionUseCase: RemoveConnectionUseCase,
     val getRequestConnectionToUserUseCase: GetRequestConnectionToUserUseCase,
     val getIsConnectedStatusUseCase: GetIsConnectedStatusUseCase,
+    val searchConnectionUseCase: SearchConnectionUseCase,
 )

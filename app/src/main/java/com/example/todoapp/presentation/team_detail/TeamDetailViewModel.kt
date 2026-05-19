@@ -1,5 +1,6 @@
 package com.example.todoapp.presentation.team_detail
 
+import android.content.SharedPreferences
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -8,10 +9,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todoapp.core.value.Constants
 import com.example.todoapp.domain.models.UserModel
 import com.example.todoapp.domain.usecase.authorization_usecase.AuthUseCase
 import com.example.todoapp.domain.usecase.team_role_usecase.TeamRoleUseCase
 import com.example.todoapp.domain.usecase.team_usecase.TeamUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.UserConnectionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.delay
@@ -22,7 +25,9 @@ class TeamDetailViewModel @Inject constructor(
     private val teamUseCase: TeamUseCase,
     private val teamRoleUseCase: TeamRoleUseCase,
     private val authUseCase: AuthUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val userConnectionUseCase: UserConnectionUseCase,
+    private val savedStateHandle: SavedStateHandle,
+    private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
     // create state for team detail
     private var _teamDetailState by mutableStateOf<TeamDetailState>(TeamDetailState.LoadingState)
@@ -48,6 +53,11 @@ class TeamDetailViewModel @Inject constructor(
     private var _deleteTeamRoleState by mutableStateOf<TeamDetailState>(TeamDetailState.IdleState)
 
     val deleteTeamRoleState : State<TeamDetailState> get() = derivedStateOf { _deleteTeamRoleState }
+
+    // create state for search connection
+    private var _searchConnectionState by mutableStateOf<TeamDetailState>(TeamDetailState.IdleState)
+
+    val searchConnectionState : State<TeamDetailState> get() = derivedStateOf { _searchConnectionState }
 
     init {
         viewModelScope.launch {
@@ -142,6 +152,63 @@ class TeamDetailViewModel @Inject constructor(
 
                         _deleteTeamRoleState = TeamDetailState.ErrorState(
                             errMsg = errMsg
+                        )
+                    }
+                }
+            }
+
+            is TeamDetailEvent.OnAddTeamMember -> {
+
+            }
+
+            is TeamDetailEvent.OnRemoveTeamMember -> {
+                
+            }
+
+            is TeamDetailEvent.OnSearchConnection -> {
+                viewModelScope.launch {
+                    // update state of search connection
+                    _searchConnectionState = TeamDetailState.LoadingState
+
+                    delay(600)
+
+                    val getName = event.name
+
+                    // get current login user id
+                    val getLoginUserId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
+
+                    try{
+                        val getConnections = userConnectionUseCase.searchConnectionUseCase(
+                            name = getName,
+                            userId = getLoginUserId
+                        )
+
+                        // populated data for only search player
+                        val getSearchConnection : MutableList<UserModel> = mutableListOf()
+
+                        for (connectionDto in getConnections) {
+                            val getUserId = if(getLoginUserId == connectionDto.connectionUserOwnerId)
+                                connectionDto.connectionUserConnectionId
+                                    else connectionDto.connectionUserOwnerId
+
+                            // get user
+                            val getUserConnection = authUseCase.getUserIdUseCase(
+                                userId = getUserId
+                            )
+
+                            // add to list
+                            getSearchConnection.add(getUserConnection)
+                        }
+
+                        // update state
+                        _searchConnectionState = TeamDetailState.DataState(
+                            data = getSearchConnection
+                        )
+                    } catch (e : Exception) {
+                        val errMsg = "Error Happen : ${e.message}, ${e.stackTrace}"
+
+                        _searchConnectionState = TeamDetailState.ErrorState(
+                            errMsg = errMsg,
                         )
                     }
                 }

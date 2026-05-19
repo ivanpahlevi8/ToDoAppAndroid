@@ -85,4 +85,11 @@ interface ConnectionRemoteAPI {
         @Query("userId") userId : String,
         @Query("userConnectedId") userConnectedId : String
     ) : ResponseDto<Boolean>
+
+    // function to search connection
+    @GET("api/connection/search-connection")
+    suspend fun searchConnection(
+        @Query("name") name : String,
+        @Query("userId") userId : String
+    ) : ResponseDto<List<SendConnectionModel>>
 }

@@ -399,7 +399,8 @@ fun MainNavigation(
                                 newState -> teamDetailViewModel.updateDeleteTeamRoleState(
                                     newState = newState
                                 )
-                            }
+                            },
+                            searchConnectionState = teamDetailViewModel.searchConnectionState.value
                         )
                     }
                 }

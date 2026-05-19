@@ -41,7 +41,7 @@ fun SearchTextField(
     onSearch : () -> Unit,
     textInput : String,
     onChangeText : (String) -> Unit,
-    navigator : NavHostController
+    navigator : NavHostController?
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -53,22 +53,24 @@ fun SearchTextField(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            IconButton(
-                onClick = {
-                    navigator.navigateUp()
+            if(navigator != null) {
+                IconButton(
+                    onClick = {
+                        navigator.navigateUp()
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            id = R.drawable.arrow_back_ic
+                        ),
+                        contentDescription = "Back Arrow Icon",
+                        tint = colorResource(
+                            id = R.color.body
+                        ),
+                        modifier = Modifier
+                            .size(24.dp)
+                    )
                 }
-            ) {
-                Icon(
-                    painter = painterResource(
-                        id = R.drawable.arrow_back_ic
-                    ),
-                    contentDescription = "Back Arrow Icon",
-                    tint = colorResource(
-                        id = R.color.body
-                    ),
-                    modifier = Modifier
-                        .size(24.dp)
-                )
             }
             TextField(
                 modifier = Modifier
@@ -150,7 +152,7 @@ fun SearchBarPreview(){
 
             },
             onSearch = {},
-            navigator = controller,
+            navigator = null,
         )
     }
 }

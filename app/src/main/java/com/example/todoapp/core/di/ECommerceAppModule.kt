@@ -49,6 +49,7 @@ import com.example.todoapp.domain.usecase.user_connection_usecase.GetIsConnected
 import com.example.todoapp.domain.usecase.user_connection_usecase.GetRequestConnectionToUserUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.GetRequestConnectionUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.RemoveConnectionUseCase
+import com.example.todoapp.domain.usecase.user_connection_usecase.SearchConnectionUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.SendUserConnectionUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.UnConnectUserUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.UserConnectionUseCase
@@ -223,6 +224,9 @@ class ECommerceAppModule {
                 connectionRemoteRepository = connectionRemoteRepository,
             ),
             getIsConnectedStatusUseCase = GetIsConnectedStatusUseCase(
+                connectionRemoteRepository = connectionRemoteRepository
+            ),
+            searchConnectionUseCase = SearchConnectionUseCase(
                 connectionRemoteRepository = connectionRemoteRepository
             )
         )

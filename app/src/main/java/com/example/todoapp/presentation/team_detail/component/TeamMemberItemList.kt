@@ -45,7 +45,8 @@ import com.example.todoapp.ui.theme.ToDoAppTheme
 @Composable
 fun TeamMemberItemList(
     teamMember : List<UserModel>,
-    roleMember : List<TeamRoleDto>
+    roleMember : List<TeamRoleDto>,
+    onShowAddMemberDialog : () -> Unit,
 ){
     Box(
         modifier = Modifier
@@ -146,7 +147,7 @@ fun TeamMemberItemList(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = rememberRipple()
                         ) {
-
+                            onShowAddMemberDialog()
                         }
                         .padding(
                             Dimension.SMALL_PADDING2
@@ -259,7 +260,8 @@ fun TeamMemberListPreview(){
                         roleName = "Software Engineer",
                         teamId = 1
                     )
-                )
+                ),
+                onShowAddMemberDialog = {}
             )
         }
     }

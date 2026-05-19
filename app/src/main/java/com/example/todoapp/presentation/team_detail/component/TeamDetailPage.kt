@@ -55,9 +55,11 @@ import java.util.Locale
 fun TeamDetailPage(
     teamModelState : TeamDetailState,
     teamRoleState : TeamDetailState,
+    searchConnectionState : TeamDetailState,
     onEvent : (TeamDetailEvent) -> Unit,
 ){
     var showAddTeamRoleDialog by remember { mutableStateOf(false) }
+    var showAddTeamMemberDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -96,6 +98,7 @@ fun TeamDetailPage(
                     )
                 )
 
+                // create team role dialog
                 CreateTeamRoleDialog(
                     showDialog = showAddTeamRoleDialog,
                     onDismiss = {
@@ -112,6 +115,22 @@ fun TeamDetailPage(
                             )
                         )
                         showAddTeamRoleDialog = false
+                    }
+                )
+
+                // add team member dialog
+                AddTeamMemberDialog(
+                    showDialog = showAddTeamMemberDialog,
+                    onDismiss = {
+                        showAddTeamMemberDialog = false
+                    },
+                    searchConnectionState = searchConnectionState,
+                    onSearchConnection = {
+                        searchName : String -> onEvent(
+                            TeamDetailEvent.OnSearchConnection(
+                                name = searchName,
+                            )
+                        )
                     }
                 )
             }
@@ -188,6 +207,9 @@ fun TeamDetailPage(
                     TeamMemberItemList(
                         teamMember = teamModel.teamUserMember ?: listOf(),
                         roleMember = teamModel.roleMember ?: listOf(),
+                        onShowAddMemberDialog = {
+                            showAddTeamMemberDialog = true
+                        }
                     )
                 }
             }
@@ -296,7 +318,8 @@ fun TeamDetailPagePreview() {
                         ),
                     )
                 ),
-                onEvent = {}
+                onEvent = {},
+                searchConnectionState = TeamDetailState.IdleState
             )
         }
     }

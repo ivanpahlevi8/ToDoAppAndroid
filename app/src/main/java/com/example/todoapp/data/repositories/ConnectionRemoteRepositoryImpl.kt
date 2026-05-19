@@ -391,4 +391,35 @@ class ConnectionRemoteRepositoryImpl(
             throw Exception(e.message ?: "An unexpected network error occurred.")
         }
     }
+
+    override suspend fun searchConnection(name: String, userId: String): List<SendConnectionModel> {
+        try{
+            // search connection
+            val response : ResponseDto<List<SendConnectionModel>> = connectionRemoteAPI.searchConnection(
+                name = name,
+                userId = userId
+            )
+
+            return response.responseResult
+        } catch (e: HttpException) {
+            val errorBodyString = e.response()?.errorBody()?.string()
+
+            if (errorBodyString != null) {
+                try {
+                    val parsedError = Gson().fromJson(errorBodyString, ResponseDto::class.java)
+                    throw Exception(parsedError.responseMessage)
+
+                } catch (jsonException: Exception) {
+                    throw Exception(jsonException.message ?: "Failed to parse error response")
+                }
+            } else {
+                throw Exception("Unknown server error occurred.")
+            }
+
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+
+            throw Exception(e.message ?: "An unexpected network error occurred.")
+        }
+    }
 }

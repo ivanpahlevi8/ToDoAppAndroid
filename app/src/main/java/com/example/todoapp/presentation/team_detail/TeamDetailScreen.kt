@@ -16,6 +16,7 @@ fun TeamDetailScreen(
     teamRoleListState : TeamDetailState,
     createTeamRoleState : TeamDetailState,
     deleteTeamRoleState : TeamDetailState,
+    searchConnectionState : TeamDetailState,
     updateCreateTeamRoleState : (TeamDetailState) -> Unit,
     updateDeleteTeamRoleState : (TeamDetailState) -> Unit,
     onEvent: (TeamDetailEvent) -> Unit,
@@ -23,6 +24,7 @@ fun TeamDetailScreen(
     TeamDetailPage(
         teamModelState = state,
         teamRoleState = teamRoleListState,
+        searchConnectionState = searchConnectionState,
         onEvent = onEvent
     )
 
