@@ -237,10 +237,7 @@ fun TeamMemberItemShimmer(){
             ) {
                 Box(
                     modifier = Modifier
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple()
-                        ) {
+                        .clickable{
                         }
                         .padding(
                             Dimension.SMALL_PADDING2
@@ -280,10 +277,7 @@ fun TeamMemberItemShimmer(){
 
                 Box(
                     modifier = Modifier
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple()
-                        ) {
+                        .clickable{
                         }
                         .padding(
                             Dimension.SMALL_PADDING2

@@ -248,10 +248,7 @@ fun LoginPage(
                         id = R.color.body
                     ),
                     modifier = Modifier
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple()
-                        ) {
+                        .clickable{
                             onRegister()
                         }
                 )

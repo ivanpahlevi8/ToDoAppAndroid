@@ -28,6 +28,13 @@ interface TeamRemoteAPI {
     @POST("api/Team/assign-user-team")
     suspend fun assignUserTeam(
         @Query("userId") userId: String,
-        @Query("teamId") teamId : Int
+        @Query("teamId") teamId : Int,
+        @Query("teamRoleId") teamRoleId : Int,
     ) : ResponseDto<AssignUserDto>
+
+    @GET("api/Team/check-member-onteam")
+    suspend fun checkMemberOnTeam(
+        @Query("userId") userId: String,
+        @Query("teamId") teamId: Int
+    ) : ResponseDto<Boolean>
 }

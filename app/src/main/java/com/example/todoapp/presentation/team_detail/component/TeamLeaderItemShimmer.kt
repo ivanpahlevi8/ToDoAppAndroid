@@ -323,10 +323,7 @@ fun TeamLeaderItemShimmer(){
                             .clip(
                                 shape = CircleShape
                             )
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = rememberRipple()
-                            ) {
+                            .clickable {
 
                             }
                             .padding(

@@ -33,10 +33,7 @@ fun ErrorDialog(
         confirmButton = {
             Box(
                 modifier = Modifier
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple()
-                    ) {
+                    .clickable {
                         onDismiss()
                     }
                     .padding(

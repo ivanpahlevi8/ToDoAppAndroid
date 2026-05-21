@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import com.example.todoapp.core.component.ErrorDialog
 import com.example.todoapp.core.component.LoadingDialog
 import com.example.todoapp.core.component.SuccessDialog
+import com.example.todoapp.data.dtos.AssignUserDto
 import com.example.todoapp.data.dtos.TeamRoleDto
 import com.example.todoapp.presentation.team_detail.component.TeamDetailPage
 
@@ -17,8 +18,10 @@ fun TeamDetailScreen(
     createTeamRoleState : TeamDetailState,
     deleteTeamRoleState : TeamDetailState,
     searchConnectionState : TeamDetailState,
+    addTeamMemberState : TeamDetailState,
     updateCreateTeamRoleState : (TeamDetailState) -> Unit,
     updateDeleteTeamRoleState : (TeamDetailState) -> Unit,
+    updateAddTeamMemberState : (TeamDetailState) -> Unit,
     onEvent: (TeamDetailEvent) -> Unit,
 ) {
     TeamDetailPage(
@@ -89,6 +92,45 @@ fun TeamDetailScreen(
                 errMsg = errNsg,
                 onDismiss = {
                     updateDeleteTeamRoleState(
+                        TeamDetailState.IdleState
+                    )
+                }
+            )
+        }
+        is TeamDetailState.LoadingState -> {
+            // show loading dialog
+            LoadingDialog()
+        }
+        is TeamDetailState.IdleState -> {
+
+        }
+    }
+
+    when(addTeamMemberState) {
+        is TeamDetailState.DataState<*> -> {
+            // get data
+            val getData = addTeamMemberState.data as AssignUserDto
+
+            // show success message
+            SuccessDialog(
+                successTitle = "Success",
+                successMsg = "Success assign user with id ${getData.userId}",
+                onDismiss = {
+                    updateAddTeamMemberState(
+                        TeamDetailState.IdleState
+                    )
+                }
+            )
+        }
+        is TeamDetailState.ErrorState -> {
+            // get error message
+            val errNsg = addTeamMemberState.errMsg
+
+            // show error dialog
+            ErrorDialog(
+                errMsg = errNsg,
+                onDismiss = {
+                    updateAddTeamMemberState(
                         TeamDetailState.IdleState
                     )
                 }

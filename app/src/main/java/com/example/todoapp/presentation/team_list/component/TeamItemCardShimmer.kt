@@ -215,10 +215,7 @@ fun TeamItemCardShimmer(){
                         .padding(
                             Dimension.SMALL_PADDING1
                         )
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple()
-                        ){
+                        .clickable{
 
                         }
                 ) {
@@ -260,10 +257,7 @@ fun TeamItemCardShimmer(){
                         .padding(
                             Dimension.SMALL_PADDING1
                         )
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple()
-                        ){
+                        .clickable{
 
                         }
                 ) {

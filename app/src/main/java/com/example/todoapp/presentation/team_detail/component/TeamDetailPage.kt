@@ -60,6 +60,11 @@ fun TeamDetailPage(
 ){
     var showAddTeamRoleDialog by remember { mutableStateOf(false) }
     var showAddTeamMemberDialog by remember { mutableStateOf(false) }
+    var showSelectRoleDialog by remember { mutableStateOf(false) }
+
+    // for add team member data
+    var selectedUserId by remember { mutableStateOf("") }
+    var selectedTeamId by remember { mutableStateOf(0) }
 
     Column(
         modifier = Modifier
@@ -131,6 +136,18 @@ fun TeamDetailPage(
                                 name = searchName,
                             )
                         )
+                    },
+                    onAddTeamMember = {
+                        userId : String ->
+                        // set selected user id
+                        selectedUserId = userId
+                        selectedTeamId = teamModel.teamId ?: 0
+
+                        // unshow current dialog
+                        showAddTeamMemberDialog = false
+
+                        // show select dialog
+                        showSelectRoleDialog = true;
                     }
                 )
             }
@@ -176,6 +193,29 @@ fun TeamDetailPage(
                                 teamRoleId = teamRoleId
                             )
                         )
+                    }
+                )
+
+                // select role dialog
+                SelectRoleDialog(
+                    roleList = roleList,
+                    showDialog = showSelectRoleDialog,
+                    onSelectRole = {
+                        roleId : Int ->
+                        // unshow team role
+                        showSelectRoleDialog = false
+
+                        // assign user
+                        onEvent(
+                            TeamDetailEvent.OnAddTeamMember(
+                                userId = selectedUserId,
+                                teamId = selectedTeamId,
+                                teamRole = roleId
+                            )
+                        )
+                    },
+                    onDismiss = {
+                        showSelectRoleDialog = false;
                     }
                 )
             }

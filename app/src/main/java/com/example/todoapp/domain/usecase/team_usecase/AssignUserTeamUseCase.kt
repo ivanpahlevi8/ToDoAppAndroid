@@ -9,11 +9,13 @@ class AssignUserTeamUseCase(
 ) {
     suspend operator fun invoke(
         userId : String,
-        teamId : Int
+        teamId : Int,
+        teamRoleId : Int
     ) : AssignUserDto {
         return teamRemoteRepository.assignUserTeam(
             teamId = teamId,
-            userId = userId
+            userId = userId,
+            teamRoleId = teamRoleId
         )
     }
 }

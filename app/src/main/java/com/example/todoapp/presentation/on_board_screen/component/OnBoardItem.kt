@@ -142,10 +142,7 @@ fun OnBoardItem(
                             .padding(
                                 Dimension.MEDIUM_PADDING2
                             )
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = rememberRipple()
-                            ) {
+                            .clickable{
                                 onBack()
                             }
                             .shadow(
@@ -191,10 +188,7 @@ fun OnBoardItem(
                             .padding(
                                 Dimension.MEDIUM_PADDING2
                             )
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = rememberRipple()
-                            ) {
+                            .clickable{
                                 onNext()
                             }
                             .shadow(
@@ -233,10 +227,7 @@ fun OnBoardItem(
                             .padding(
                                 Dimension.MEDIUM_PADDING2
                             )
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = rememberRipple()
-                            ) {
+                            .clickable{
                                 onFinish()
                             }
                             .shadow(

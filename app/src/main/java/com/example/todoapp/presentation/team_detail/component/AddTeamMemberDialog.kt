@@ -3,6 +3,7 @@ package com.example.todoapp.presentation.team_detail.component
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -55,6 +56,7 @@ fun AddTeamMemberDialog(
     onDismiss : () -> Unit,
     onSearchConnection : (String) -> Unit,
     searchConnectionState : TeamDetailState,
+    onAddTeamMember : (String) -> Unit,
 ){
     var searchNameInput by remember { mutableStateOf("") }
 
@@ -166,7 +168,12 @@ fun AddTeamMemberDialog(
                                             val getConnection = getData[index]
 
                                             AddTeamMemberItem(
-                                                user = getConnection
+                                                user = getConnection,
+                                                onAddMemberTeam = {
+                                                    userId -> onAddTeamMember(
+                                                        userId,
+                                                    )
+                                                }
                                             )
                                         }
                                     }
@@ -232,7 +239,10 @@ fun AddTeamMemberDialogPreview(){
                 showDialog = true,
                 onDismiss = {},
                 searchConnectionState = TeamDetailState.LoadingState,
-                onSearchConnection = {}
+                onSearchConnection = {},
+                onAddTeamMember = {
+                    val1 ->
+                },
             )
         }
     }
@@ -240,7 +250,8 @@ fun AddTeamMemberDialogPreview(){
 
 @Composable
 private fun AddTeamMemberItem(
-    user : UserModel
+    user : UserModel,
+    onAddMemberTeam : (String) -> Unit,
 ){
     Box(
         modifier = Modifier
@@ -394,11 +405,10 @@ private fun AddTeamMemberItem(
                     .clip(
                         shape = CircleShape
                     )
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple()
-                    ) {
-
+                    .clickable{
+                        onAddMemberTeam(
+                            user.userId
+                        )
                     }
                     .clip(
                         shape = CircleShape
@@ -414,7 +424,7 @@ private fun AddTeamMemberItem(
             ) {
                 Icon(
                     painter = painterResource(
-                        id = R.drawable.add_ic
+                        id = R.drawable.email_ic
                     ),
                     contentDescription = "Add Icon",
                     modifier = Modifier
@@ -585,10 +595,7 @@ fun AddTeamMemberItemShimmer(){
                     .clip(
                         shape = CircleShape
                     )
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple()
-                    ) {
+                    .clickable{
 
                     }
                     .clip(
@@ -642,7 +649,8 @@ private fun AddTeamMemberItemPreview(){
                     userFirstName = "Ivan",
                     userPhoneNumber = "",
                     userLastName = "Pahlevi"
-                )
+                ),
+                onAddMemberTeam = {}
             )
         }
     }

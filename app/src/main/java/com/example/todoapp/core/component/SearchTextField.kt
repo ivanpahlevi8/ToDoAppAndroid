@@ -106,10 +106,9 @@ fun SearchTextField(
                     )
                 },
                 shape = MaterialTheme.shapes.medium,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = colorResource(
-                        id = R.color.input_background,
-                    ),
+                colors = TextFieldDefaults.colors( // Changed from textFieldColors to colors
+                    focusedContainerColor = colorResource(id = R.color.input_background),   // Replaced containerColor
+                    unfocusedContainerColor = colorResource(id = R.color.input_background), // Replaced containerColor
                     focusedTextColor = if(isSystemInDarkTheme()) Color.White else Color.Black,
                     unfocusedTextColor = if(isSystemInDarkTheme()) Color.White else Color.Black,
                     cursorColor = if(isSystemInDarkTheme()) Color.White else Color.Black,

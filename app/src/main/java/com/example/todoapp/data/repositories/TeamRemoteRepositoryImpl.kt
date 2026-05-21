@@ -104,9 +104,40 @@ class TeamRemoteRepositoryImpl(
         }
     }
 
-    override suspend fun assignUserTeam(teamId: Int, userId: String): AssignUserDto {
+    override suspend fun assignUserTeam(teamId: Int, userId: String, teamRoleId : Int): AssignUserDto {
         try{
             val response = teamRemoteAPI.assignUserTeam(
+                userId = userId,
+                teamId = teamId,
+                teamRoleId = teamRoleId
+            )
+
+            return response.responseResult
+        } catch (e: HttpException) {
+            val errorBodyString = e.response()?.errorBody()?.string()
+
+            if (errorBodyString != null) {
+                try {
+                    val parsedError = Gson().fromJson(errorBodyString, ResponseDto::class.java)
+                    throw Exception(parsedError.responseMessage)
+
+                } catch (jsonException: Exception) {
+                    throw Exception(jsonException.message ?: "Failed to parse error response")
+                }
+            } else {
+                throw Exception("Unknown server error occurred.")
+            }
+
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+
+            throw Exception(e.message ?: "An unexpected network error occurred.")
+        }
+    }
+
+    override suspend fun checkMemberOnTeam(userId: String, teamId: Int): Boolean {
+        try{
+            val response = teamRemoteAPI.checkMemberOnTeam(
                 userId = userId,
                 teamId = teamId
             )

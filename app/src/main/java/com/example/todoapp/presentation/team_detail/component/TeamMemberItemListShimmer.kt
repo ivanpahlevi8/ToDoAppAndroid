@@ -139,10 +139,7 @@ fun TeamMemberItemListShimmer(){
                         .padding(
                             Dimension.SMALL_PADDING2
                         )
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple()
-                        ) {
+                        .clickable{
 
                         }
                         .clip(

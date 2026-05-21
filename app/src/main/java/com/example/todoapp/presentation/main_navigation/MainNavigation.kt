@@ -400,7 +400,13 @@ fun MainNavigation(
                                     newState = newState
                                 )
                             },
-                            searchConnectionState = teamDetailViewModel.searchConnectionState.value
+                            searchConnectionState = teamDetailViewModel.searchConnectionState.value,
+                            addTeamMemberState = teamDetailViewModel.addTeamMemberState.value,
+                            updateAddTeamMemberState = {
+                                newState -> teamDetailViewModel.updateAddTeamMemberState(
+                                    newState
+                                )
+                            }
                         )
                     }
                 }

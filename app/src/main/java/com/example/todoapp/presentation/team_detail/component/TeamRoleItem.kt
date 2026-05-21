@@ -124,10 +124,7 @@ fun TeamRoleItem(
                     .clip(
                         shape = CircleShape
                     )
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple()
-                    ) {
+                    .clickable{
                         onDelete(
                             teamRoleDto.teamRoleId ?: 0
                         )

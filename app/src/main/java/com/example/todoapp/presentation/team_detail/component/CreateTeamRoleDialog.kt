@@ -120,10 +120,7 @@ fun CreateTeamRoleDialog(showDialog : Boolean, onDismiss : ()->Unit, onAddRole :
                             .clip(
                                 shape = MaterialTheme.shapes.medium
                             )
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = rememberRipple()
-                            ) {
+                            .clickable{
                                 onAddRole(roleNameInput)
                             }
                             .padding(

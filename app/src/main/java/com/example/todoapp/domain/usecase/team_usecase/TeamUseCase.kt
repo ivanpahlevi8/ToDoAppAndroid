@@ -5,4 +5,5 @@ data class TeamUseCase(
     val getAllTeamUseCase: GetAllTeamUseCase,
     val getTeamUseCase: GetTeamUseCase,
     val assignUserTeamUseCase: AssignUserTeamUseCase,
+    val checkUserOnTeamUseCase : CheckUserOnTeamUseCase
 )

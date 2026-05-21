@@ -207,10 +207,7 @@ fun TeamItemCard(
                 // info button
                 Box(
                     modifier = Modifier
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple()
-                        ){
+                        .clickable{
                             onTeamDetail(teamModel.teamId ?: 0)
                         }
                         .padding(
@@ -277,10 +274,7 @@ fun TeamItemCard(
                         .padding(
                             Dimension.SMALL_PADDING1
                         )
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple()
-                        ){
+                        .clickable{
 
                         }
                 ) {

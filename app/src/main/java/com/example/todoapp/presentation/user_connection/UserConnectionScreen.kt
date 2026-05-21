@@ -120,10 +120,7 @@ fun UserConnectionScreen(
                                 )
                             }
                         )
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple(), //
-                        ) {
+                        .clickable{
                             if(!showRequestConnection){
                                 onEvent(
                                     UserConnectionEvent.OnGetRequestConnection
@@ -202,10 +199,7 @@ fun UserConnectionScreen(
                                 )
                             }
                         )
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple(), //
-                        ) {
+                        .clickable{
                             if(showRequestConnection){
                                 onEvent(
                                     UserConnectionEvent.OnGetUserConnection

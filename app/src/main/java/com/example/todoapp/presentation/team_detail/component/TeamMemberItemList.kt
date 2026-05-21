@@ -143,10 +143,7 @@ fun TeamMemberItemList(
                         .clip(
                             shape = CircleShape
                         )
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple()
-                        ) {
+                        .clickable{
                             onShowAddMemberDialog()
                         }
                         .padding(

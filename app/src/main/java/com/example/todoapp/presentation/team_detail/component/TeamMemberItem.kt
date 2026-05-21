@@ -232,10 +232,7 @@ fun TeamMemberItem(
             ) {
                 Box(
                     modifier = Modifier
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple()
-                        ) {
+                        .clickable{
                             onInfoUser(
                                 userItem.userId
                             )
@@ -278,10 +275,7 @@ fun TeamMemberItem(
 
                 Box(
                     modifier = Modifier
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple()
-                        ) {
+                        .clickable{
                             onDeleteMember(
                                 userItem.userId
                             )

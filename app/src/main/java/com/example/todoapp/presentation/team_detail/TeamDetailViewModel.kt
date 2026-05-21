@@ -1,6 +1,7 @@
 package com.example.todoapp.presentation.team_detail
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -39,11 +40,6 @@ class TeamDetailViewModel @Inject constructor(
 
     val roleOnTeamState : State<TeamDetailState> get() = derivedStateOf { _roleOnTeamState }
 
-    // create state for team member on team
-    private var _teamMemberState by mutableStateOf<TeamDetailState>(TeamDetailState.LoadingState)
-
-    val teamMemberState : State<TeamDetailState> get() = derivedStateOf { _teamMemberState }
-
     // create state for create team role
     private var _createTeamRoleState by mutableStateOf<TeamDetailState>(TeamDetailState.IdleState)
 
@@ -59,35 +55,17 @@ class TeamDetailViewModel @Inject constructor(
 
     val searchConnectionState : State<TeamDetailState> get() = derivedStateOf { _searchConnectionState }
 
+    // create state to add member to the team
+    private var _addTeamMemberState by mutableStateOf<TeamDetailState>(TeamDetailState.IdleState)
+
+    val addTeamMemberState : State<TeamDetailState> get() = derivedStateOf { _addTeamMemberState }
+
     init {
         viewModelScope.launch {
             delay(600)
 
-            // get team role data
-            try{
-                // get team detail
-                val data = teamUseCase.getTeamUseCase(
-                    teamId = (savedStateHandle.get<String>("teamId") ?: "0").toInt()
-                )
-
-                // get team leader data
-                val getTeamLeader : UserModel = authUseCase.getUserIdUseCase(
-                    userId = data.teamLeaderId ?: ""
-                )
-
-                // update team leader on data
-                data.teamLeader = getTeamLeader
-
-                _teamDetailState = TeamDetailState.DataState(
-                    data = data,
-                )
-            } catch (e : Exception) {
-                val errMsg = "Error Happen : ${e.message}"
-
-                _teamDetailState = TeamDetailState.ErrorState(
-                    errMsg = errMsg
-                )
-            }
+            // get team header data
+            getTeamHeaderData()
 
             // add delay
             delay(400)
@@ -158,7 +136,55 @@ class TeamDetailViewModel @Inject constructor(
             }
 
             is TeamDetailEvent.OnAddTeamMember -> {
+                viewModelScope.launch {
+                    // update add team member state into loading
+                    _addTeamMemberState = TeamDetailState.LoadingState
 
+                    // add delay
+                    delay(600)
+
+                    // get user id and team id
+                    val getUserId = event.userId
+                    val getTeamId = event.teamId
+                    val getRoleTeamId = event.teamRole
+
+                    try{
+                        // check if user already on team or not
+                        val isUserOnTeam : Boolean = teamUseCase.checkUserOnTeamUseCase(
+                            userId = getUserId,
+                            teamId = getTeamId
+                        )
+
+                        Log.d("Check", "Check user id : ${getUserId}")
+
+                        if(isUserOnTeam) {
+                            // user already on team, update state
+                            _addTeamMemberState = TeamDetailState.ErrorState(
+                                errMsg = "Already On Team: User with id $getUserId already on team"
+                            )
+
+                            return@launch
+                        }
+
+                        // assign user to team
+                        val teamUser = teamUseCase.assignUserTeamUseCase(
+                            userId = getUserId,
+                            teamId = getTeamId,
+                            teamRoleId = getRoleTeamId
+                        )
+
+                        // update state
+                        _addTeamMemberState = TeamDetailState.DataState(
+                            data = teamUser
+                        )
+                    } catch (e : Exception) {
+                        val errMsg = "Error Happen : ${e.message}, ${e.stackTrace}"
+
+                        _addTeamMemberState = TeamDetailState.ErrorState(
+                            errMsg = errMsg
+                        )
+                    }
+                }
             }
 
             is TeamDetailEvent.OnRemoveTeamMember -> {
@@ -230,6 +256,13 @@ class TeamDetailViewModel @Inject constructor(
         getAllRoleTeam()
     }
 
+    fun updateAddTeamMemberState(newState : TeamDetailState) {
+        _addTeamMemberState = newState
+
+        // update get new team
+        getTeamHeaderData()
+    }
+
     private fun getAllRoleTeam(){
         viewModelScope.launch {
             // update role team into loading
@@ -250,6 +283,35 @@ class TeamDetailViewModel @Inject constructor(
                 val errMsg = "Error Happen : ${e.message}"
 
                 _roleOnTeamState = TeamDetailState.ErrorState(
+                    errMsg = errMsg
+                )
+            }
+        }
+    }
+
+    private fun getTeamHeaderData(){
+        viewModelScope.launch {
+            try{
+                // get team detail
+                val data = teamUseCase.getTeamUseCase(
+                    teamId = (savedStateHandle.get<String>("teamId") ?: "0").toInt()
+                )
+
+                // get team leader data
+                val getTeamLeader : UserModel = authUseCase.getUserIdUseCase(
+                    userId = data.teamLeaderId ?: ""
+                )
+
+                // update team leader on data
+                data.teamLeader = getTeamLeader
+
+                _teamDetailState = TeamDetailState.DataState(
+                    data = data,
+                )
+            } catch (e : Exception) {
+                val errMsg = "Error Happen : ${e.message}"
+
+                _teamDetailState = TeamDetailState.ErrorState(
                     errMsg = errMsg
                 )
             }

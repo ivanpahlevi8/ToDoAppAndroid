@@ -118,10 +118,7 @@ fun TeamRoleItemShimmer(){
 
             Box(
                 modifier = Modifier
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple()
-                    ) {
+                    .clickable{
                     }
                     .clip(
                         shape = CircleShape

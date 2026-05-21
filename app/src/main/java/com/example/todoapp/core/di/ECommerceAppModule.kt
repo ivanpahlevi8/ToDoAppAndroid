@@ -34,6 +34,7 @@ import com.example.todoapp.domain.usecase.team_role_usecase.DeleteTeamRoleUseCas
 import com.example.todoapp.domain.usecase.team_role_usecase.GetAllTeamRoleUseCase
 import com.example.todoapp.domain.usecase.team_role_usecase.TeamRoleUseCase
 import com.example.todoapp.domain.usecase.team_usecase.AssignUserTeamUseCase
+import com.example.todoapp.domain.usecase.team_usecase.CheckUserOnTeamUseCase
 import com.example.todoapp.domain.usecase.team_usecase.CreateTeamUseCase
 import com.example.todoapp.domain.usecase.team_usecase.GetAllTeamUseCase
 import com.example.todoapp.domain.usecase.team_usecase.GetTeamUseCase
@@ -277,6 +278,9 @@ class ECommerceAppModule {
                 teamRemoteRepository = teamRemoteRepository
             ),
             assignUserTeamUseCase = AssignUserTeamUseCase(
+                teamRemoteRepository = teamRemoteRepository
+            ),
+            checkUserOnTeamUseCase = CheckUserOnTeamUseCase(
                 teamRemoteRepository = teamRemoteRepository
             )
         )
