@@ -118,32 +118,20 @@ fun TeamRoleItemShimmer(){
 
             Box(
                 modifier = Modifier
-                    .clickable{
-                    }
-                    .clip(
-                        shape = CircleShape
-                    )
-                    .background(
-                        color = colorResource(
-                            id = R.color.error_color
-                        )
+                    .size(
+                        45.dp
                     )
                     .padding(
                         Dimension.SMALL_PADDING2
                     )
-            ) {
-                Icon(
-                    painter = painterResource(
-                        id = R.drawable.delete_forever_ic
-                    ),
-                    contentDescription = "Delete Forever Icon",
-                    tint = colorResource(
-                        id = R.color.white
-                    ),
-                    modifier = Modifier
-                        .size(14.dp)
-                )
-            }
+                    .clickable{
+
+                    }
+                    .clip(
+                        shape = CircleShape
+                    )
+                    .shimmerEffect()
+            )
         }
     }
 }

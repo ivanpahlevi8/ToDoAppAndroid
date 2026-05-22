@@ -65,6 +65,12 @@ class TeamDetailViewModel @Inject constructor(
 
     val removeTeamMemberState : State<TeamDetailState> get() = derivedStateOf { _removeTeamMemberState }
 
+    // create variable for check weather the login user is team leader or not
+    var isTeamLeader by mutableStateOf(false)
+
+    // variable to hold login user id value
+    var loginUserId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
+
     init {
         viewModelScope.launch {
             delay(600)
@@ -338,6 +344,12 @@ class TeamDetailViewModel @Inject constructor(
                 val data = teamUseCase.getTeamUseCase(
                     teamId = (savedStateHandle.get<String>("teamId") ?: "0").toInt()
                 )
+
+                // update value for is team leader
+                // get login user id
+                val getLoginUserId = sharedPreferences.getString(Constants.USER_ID, "") ?: ""
+
+                isTeamLeader = getLoginUserId == data.teamLeaderId
 
                 // get team leader data
                 val getTeamLeader : UserModel = authUseCase.getUserIdUseCase(

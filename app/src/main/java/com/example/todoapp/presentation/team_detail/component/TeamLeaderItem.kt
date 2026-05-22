@@ -46,7 +46,8 @@ import com.example.todoapp.ui.theme.ToDoAppTheme
 
 @Composable
 fun TeamLeaderItem(
-    teamLead : UserModel
+    teamLead : UserModel,
+    isTeamLeader : Boolean,
 ){
     Box(
         modifier = Modifier
@@ -308,51 +309,53 @@ fun TeamLeaderItem(
                         }
                     }
 
-                    Spacer(
-                        modifier = Modifier
-                            .width(
-                                Dimension.MEDIUM_PADDING1
-                            )
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .clip(
-                                shape = CircleShape
-                            )
-                            .clickable{
-
-                            }
-                            .padding(
-                                Dimension.SMALL_PADDING2
-                            )
-                            .shadow(
-                                elevation = 2.dp,
-                                shape = CircleShape
-                            )
-                            .clip(
-                                shape = CircleShape
-                            )
-                            .background(
-                                color = colorResource(
-                                    id = R.color.time_line_card_color6
-                                )
-                            )
-                            .padding(
-                                Dimension.SMALL_PADDING2
-                            )
-                    ) {
-                        Icon(
-                            painter = painterResource(
-                                id = R.drawable.info_ic
-                            ),
-                            contentDescription = "Info Icon",
-                            tint = colorResource(
-                                id = R.color.white
-                            ),
+                    if(!isTeamLeader) {
+                        Spacer(
                             modifier = Modifier
-                                .size(24.dp)
+                                .width(
+                                    Dimension.MEDIUM_PADDING1
+                                )
                         )
+
+                        Box(
+                            modifier = Modifier
+                                .clip(
+                                    shape = CircleShape
+                                )
+                                .clickable{
+
+                                }
+                                .padding(
+                                    Dimension.SMALL_PADDING2
+                                )
+                                .shadow(
+                                    elevation = 2.dp,
+                                    shape = CircleShape
+                                )
+                                .clip(
+                                    shape = CircleShape
+                                )
+                                .background(
+                                    color = colorResource(
+                                        id = R.color.time_line_card_color6
+                                    )
+                                )
+                                .padding(
+                                    Dimension.SMALL_PADDING2
+                                )
+                        ) {
+                            Icon(
+                                painter = painterResource(
+                                    id = R.drawable.info_ic
+                                ),
+                                contentDescription = "Info Icon",
+                                tint = colorResource(
+                                    id = R.color.white
+                                ),
+                                modifier = Modifier
+                                    .size(24.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -383,7 +386,8 @@ fun TeamLeaderItemPreview(){
                     userName = "ivanpahlevi8",
                     userEmail = "ivan.indirsya@gmail.com",
                     userPhoneNumber = "234325435"
-                )
+                ),
+                isTeamLeader = true,
             )
         }
     }

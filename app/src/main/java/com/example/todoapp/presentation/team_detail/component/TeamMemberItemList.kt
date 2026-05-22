@@ -48,6 +48,8 @@ fun TeamMemberItemList(
     roleMember : List<TeamRoleDto>,
     onShowAddMemberDialog : () -> Unit,
     onDeleteTeamMember : (String) -> Unit,
+    loginUserId : String,
+    isTeamLeader : Boolean,
 ){
     Box(
         modifier = Modifier
@@ -139,40 +141,42 @@ fun TeamMemberItemList(
                     )
                 }
 
-                Box(
-                    modifier = Modifier
-                        .clip(
-                            shape = CircleShape
-                        )
-                        .clickable{
-                            onShowAddMemberDialog()
-                        }
-                        .padding(
-                            Dimension.SMALL_PADDING2
-                        )
-                        .clip(
-                            shape = CircleShape
-                        )
-                        .background(
-                            color = colorResource(
-                                id = R.color.excellent_end
+                if(isTeamLeader) {
+                    Box(
+                        modifier = Modifier
+                            .clip(
+                                shape = CircleShape
+                            )
+                            .clickable{
+                                onShowAddMemberDialog()
+                            }
+                            .padding(
+                                Dimension.SMALL_PADDING2
+                            )
+                            .clip(
+                                shape = CircleShape
+                            )
+                            .background(
+                                color = colorResource(
+                                    id = R.color.excellent_end
+                                )
+                            )
+                            .padding(
+                                Dimension.SMALL_PADDING2
+                            )
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                id = R.drawable.add_ic
+                            ),
+                            contentDescription = "Add Icon",
+                            modifier = Modifier
+                                .size(18.dp),
+                            tint = colorResource(
+                                id = R.color.black
                             )
                         )
-                        .padding(
-                            Dimension.SMALL_PADDING2
-                        )
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            id = R.drawable.add_ic
-                        ),
-                        contentDescription = "Add Icon",
-                        modifier = Modifier
-                            .size(18.dp),
-                        tint = colorResource(
-                            id = R.color.black
-                        )
-                    )
+                    }
                 }
             }
 
@@ -195,6 +199,13 @@ fun TeamMemberItemList(
                         onInfoUser = {},
                         onDeleteMember = {
                             userId -> onDeleteTeamMember(userId)
+                        },
+                        isLoginUser = loginUserId == getTeamMember.userId,
+                        isTeamLeader = isTeamLeader,
+                        onLeavePerson = {
+                            userId : String -> onDeleteTeamMember(
+                                userId
+                            )
                         }
                     )
                 }
@@ -262,7 +273,9 @@ fun TeamMemberListPreview(){
                     )
                 ),
                 onShowAddMemberDialog = {},
-                onDeleteTeamMember = {}
+                onDeleteTeamMember = {},
+                loginUserId = "",
+                isTeamLeader = false,
             )
         }
     }

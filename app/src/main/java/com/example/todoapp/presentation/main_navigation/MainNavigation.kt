@@ -412,7 +412,9 @@ fun MainNavigation(
                                 newState -> teamDetailViewModel.updateRemoveTeamMemberState(
                                     newState = newState
                                 )
-                            }
+                            },
+                            isTeamLeader = teamDetailViewModel.isTeamLeader,
+                            loginUserId = teamDetailViewModel.loginUserId,
                         )
                     }
                 }

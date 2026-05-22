@@ -57,6 +57,8 @@ fun TeamDetailPage(
     teamRoleState : TeamDetailState,
     searchConnectionState : TeamDetailState,
     onEvent : (TeamDetailEvent) -> Unit,
+    isTeamLeader : Boolean,
+    loginUserId : String,
 ){
     var showAddTeamRoleDialog by remember { mutableStateOf(false) }
     var showAddTeamMemberDialog by remember { mutableStateOf(false) }
@@ -99,8 +101,9 @@ fun TeamDetailPage(
                         userId = "",
                         userName = "ivanpahlevi8",
                         userEmail = "ivan.indirsya@gmail.com",
-                        userPhoneNumber = "234325435"
-                    )
+                        userPhoneNumber = "234325435",
+                    ),
+                    isTeamLeader = isTeamLeader
                 )
 
                 // create team role dialog
@@ -184,7 +187,6 @@ fun TeamDetailPage(
                 TeamRoleItemList(
                     roleList = roleList,
                     showTeamRoleDialog = {
-                        Log.d("CHECK", "Add new team role button clicked")
                         showAddTeamRoleDialog = true
                     },
                     onDelete = {
@@ -193,7 +195,8 @@ fun TeamDetailPage(
                                 teamRoleId = teamRoleId
                             )
                         )
-                    }
+                    },
+                    isTeamLeader = isTeamLeader
                 )
 
                 // select role dialog
@@ -257,7 +260,9 @@ fun TeamDetailPage(
                                     teamId = teamModel.teamId ?: 0
                                 )
                             )
-                        }
+                        },
+                        loginUserId = loginUserId,
+                        isTeamLeader = isTeamLeader
                     )
                 }
             }
@@ -367,7 +372,9 @@ fun TeamDetailPagePreview() {
                     )
                 ),
                 onEvent = {},
-                searchConnectionState = TeamDetailState.IdleState
+                searchConnectionState = TeamDetailState.IdleState,
+                isTeamLeader = false,
+                loginUserId = ""
             )
         }
     }

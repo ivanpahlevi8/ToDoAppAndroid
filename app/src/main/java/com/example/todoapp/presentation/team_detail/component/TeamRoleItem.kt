@@ -43,6 +43,7 @@ import com.example.todoapp.ui.theme.ToDoAppTheme
 fun TeamRoleItem(
     teamRoleDto: TeamRoleDto,
     onDelete : (Int) -> Unit,
+    isTeamLeader : Boolean,
 ) {
     Box(
         modifier = Modifier
@@ -101,57 +102,59 @@ fun TeamRoleItem(
                     )
             )
 
-            VerticalDivider(
-                modifier = Modifier
-                    .height(
-                        Dimension.MEDIUM_PADDING2 * 2
-                    ),
-                color = colorResource(
-                    id = R.color.text_title
-                ),
-                thickness = 1.dp
-            )
-
-            Spacer(
-                modifier = Modifier
-                    .width(
-                        Dimension.SMALL_PADDING2
-                    )
-            )
-
-            Box(
-                modifier = Modifier
-                    .clip(
-                        shape = CircleShape
-                    )
-                    .clickable{
-                        onDelete(
-                            teamRoleDto.teamRoleId ?: 0
-                        )
-                    }
-                    .clip(
-                        shape = CircleShape
-                    )
-                    .background(
-                        color = colorResource(
-                            id = R.color.error_color
-                        )
-                    )
-                    .padding(
-                        Dimension.SMALL_PADDING2
-                    )
-            ) {
-                Icon(
-                    painter = painterResource(
-                        id = R.drawable.delete_forever_ic
-                    ),
-                    contentDescription = "Delete Forever Icon",
-                    tint = colorResource(
-                        id = R.color.white
-                    ),
+            if(isTeamLeader) {
+                VerticalDivider(
                     modifier = Modifier
-                        .size(14.dp)
+                        .height(
+                            Dimension.MEDIUM_PADDING2 * 2
+                        ),
+                    color = colorResource(
+                        id = R.color.text_title
+                    ),
+                    thickness = 1.dp
                 )
+
+                Spacer(
+                    modifier = Modifier
+                        .width(
+                            Dimension.SMALL_PADDING2
+                        )
+                )
+
+                Box(
+                    modifier = Modifier
+                        .clip(
+                            shape = CircleShape
+                        )
+                        .clickable{
+                            onDelete(
+                                teamRoleDto.teamRoleId ?: 0
+                            )
+                        }
+                        .clip(
+                            shape = CircleShape
+                        )
+                        .background(
+                            color = colorResource(
+                                id = R.color.error_color
+                            )
+                        )
+                        .padding(
+                            Dimension.SMALL_PADDING2
+                        )
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            id = R.drawable.delete_forever_ic
+                        ),
+                        contentDescription = "Delete Forever Icon",
+                        tint = colorResource(
+                            id = R.color.white
+                        ),
+                        modifier = Modifier
+                            .size(14.dp)
+                    )
+                }
             }
         }
     }
@@ -176,7 +179,8 @@ fun TeamRoleItemPreview(){
                     roleName = "Software Engineer",
                     teamId = 1
                 ),
-                onDelete = {}
+                onDelete = {},
+                isTeamLeader = false,
             )
         }
     }

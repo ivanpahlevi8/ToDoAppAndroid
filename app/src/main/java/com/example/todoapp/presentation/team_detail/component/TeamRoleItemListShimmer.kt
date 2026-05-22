@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todoapp.R
+import com.example.todoapp.core.component.shimmerEffect
 import com.example.todoapp.core.value.Dimension
 import com.example.todoapp.ui.theme.ToDoAppTheme
 
@@ -132,6 +133,9 @@ fun TeamRoleItemListShimmer(){
 
                 Box(
                     modifier = Modifier
+                        .size(
+                            50.dp
+                        )
                         .padding(
                             Dimension.SMALL_PADDING2
                         )
@@ -141,24 +145,8 @@ fun TeamRoleItemListShimmer(){
                         .clip(
                             shape = CircleShape
                         )
-                        .background(
-                            color = colorResource(
-                                id = R.color.excellent_end
-                            )
-                        )
-                        .padding(
-                            Dimension.SMALL_PADDING2
-                        )
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            id = R.drawable.add_ic
-                        ),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(18.dp)
-                    )
-                }
+                        .shimmerEffect()
+                )
             }
 
             Spacer(

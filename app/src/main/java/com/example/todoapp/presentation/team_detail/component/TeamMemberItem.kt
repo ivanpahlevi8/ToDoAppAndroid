@@ -47,8 +47,11 @@ import com.example.todoapp.ui.theme.ToDoAppTheme
 fun TeamMemberItem(
     userItem : UserModel,
     teamRoleDto: TeamRoleDto,
+    isLoginUser : Boolean,
+    isTeamLeader : Boolean,
     onInfoUser : (String) -> Unit,
     onDeleteMember : (String) -> Unit,
+    onLeavePerson : (String) -> Unit,
 ){
     Box(
         modifier = Modifier
@@ -227,9 +230,97 @@ fun TeamMemberItem(
                     )
             )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            if(isTeamLeader){
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clickable{
+                                onInfoUser(
+                                    userItem.userId
+                                )
+                            }
+                            .padding(
+                                Dimension.SMALL_PADDING2
+                            )
+                            .clip(
+                                shape = RoundedCornerShape(
+                                    10.dp
+                                )
+                            )
+                            .shadow(
+                                elevation = 2.dp,
+                                shape = RoundedCornerShape(
+                                    10.dp
+                                )
+                            )
+                            .background(
+                                color = colorResource(
+                                    id = R.color.excellent_end
+                                )
+                            )
+                            .padding(
+                                Dimension.SMALL_PADDING2
+                            )
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                id = R.drawable.info_ic
+                            ),
+                            contentDescription = "Info Icon",
+                            modifier = Modifier
+                                .size(18.dp),
+                            tint = colorResource(
+                                id = R.color.white
+                            )
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .clickable{
+                                onDeleteMember(
+                                    userItem.userId
+                                )
+                            }
+                            .padding(
+                                Dimension.SMALL_PADDING2
+                            )
+                            .clip(
+                                shape = RoundedCornerShape(
+                                    10.dp
+                                )
+                            )
+                            .shadow(
+                                elevation = 2.dp,
+                                shape = RoundedCornerShape(
+                                    10.dp
+                                )
+                            )
+                            .background(
+                                color = colorResource(
+                                    id = R.color.error_color
+                                )
+                            )
+                            .padding(
+                                Dimension.SMALL_PADDING2
+                            )
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                id = R.drawable.person_remove_ic
+                            ),
+                            contentDescription = "Info Icon",
+                            modifier = Modifier
+                                .size(18.dp),
+                            tint = colorResource(
+                                id = R.color.white
+                            )
+                        )
+                    }
+                }
+            }else if(!isLoginUser) {
                 Box(
                     modifier = Modifier
                         .clickable{
@@ -272,7 +363,7 @@ fun TeamMemberItem(
                         )
                     )
                 }
-
+            } else {
                 Box(
                     modifier = Modifier
                         .clickable{
@@ -305,7 +396,7 @@ fun TeamMemberItem(
                 ) {
                     Icon(
                         painter = painterResource(
-                            id = R.drawable.delete_forever_ic
+                            id = R.drawable.exit_to_app_ic
                         ),
                         contentDescription = "Info Icon",
                         modifier = Modifier
@@ -351,7 +442,10 @@ fun TeamMemberItemPreview(){
                     createdAt = ""
                 ),
                 onInfoUser = {},
-                onDeleteMember = {}
+                onDeleteMember = {},
+                onLeavePerson = {},
+                isLoginUser = false,
+                isTeamLeader = true
             )
         }
     }

@@ -136,6 +136,9 @@ fun TeamMemberItemListShimmer(){
 
                 Box(
                     modifier = Modifier
+                        .size(
+                            50.dp
+                        )
                         .padding(
                             Dimension.SMALL_PADDING2
                         )
@@ -145,27 +148,8 @@ fun TeamMemberItemListShimmer(){
                         .clip(
                             shape = CircleShape
                         )
-                        .background(
-                            color = colorResource(
-                                id = R.color.excellent_end
-                            )
-                        )
-                        .padding(
-                            Dimension.SMALL_PADDING2
-                        )
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            id = R.drawable.add_ic
-                        ),
-                        contentDescription = "Add Icon",
-                        modifier = Modifier
-                            .size(18.dp),
-                        tint = colorResource(
-                            id = R.color.black
-                        )
-                    )
-                }
+                        .shimmerEffect()
+                )
             }
 
             LazyColumn(

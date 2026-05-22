@@ -43,6 +43,7 @@ fun TeamRoleItemList(
     roleList : List<TeamRoleDto>,
     showTeamRoleDialog : () -> Unit,
     onDelete : (Int) -> Unit,
+    isTeamLeader : Boolean,
 ){
     Box(
         modifier = Modifier
@@ -134,40 +135,42 @@ fun TeamRoleItemList(
                     )
                 }
 
-                Box(
-                    modifier = Modifier
-                        .clip(
-                            shape = CircleShape
-                        )
-                        .clickable{
-                            showTeamRoleDialog()
-                        }
-                        .padding(
-                            Dimension.SMALL_PADDING2
-                        )
-                        .clip(
-                            shape = CircleShape
-                        )
-                        .background(
-                            color = colorResource(
-                                id = R.color.excellent_end
+                if(isTeamLeader) {
+                    Box(
+                        modifier = Modifier
+                            .clip(
+                                shape = CircleShape
+                            )
+                            .clickable{
+                                showTeamRoleDialog()
+                            }
+                            .padding(
+                                Dimension.SMALL_PADDING2
+                            )
+                            .clip(
+                                shape = CircleShape
+                            )
+                            .background(
+                                color = colorResource(
+                                    id = R.color.excellent_end
+                                )
+                            )
+                            .padding(
+                                Dimension.SMALL_PADDING2
+                            )
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                id = R.drawable.add_ic
+                            ),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(18.dp),
+                            tint = colorResource(
+                                id = R.color.black
                             )
                         )
-                        .padding(
-                            Dimension.SMALL_PADDING2
-                        )
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            id = R.drawable.add_ic
-                        ),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(18.dp),
-                        tint = colorResource(
-                            id = R.color.black
-                        )
-                    )
+                    }
                 }
             }
 
@@ -192,7 +195,8 @@ fun TeamRoleItemList(
                         teamRoleDto = getData,
                         onDelete = {
                             teamRoleId -> onDelete(teamRoleId)
-                        }
+                        },
+                        isTeamLeader = isTeamLeader
                     )
                 }
             }
@@ -233,7 +237,8 @@ fun TeamRoleItemListPreview(){
                 ),
             ),
             showTeamRoleDialog = {},
-            onDelete = {}
+            onDelete = {},
+            isTeamLeader = false,
         )
     }
 }

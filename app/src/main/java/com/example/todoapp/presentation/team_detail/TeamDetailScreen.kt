@@ -25,12 +25,16 @@ fun TeamDetailScreen(
     removeTeamMemberState : TeamDetailState,
     updateRemoveTeamMemberState : (TeamDetailState) -> Unit,
     onEvent: (TeamDetailEvent) -> Unit,
+    isTeamLeader : Boolean,
+    loginUserId : String,
 ) {
     TeamDetailPage(
         teamModelState = state,
         teamRoleState = teamRoleListState,
         searchConnectionState = searchConnectionState,
-        onEvent = onEvent
+        onEvent = onEvent,
+        isTeamLeader = isTeamLeader,
+        loginUserId = loginUserId
     )
 
     // check state for create team

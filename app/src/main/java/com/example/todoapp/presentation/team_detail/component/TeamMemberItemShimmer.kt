@@ -237,83 +237,37 @@ fun TeamMemberItemShimmer(){
             ) {
                 Box(
                     modifier = Modifier
+                        .size(
+                            50.dp
+                        )
+                        .padding(
+                            Dimension.SMALL_PADDING2
+                        )
                         .clickable{
+
                         }
-                        .padding(
-                            Dimension.SMALL_PADDING2
-                        )
                         .clip(
-                            shape = RoundedCornerShape(
-                                10.dp
-                            )
+                            shape = MaterialTheme.shapes.medium
                         )
-                        .shadow(
-                            elevation = 2.dp,
-                            shape = RoundedCornerShape(
-                                10.dp
-                            )
-                        )
-                        .background(
-                            color = colorResource(
-                                id = R.color.excellent_end
-                            )
-                        )
-                        .padding(
-                            Dimension.SMALL_PADDING2
-                        )
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            id = R.drawable.info_ic
-                        ),
-                        contentDescription = "Info Icon",
-                        modifier = Modifier
-                            .size(18.dp),
-                        tint = colorResource(
-                            id = R.color.white
-                        )
-                    )
-                }
+                        .shimmerEffect()
+                )
 
                 Box(
                     modifier = Modifier
+                        .size(
+                            40.dp
+                        )
+                        .padding(
+                            Dimension.SMALL_PADDING2
+                        )
                         .clickable{
+
                         }
-                        .padding(
-                            Dimension.SMALL_PADDING2
-                        )
                         .clip(
-                            shape = RoundedCornerShape(
-                                10.dp
-                            )
+                            shape = MaterialTheme.shapes.medium
                         )
-                        .shadow(
-                            elevation = 2.dp,
-                            shape = RoundedCornerShape(
-                                10.dp
-                            )
-                        )
-                        .background(
-                            color = colorResource(
-                                id = R.color.error_color
-                            )
-                        )
-                        .padding(
-                            Dimension.SMALL_PADDING2
-                        )
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            id = R.drawable.delete_forever_ic
-                        ),
-                        contentDescription = "Info Icon",
-                        modifier = Modifier
-                            .size(18.dp),
-                        tint = colorResource(
-                            id = R.color.white
-                        )
-                    )
-                }
+                        .shimmerEffect()
+                )
             }
         }
     }
