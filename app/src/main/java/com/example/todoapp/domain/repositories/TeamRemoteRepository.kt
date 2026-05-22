@@ -10,4 +10,5 @@ interface TeamRemoteRepository {
     suspend fun getTeam(teamId : Int) : TeamModel
     suspend fun assignUserTeam(teamId : Int, userId : String, teamRoleId : Int) : AssignUserDto
     suspend fun checkMemberOnTeam(userId: String, teamId: Int) : Boolean
+    suspend fun unAssignUserTeam(userId : String, teamId: Int) : String
 }

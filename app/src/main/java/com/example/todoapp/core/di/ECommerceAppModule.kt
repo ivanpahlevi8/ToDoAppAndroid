@@ -39,6 +39,7 @@ import com.example.todoapp.domain.usecase.team_usecase.CreateTeamUseCase
 import com.example.todoapp.domain.usecase.team_usecase.GetAllTeamUseCase
 import com.example.todoapp.domain.usecase.team_usecase.GetTeamUseCase
 import com.example.todoapp.domain.usecase.team_usecase.TeamUseCase
+import com.example.todoapp.domain.usecase.team_usecase.UnAssignUserTeamUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.AcceptUserConnectionUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.DeclineUserUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.GetAllConnectionUseCase
@@ -281,6 +282,9 @@ class ECommerceAppModule {
                 teamRemoteRepository = teamRemoteRepository
             ),
             checkUserOnTeamUseCase = CheckUserOnTeamUseCase(
+                teamRemoteRepository = teamRemoteRepository
+            ),
+            unAssignUserTeamUseCase = UnAssignUserTeamUseCase(
                 teamRemoteRepository = teamRemoteRepository
             )
         )

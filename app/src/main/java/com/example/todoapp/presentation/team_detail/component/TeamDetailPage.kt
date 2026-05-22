@@ -249,6 +249,14 @@ fun TeamDetailPage(
                         roleMember = teamModel.roleMember ?: listOf(),
                         onShowAddMemberDialog = {
                             showAddTeamMemberDialog = true
+                        },
+                        onDeleteTeamMember = {
+                            userId -> onEvent(
+                                TeamDetailEvent.OnRemoveTeamMember(
+                                    userId = userId,
+                                    teamId = teamModel.teamId ?: 0
+                                )
+                            )
                         }
                     )
                 }

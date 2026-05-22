@@ -22,6 +22,8 @@ fun TeamDetailScreen(
     updateCreateTeamRoleState : (TeamDetailState) -> Unit,
     updateDeleteTeamRoleState : (TeamDetailState) -> Unit,
     updateAddTeamMemberState : (TeamDetailState) -> Unit,
+    removeTeamMemberState : TeamDetailState,
+    updateRemoveTeamMemberState : (TeamDetailState) -> Unit,
     onEvent: (TeamDetailEvent) -> Unit,
 ) {
     TeamDetailPage(
@@ -131,6 +133,45 @@ fun TeamDetailScreen(
                 errMsg = errNsg,
                 onDismiss = {
                     updateAddTeamMemberState(
+                        TeamDetailState.IdleState
+                    )
+                }
+            )
+        }
+        is TeamDetailState.LoadingState -> {
+            // show loading dialog
+            LoadingDialog()
+        }
+        is TeamDetailState.IdleState -> {
+
+        }
+    }
+
+    when(removeTeamMemberState) {
+        is TeamDetailState.DataState<*> -> {
+            // get data
+            val getData = removeTeamMemberState.data as String
+
+            // show success message
+            SuccessDialog(
+                successTitle = "Success",
+                successMsg = getData,
+                onDismiss = {
+                    updateRemoveTeamMemberState(
+                        TeamDetailState.IdleState
+                    )
+                }
+            )
+        }
+        is TeamDetailState.ErrorState -> {
+            // get error message
+            val errNsg = removeTeamMemberState.errMsg
+
+            // show error dialog
+            ErrorDialog(
+                errMsg = errNsg,
+                onDismiss = {
+                    updateRemoveTeamMemberState(
                         TeamDetailState.IdleState
                     )
                 }

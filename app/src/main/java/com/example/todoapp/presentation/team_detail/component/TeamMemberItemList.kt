@@ -47,6 +47,7 @@ fun TeamMemberItemList(
     teamMember : List<UserModel>,
     roleMember : List<TeamRoleDto>,
     onShowAddMemberDialog : () -> Unit,
+    onDeleteTeamMember : (String) -> Unit,
 ){
     Box(
         modifier = Modifier
@@ -192,7 +193,9 @@ fun TeamMemberItemList(
                         userItem = getTeamMember,
                         teamRoleDto = getTeamRole,
                         onInfoUser = {},
-                        onDeleteMember = {}
+                        onDeleteMember = {
+                            userId -> onDeleteTeamMember(userId)
+                        }
                     )
                 }
             }
@@ -258,7 +261,8 @@ fun TeamMemberListPreview(){
                         teamId = 1
                     )
                 ),
-                onShowAddMemberDialog = {}
+                onShowAddMemberDialog = {},
+                onDeleteTeamMember = {}
             )
         }
     }

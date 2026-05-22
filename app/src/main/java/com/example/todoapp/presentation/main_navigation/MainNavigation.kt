@@ -406,6 +406,12 @@ fun MainNavigation(
                                 newState -> teamDetailViewModel.updateAddTeamMemberState(
                                     newState
                                 )
+                            },
+                            removeTeamMemberState = teamDetailViewModel.removeTeamMemberState.value,
+                            updateRemoveTeamMemberState = {
+                                newState -> teamDetailViewModel.updateRemoveTeamMemberState(
+                                    newState = newState
+                                )
                             }
                         )
                     }

@@ -60,6 +60,11 @@ class TeamDetailViewModel @Inject constructor(
 
     val addTeamMemberState : State<TeamDetailState> get() = derivedStateOf { _addTeamMemberState }
 
+    // create state to remove team member
+    private var _removeTeamMemberState by mutableStateOf<TeamDetailState>(TeamDetailState.IdleState)
+
+    val removeTeamMemberState : State<TeamDetailState> get() = derivedStateOf { _removeTeamMemberState }
+
     init {
         viewModelScope.launch {
             delay(600)
@@ -188,7 +193,32 @@ class TeamDetailViewModel @Inject constructor(
             }
 
             is TeamDetailEvent.OnRemoveTeamMember -> {
-                
+                viewModelScope.launch {
+                    // update state on remove team
+                    _removeTeamMemberState = TeamDetailState.LoadingState
+
+                    delay(600)
+
+                    val getUserId = event.userId
+                    val getTeamId = event.teamId
+
+                    try{
+                        val response = teamUseCase.unAssignUserTeamUseCase(
+                            userId = getUserId,
+                            teamId = getTeamId
+                        )
+
+                        _removeTeamMemberState = TeamDetailState.DataState(
+                            data = response
+                        )
+                    } catch (e : Exception) {
+                        val errMsg = "Error Happen : ${e.message}, ${e.stackTrace}"
+
+                        _removeTeamMemberState = TeamDetailState.ErrorState(
+                            errMsg = errMsg
+                        )
+                    }
+                }
             }
 
             is TeamDetailEvent.OnSearchConnection -> {
@@ -254,12 +284,21 @@ class TeamDetailViewModel @Inject constructor(
 
         // update role team
         getAllRoleTeam()
+
+        // update header
+        getTeamHeaderData()
     }
 
     fun updateAddTeamMemberState(newState : TeamDetailState) {
         _addTeamMemberState = newState
 
         // update get new team
+        getTeamHeaderData()
+    }
+
+    fun updateRemoveTeamMemberState(newState: TeamDetailState) {
+        _removeTeamMemberState = newState
+
         getTeamHeaderData()
     }
 
@@ -291,6 +330,9 @@ class TeamDetailViewModel @Inject constructor(
 
     private fun getTeamHeaderData(){
         viewModelScope.launch {
+            // update stat into loading
+            _teamDetailState = TeamDetailState.LoadingState
+
             try{
                 // get team detail
                 val data = teamUseCase.getTeamUseCase(

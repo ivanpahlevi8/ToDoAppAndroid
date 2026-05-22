@@ -37,4 +37,10 @@ interface TeamRemoteAPI {
         @Query("userId") userId: String,
         @Query("teamId") teamId: Int
     ) : ResponseDto<Boolean>
+
+    @POST("api/Team/unassign-user-team")
+    suspend fun unassignUserTeam(
+        @Query("userId") userId : String,
+        @Query("teamId") teamId : Int,
+    ) : ResponseDto<String>
 }
