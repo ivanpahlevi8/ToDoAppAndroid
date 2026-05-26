@@ -15,4 +15,9 @@ object Constants {
     const val USER_ID = "userId"
     const val FIRST_NAME = "firstName"
     const val LAST_NAME = "lastName"
+
+    const val PROJECT_STATUS_CREATED = "CREATED"
+    const val PROJECT_STATUS_ON_GOING = "ON_GOING"
+    const val PROJECT_STATUS_REVIEWED = "REVIEWED"
+    const val PROJECT_STATUS_FINISHED = "FINISHED"
 }

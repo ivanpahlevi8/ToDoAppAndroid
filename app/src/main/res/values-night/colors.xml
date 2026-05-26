@@ -57,4 +57,17 @@
     <color name="tab_active_text">#F9FAFB</color>
     <color name="tab_inactive_text">#9CA3AF</color>
     <color name="tab_indicator_tint">#60A5FA</color>
+
+    <!-- Deeper slate blue -->
+    <color name="time_line_card_color1">#2C4A60</color>
+    <!-- Deeper medium blue -->
+    <color name="time_line_card_color2">#3F6A82</color>
+    <!-- Very dark navy (almost black) for sharp contrast -->
+    <color name="time_line_card_color3">#15202B</color>
+    <!-- Darker, richer green -->
+    <color name="time_line_card_color4">#3C7A40</color>
+    <!-- Deeper brick red -->
+    <color name="time_line_card_color5">#BD4A4A</color>
+    <!-- Darker gold/mustard for readability on white -->
+    <color name="time_line_card_color6">#D4A017</color>
 </resources>

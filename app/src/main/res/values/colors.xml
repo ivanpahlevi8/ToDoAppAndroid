@@ -107,12 +107,18 @@
 
     <color name="cruise_ship_header_color">#2E3A4D</color>
 
-    <color name="time_line_card_color1">#446A87</color>
-    <color name="time_line_card_color2">#5E8CA8</color>
-    <color name="time_line_card_color3">#1E2B38</color>
-    <color name="time_line_card_color4">#58A55C</color>
-    <color name="time_line_card_color5">#D66C6C</color>
-    <color name="time_line_card_color6">#FFD166</color>
+    <!-- Lighter, softer blue -->
+    <color name="time_line_card_color1">#6696BA</color>
+    <!-- Pastel light blue -->
+    <color name="time_line_card_color2">#88B9D6</color>
+    <!-- Brightened navy so it doesn't vanish on pure black -->
+    <color name="time_line_card_color3">#2E4154</color>
+    <!-- Desaturated soft green -->
+    <color name="time_line_card_color4">#71C277</color>
+    <!-- Softer coral/red to reduce glare -->
+    <color name="time_line_card_color5">#E88C8C</color>
+    <!-- Slightly muted yellow -->
+    <color name="time_line_card_color6">#FFE082</color>
 
     <color name="tab_container_bg">#F3F4F6</color>
     <color name="tab_active_bg">#FFFFFF</color>

@@ -1,6 +1,7 @@
 package com.example.todoapp.presentation.main_navigation
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -50,6 +51,8 @@ import com.example.todoapp.presentation.team_detail.TeamDetailScreen
 import com.example.todoapp.presentation.team_detail.TeamDetailViewModel
 import com.example.todoapp.presentation.team_list.TeamListScreen
 import com.example.todoapp.presentation.team_list.TeamListViewModel
+import com.example.todoapp.presentation.team_project.TeamProjectScreen
+import com.example.todoapp.presentation.team_project.TeamProjectViewModel
 import com.example.todoapp.presentation.user_connection.UserConnectionScreen
 import com.example.todoapp.presentation.user_connection.UserConnectionViewModel
 import kotlinx.coroutines.launch
@@ -81,6 +84,7 @@ fun MainNavigation(
         getCurrentRoute == Routes.UserConnectionRoutes.route -> 2
         getCurrentRoute == Routes.TeamListRoutes.route -> 3
         (getCurrentRoute?.startsWith(Routes.TeamDetailRoutes.route)) ?: false -> 4
+        (getCurrentRoute?.startsWith(Routes.ProjectByTeamRoutes.route)) ?: false -> 5
         else -> 0
     }
 
@@ -166,6 +170,20 @@ fun MainNavigation(
                                             )
                                         )
                                     }
+                                    5 -> {
+                                        Text(
+                                            text = "Team Projects",
+                                            style = MaterialTheme.typography.titleMedium.copy(
+                                                fontWeight = FontWeight.W600,
+                                                letterSpacing = 1.1.sp,
+                                                fontSize = 20.sp,
+                                            ),
+                                            color = colorResource(
+                                                id = R.color.text_title,
+                                            )
+                                        )
+                                    }
+
                                 }
                             },
                             navigationIcon = {
@@ -220,27 +238,99 @@ fun MainNavigation(
                                             )
                                         }
                                     }
+                                    5 -> {
+                                        IconButton(onClick = {
+                                            navController.popBackStack()
+                                        }) {
+                                            Icon(  //Show Menu Icon on TopBar
+                                                painter = painterResource(
+                                                    id = R.drawable.arrow_back_ic
+                                                ),
+                                                contentDescription = "Back"
+                                            )
+                                        }
+                                    }
                                 }
                             },
                             actions = {
-                                IconButton(
-                                    onClick = {
-                                        navController.navigate(
-                                            Routes.UserConnectionRoutes.route
-                                        )
+                                when(indexSelectedRoute){
+                                    4 -> {
+                                        IconButton(
+                                            onClick = {
+                                                val currentEntry = navController.currentBackStackEntry
+
+                                                val teamIdString = currentEntry?.arguments?.getString("teamId") ?: "0"
+
+                                                // safely convert to Int
+                                                val teamId = teamIdString.toIntOrNull() ?: 0
+
+                                                // navigate to detail
+                                                navController.navigate(
+                                                    Routes.ProjectByTeamRoutes.route + "/$teamId"
+                                                )
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(
+                                                    id = R.drawable.assignment_ic
+                                                ),
+                                                modifier = Modifier
+                                                    .size(20.dp),
+                                                tint = colorResource(
+                                                    id = R.color.text_title
+                                                ),
+                                                contentDescription = "Assignment Icon"
+                                            )
+                                        }
                                     }
-                                ) {
-                                    Icon(
-                                        painter = painterResource(
-                                            id = R.drawable.people_alt_ic
-                                        ),
-                                        modifier = Modifier
-                                            .size(20.dp),
-                                        tint = colorResource(
-                                            id = R.color.text_title
-                                        ),
-                                        contentDescription = "People Icon"
-                                    )
+                                    5 -> {
+                                        IconButton(
+                                            onClick = {
+                                                val currentEntry = navController.currentBackStackEntry
+
+                                                val teamIdString = currentEntry?.arguments?.getString("teamId") ?: "0"
+
+                                                // safely convert to Int
+                                                val teamId = teamIdString.toIntOrNull() ?: 0
+
+                                                // navigate to detail
+                                                Log.d("check", "Team id : $teamId")
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(
+                                                    id = R.drawable.checklist_ic
+                                                ),
+                                                modifier = Modifier
+                                                    .size(20.dp),
+                                                tint = colorResource(
+                                                    id = R.color.text_title
+                                                ),
+                                                contentDescription = "Assignment Icon"
+                                            )
+                                        }
+                                    }
+                                    else -> {
+                                        IconButton(
+                                            onClick = {
+                                                navController.navigate(
+                                                    Routes.UserConnectionRoutes.route
+                                                )
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(
+                                                    id = R.drawable.people_alt_ic
+                                                ),
+                                                modifier = Modifier
+                                                    .size(20.dp),
+                                                tint = colorResource(
+                                                    id = R.color.text_title
+                                                ),
+                                                contentDescription = "People Icon"
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         )
@@ -415,6 +505,19 @@ fun MainNavigation(
                             },
                             isTeamLeader = teamDetailViewModel.isTeamLeader,
                             loginUserId = teamDetailViewModel.loginUserId,
+                        )
+                    }
+
+                    // route for team project
+                    composable(
+                        route = Routes.ProjectByTeamRoutes.route + "/{teamId}",
+                        arguments = listOf(navArgument("teamId"){type= NavType.StringType})
+                    ) {
+                        val projectTeamViewModel : TeamProjectViewModel = hiltViewModel()
+
+                        TeamProjectScreen(
+                            teamProjectState = projectTeamViewModel.getProjectTeamState.value,
+                            onProjectDetail = {}
                         )
                     }
                 }

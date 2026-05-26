@@ -7,15 +7,18 @@ import com.example.todoapp.core.value.Constants
 import com.example.todoapp.data.manager.LocalUserManagerImpl
 import com.example.todoapp.data.remote.AuthRemoteAPI
 import com.example.todoapp.data.remote.ConnectionRemoteAPI
+import com.example.todoapp.data.remote.ProjectRemoteAPI
 import com.example.todoapp.data.remote.TeamRemoteAPI
 import com.example.todoapp.data.remote.TeamRoleRemoteAPI
 import com.example.todoapp.data.repositories.AuthRemoteRepositoryImpl
 import com.example.todoapp.data.repositories.ConnectionRemoteRepositoryImpl
+import com.example.todoapp.data.repositories.ProjectRemoteRepositoryImpl
 import com.example.todoapp.data.repositories.TeamRemoteRepositoryImpl
 import com.example.todoapp.data.repositories.TeamRoleRemoteRepositoryImpl
 import com.example.todoapp.domain.manager.LocalUserManager
 import com.example.todoapp.domain.repositories.AuthRemoteRepository
 import com.example.todoapp.domain.repositories.ConnectionRemoteRepository
+import com.example.todoapp.domain.repositories.ProjectRemoteRepository
 import com.example.todoapp.domain.repositories.TeamRemoteRepository
 import com.example.todoapp.domain.repositories.TeamRoleRemoteRepository
 import com.example.todoapp.domain.usecase.authorization_usecase.AuthUseCase
@@ -29,6 +32,9 @@ import com.example.todoapp.domain.usecase.local_user_manager_usecase.LocalUserMa
 import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserLogInUseCase
 import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserLogOut
 import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserOnBoardUseCase
+import com.example.todoapp.domain.usecase.project_usecase.CreateProjectWithinTeamUseCase
+import com.example.todoapp.domain.usecase.project_usecase.GetProjectWithinTeamUseCase
+import com.example.todoapp.domain.usecase.project_usecase.ProjectUseCase
 import com.example.todoapp.domain.usecase.team_role_usecase.CreateTeamRoleUseCase
 import com.example.todoapp.domain.usecase.team_role_usecase.DeleteTeamRoleUseCase
 import com.example.todoapp.domain.usecase.team_role_usecase.GetAllTeamRoleUseCase
@@ -333,6 +339,50 @@ class ECommerceAppModule {
             ),
             getAllTeamRoleUseCase = GetAllTeamRoleUseCase(
                 teamRoleRemoteRepository = teamRoleRemoteRepository
+            )
+        )
+    }
+
+    // provides instance for project remote API
+    @Provides
+    @Singleton
+    fun providesAProjectRemoteAPI() : ProjectRemoteAPI{
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(180, TimeUnit.SECONDS)
+            .readTimeout(180, TimeUnit.SECONDS)
+            .writeTimeout(180, TimeUnit.SECONDS)
+            .build()
+        return Retrofit.Builder()
+            .baseUrl(Constants.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ProjectRemoteAPI::class.java)
+    }
+
+    // provides instance for project remote repository
+    @Provides
+    @Singleton
+    fun providesProjectRemoteRepository(
+        projectRemoteAPI: ProjectRemoteAPI
+    ) : ProjectRemoteRepository{
+        return ProjectRemoteRepositoryImpl(
+            projectRemoteAPI = projectRemoteAPI
+        )
+    }
+
+    // provides instance for project remote use case
+    @Provides
+    @Singleton
+    fun providesProjectRemoteUseCase(
+        projectRemoteRepository: ProjectRemoteRepository
+    ) : ProjectUseCase {
+        return ProjectUseCase(
+            createProjectWithinTeamUseCase = CreateProjectWithinTeamUseCase(
+                projectRemoteRepository = projectRemoteRepository,
+            ),
+            getProjectWithinTeamUseCase = GetProjectWithinTeamUseCase(
+                projectRemoteRepository = projectRemoteRepository
             )
         )
     }
