@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
@@ -33,6 +34,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,7 +51,8 @@ fun DialogInputTextField(
     @DrawableRes leadingIcon : Int?,
     iconSize : Int,
     iconColor: Int,
-    placeHolderText : String?
+    placeHolderText : String?,
+    singleLine : Boolean = true,
 ){
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -74,11 +77,14 @@ fun DialogInputTextField(
                 shape = MaterialTheme.shapes.medium
             )
             .fillMaxWidth(),
-        singleLine = true,
+        singleLine = singleLine,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         textStyle = LocalTextStyle.current.copy(
             color = MaterialTheme.colorScheme.onSurface,
             fontSize = fontSize.sp
+        ),
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done // Overrides the "New Line" button with a "Done" button
         ),
         keyboardActions = KeyboardActions {
             focucManager.clearFocus();

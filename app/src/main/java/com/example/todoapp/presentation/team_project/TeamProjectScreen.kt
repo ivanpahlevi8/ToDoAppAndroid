@@ -13,6 +13,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -24,6 +28,7 @@ import com.example.todoapp.R
 import com.example.todoapp.core.value.Dimension
 import com.example.todoapp.data.dtos.CreateProjectDto
 import com.example.todoapp.domain.models.UserModel
+import com.example.todoapp.presentation.team_project.component.CreateTeamProjectDialog
 import com.example.todoapp.presentation.team_project.component.TeamProjectItemList
 import com.example.todoapp.presentation.team_project.component.TeamProjectItemListShimmer
 
@@ -32,16 +37,15 @@ fun TeamProjectScreen(
     teamProjectState : TeamProjectState,
     onProjectDetail : (Int) -> Unit,
 ){
+    // create state to show add project dialog
+    var showAddProjectDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         floatingActionButton = {
             FloatingActionButton(
-                modifier = Modifier
-                    .padding(
-                        Dimension.SMALL_PADDING1
-                    ),
                 onClick = {
-
+                    showAddProjectDialog = true
                 },
                 shape = RoundedCornerShape(
                     16.dp
@@ -113,6 +117,13 @@ fun TeamProjectScreen(
                     TeamProjectItemListShimmer()
                 }
             }
+
+            CreateTeamProjectDialog(
+                showDialog = showAddProjectDialog,
+                onDismiss = {
+                    showAddProjectDialog = false
+                }
+            )
         }
     }
 }
