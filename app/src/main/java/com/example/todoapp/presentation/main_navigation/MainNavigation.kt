@@ -517,7 +517,18 @@ fun MainNavigation(
 
                         TeamProjectScreen(
                             teamProjectState = projectTeamViewModel.getProjectTeamState.value,
-                            onProjectDetail = {}
+                            onProjectDetail = {},
+                            onEvent = {
+                                event -> projectTeamViewModel.onEvent(
+                                    event = event
+                                )
+                            },
+                            createTeamProjectState = projectTeamViewModel.createProjectTeam.value,
+                            updateTeamProjectState = {
+                                newState -> projectTeamViewModel.updateCreateProjectTeamState(
+                                    newState
+                                )
+                            }
                         )
                     }
                 }

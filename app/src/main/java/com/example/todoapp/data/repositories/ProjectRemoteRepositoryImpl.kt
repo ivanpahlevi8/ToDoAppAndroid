@@ -1,5 +1,6 @@
 package com.example.todoapp.data.repositories
 
+import android.util.Log
 import com.example.todoapp.data.dtos.CreateProjectDto
 import com.example.todoapp.data.dtos.ResponseDto
 import com.example.todoapp.data.remote.ProjectRemoteAPI
@@ -27,6 +28,7 @@ class ProjectRemoteRepositoryImpl(
                     throw Exception(parsedError.responseMessage)
 
                 } catch (jsonException: Exception) {
+                    Log.d("CHECK", errorBodyString)
                     throw Exception(jsonException.message ?: "Failed to parse error response")
                 }
             } else {

@@ -35,12 +35,14 @@ import androidx.compose.ui.window.Dialog
 import com.example.todoapp.R
 import com.example.todoapp.core.component.DialogInputTextField
 import com.example.todoapp.core.value.Dimension
+import com.example.todoapp.data.dtos.CreateProjectDto
 import com.example.todoapp.ui.theme.ToDoAppTheme
 
 @Composable
 fun CreateTeamProjectDialog(
     showDialog : Boolean,
     onDismiss : () -> Unit,
+    onCreateProject : (CreateProjectDto) -> Unit,
 ){
     // create input value for
     var inputProjectTitle by remember { mutableStateOf("") }
@@ -158,7 +160,15 @@ fun CreateTeamProjectDialog(
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .clickable {
+                                onCreateProject(
+                                    CreateProjectDto(
+                                        projectName = inputProjectTitle,
+                                        projectDescription = inputProjectDescription,
+                                    )
+                                )
 
+                                inputProjectTitle = ""
+                                inputProjectDescription = ""
                             }
                             .shadow(
                                 elevation = 3.dp,
@@ -210,8 +220,10 @@ fun CreateTeamProjectDialogPreview(){
                 )
         ) {
             CreateTeamProjectDialog(
-                showDialog = true
-            ) { }
+                showDialog = true,
+                onDismiss = {},
+                onCreateProject = {}
+            )
         }
     }
 }

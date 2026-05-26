@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todoapp.core.value.Constants
 import com.example.todoapp.domain.models.UserModel
 import com.example.todoapp.domain.usecase.authorization_usecase.AuthUseCase
 import com.example.todoapp.domain.usecase.project_usecase.ProjectUseCase
@@ -27,13 +28,21 @@ class TeamProjectViewModel @Inject constructor(
 
     val getProjectTeamState : State<TeamProjectState> get() = derivedStateOf { _getProjectTeams }
 
+    // create state for create project within team
+    private var _createProjectTeam by mutableStateOf<TeamProjectState>(TeamProjectState.IdleState)
+
+    val createProjectTeam : State<TeamProjectState> get() = derivedStateOf { _createProjectTeam }
+
+    // team id value
+    val teamId = (savedStateHandle.get<String>("teamId") ?: "0").toInt()
+
     init {
         viewModelScope.launch {
             delay(600)
 
             try{
                 val getData = projectUseCase.getProjectWithinTeamUseCase(
-                    teamId = (savedStateHandle.get<String>("teamId") ?: "0").toInt()
+                    teamId = teamId
                 )
 
                 // get user leader
@@ -59,5 +68,41 @@ class TeamProjectViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    fun onEvent(event : TeamProjectEvent) {
+        when(event) {
+            is TeamProjectEvent.CreateProjectTeam -> {
+                viewModelScope.launch {
+                    val getProject = event.createProjectDto
+
+                    getProject.projectStatus = Constants.PROJECT_STATUS_CREATED
+                    getProject.projectTeamId = teamId
+
+                    _createProjectTeam = TeamProjectState.LoadingState
+
+                    val data = projectUseCase.createProjectWithinTeamUseCase(
+                        createProjectDto = getProject
+                    )
+
+                    _createProjectTeam = TeamProjectState.DataState(
+                        data = data
+                    )
+                    try{
+
+                    } catch (e : Exception) {
+                        val errMsg = "Error Happen : ${e.message}, ${e.stackTrace}"
+
+                        _createProjectTeam = TeamProjectState.ErrorState(
+                            errMsg = errMsg
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateCreateProjectTeamState(newState : TeamProjectState) {
+        _createProjectTeam = newState
     }
 }

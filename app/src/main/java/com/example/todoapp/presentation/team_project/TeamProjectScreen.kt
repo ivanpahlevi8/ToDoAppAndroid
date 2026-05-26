@@ -25,6 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todoapp.R
+import com.example.todoapp.core.component.ErrorDialog
+import com.example.todoapp.core.component.LoadingDialog
+import com.example.todoapp.core.component.SuccessDialog
 import com.example.todoapp.core.value.Dimension
 import com.example.todoapp.data.dtos.CreateProjectDto
 import com.example.todoapp.domain.models.UserModel
@@ -35,7 +38,10 @@ import com.example.todoapp.presentation.team_project.component.TeamProjectItemLi
 @Composable
 fun TeamProjectScreen(
     teamProjectState : TeamProjectState,
+    createTeamProjectState : TeamProjectState,
+    updateTeamProjectState: (TeamProjectState) -> Unit,
     onProjectDetail : (Int) -> Unit,
+    onEvent : (TeamProjectEvent) -> Unit,
 ){
     // create state to show add project dialog
     var showAddProjectDialog by remember { mutableStateOf(false) }
@@ -116,12 +122,50 @@ fun TeamProjectScreen(
                 is TeamProjectState.LoadingState -> {
                     TeamProjectItemListShimmer()
                 }
+                is TeamProjectState.IdleState -> {}
+            }
+
+            when(createTeamProjectState){
+                is TeamProjectState.DataState<*> -> {
+                    val getData = createTeamProjectState.data as String
+
+                    SuccessDialog(
+                        successTitle = "Success Create Project",
+                        successMsg = getData,
+                        onDismiss = {
+                            updateTeamProjectState(TeamProjectState.IdleState)
+                        }
+                    )
+                }
+                is TeamProjectState.ErrorState -> {
+                    val errMsg = createTeamProjectState.errMsg
+
+                    ErrorDialog(
+                        errMsg = errMsg,
+                        onDismiss = {
+                            updateTeamProjectState(TeamProjectState.IdleState)
+                        }
+                    )
+                }
+                is TeamProjectState.LoadingState -> {
+                    LoadingDialog()
+                }
+                is TeamProjectState.IdleState -> {}
             }
 
             CreateTeamProjectDialog(
                 showDialog = showAddProjectDialog,
                 onDismiss = {
                     showAddProjectDialog = false
+                },
+                onCreateProject = {
+                    projectDto ->
+                    showAddProjectDialog = false
+                    onEvent(
+                        TeamProjectEvent.CreateProjectTeam(
+                            createProjectDto = projectDto
+                        )
+                    )
                 }
             )
         }

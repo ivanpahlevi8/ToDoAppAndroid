@@ -4,23 +4,23 @@ import com.google.gson.annotations.SerializedName
 
 data class CreateProjectDto(
     @SerializedName("projectId")
-    val projectId : Int? = null,
+    var projectId : Int? = null,
 
     @SerializedName(value = "projectName")
-    val projectName : String,
+    var projectName : String,
 
     @SerializedName(value = "projectDescription")
-    val projectDescription : String,
+    var projectDescription : String,
 
     @SerializedName(value = "projectUserLeadId")
-    val projectUserLeadId : String? = null,
+    var projectUserLeadId : String? = null,
 
     @SerializedName(value = "projectTeamId")
-    val projectTeamId : Int? = null,
+    var projectTeamId : Int? = null,
 
     @SerializedName(value = "projectStatus")
-    val projectStatus : String? = null,
+    var projectStatus : String? = null,
 
     @SerializedName(value = "createdAt")
-    val projectCreatedAt : String? = null
+    var projectCreatedAt : String? = null
 )

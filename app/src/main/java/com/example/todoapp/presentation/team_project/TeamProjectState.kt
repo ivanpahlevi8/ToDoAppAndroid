@@ -6,4 +6,5 @@ sealed class TeamProjectState {
     data class DataState<T>(val data : T, val userList : List<UserModel>?=null) : TeamProjectState()
     data class ErrorState(val errMsg : String) : TeamProjectState()
     object LoadingState : TeamProjectState()
+    object IdleState : TeamProjectState()
 }
