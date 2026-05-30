@@ -25,6 +25,8 @@ paging-compose = "3.2.0-rc01"
 room = "2.5.2"
 osmodroid = "6.1.16"
 
+okhttp = "4.12.0"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -65,6 +67,8 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 
 androidx-osmdroid = {module="org.osmdroid:osmdroid-android", version.ref="osmodroid"}
+
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

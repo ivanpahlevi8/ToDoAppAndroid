@@ -10,17 +10,22 @@ import com.example.todoapp.data.remote.ConnectionRemoteAPI
 import com.example.todoapp.data.remote.ProjectRemoteAPI
 import com.example.todoapp.data.remote.TeamRemoteAPI
 import com.example.todoapp.data.remote.TeamRoleRemoteAPI
+import com.example.todoapp.data.remote.ToDoRemoteAPI
 import com.example.todoapp.data.repositories.AuthRemoteRepositoryImpl
 import com.example.todoapp.data.repositories.ConnectionRemoteRepositoryImpl
 import com.example.todoapp.data.repositories.ProjectRemoteRepositoryImpl
 import com.example.todoapp.data.repositories.TeamRemoteRepositoryImpl
 import com.example.todoapp.data.repositories.TeamRoleRemoteRepositoryImpl
+import com.example.todoapp.data.repositories.ToDoRepositoryImpl
+import com.example.todoapp.data.repositories.ToDoSocketRepositoryImpl
 import com.example.todoapp.domain.manager.LocalUserManager
 import com.example.todoapp.domain.repositories.AuthRemoteRepository
 import com.example.todoapp.domain.repositories.ConnectionRemoteRepository
 import com.example.todoapp.domain.repositories.ProjectRemoteRepository
 import com.example.todoapp.domain.repositories.TeamRemoteRepository
 import com.example.todoapp.domain.repositories.TeamRoleRemoteRepository
+import com.example.todoapp.domain.repositories.ToDoRepository
+import com.example.todoapp.domain.repositories.ToDoSocketRepository
 import com.example.todoapp.domain.usecase.authorization_usecase.AuthUseCase
 import com.example.todoapp.domain.usecase.authorization_usecase.GetUserIdUseCase
 import com.example.todoapp.domain.usecase.authorization_usecase.GetUserUseCase
@@ -46,6 +51,12 @@ import com.example.todoapp.domain.usecase.team_usecase.GetAllTeamUseCase
 import com.example.todoapp.domain.usecase.team_usecase.GetTeamUseCase
 import com.example.todoapp.domain.usecase.team_usecase.TeamUseCase
 import com.example.todoapp.domain.usecase.team_usecase.UnAssignUserTeamUseCase
+import com.example.todoapp.domain.usecase.todo_socket_usecase.ConnectToServerUseCase
+import com.example.todoapp.domain.usecase.todo_socket_usecase.DisConnectToServerUseCase
+import com.example.todoapp.domain.usecase.todo_socket_usecase.ToDoSocketUseCase
+import com.example.todoapp.domain.usecase.todo_usecase.CreateToDoUseCase
+import com.example.todoapp.domain.usecase.todo_usecase.ToDoUseCase
+import com.example.todoapp.domain.usecase.todo_usecase.UpdateToDoUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.AcceptUserConnectionUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.DeclineUserUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.GetAllConnectionUseCase
@@ -383,6 +394,73 @@ class ECommerceAppModule {
             ),
             getProjectWithinTeamUseCase = GetProjectWithinTeamUseCase(
                 projectRemoteRepository = projectRemoteRepository
+            )
+        )
+    }
+
+    // provides instance for to do socket repository
+    @Provides
+    @Singleton
+    fun providesToDoSocketRepository() : ToDoSocketRepository {
+        return ToDoSocketRepositoryImpl()
+    }
+
+    // provides instance for to socket usecase
+    @Provides
+    @Singleton
+    fun providesToDoSocketUseCase(
+        toDoSocketRepository: ToDoSocketRepository
+    ) : ToDoSocketUseCase {
+        return ToDoSocketUseCase(
+            connectToServerUseCase = ConnectToServerUseCase(
+                toDoSocketRepository = toDoSocketRepository
+            ),
+            disConnectToServerUseCase = DisConnectToServerUseCase(
+                toDoSocketRepository = toDoSocketRepository
+            )
+        )
+    }
+
+    // provide instance for to do remote api
+    @Provides
+    @Singleton
+    fun providesToDoRemoteAPI() : ToDoRemoteAPI{
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(180, TimeUnit.SECONDS)
+            .readTimeout(180, TimeUnit.SECONDS)
+            .writeTimeout(180, TimeUnit.SECONDS)
+            .build()
+        return Retrofit.Builder()
+            .baseUrl(Constants.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ToDoRemoteAPI::class.java)
+    }
+
+    // provides instance for to do repository
+    @Provides
+    @Singleton
+    fun providesToDoRepository(
+        toDoRemoteAPI: ToDoRemoteAPI
+    ) : ToDoRepository{
+        return ToDoRepositoryImpl(
+            toDoRemoteAPI = toDoRemoteAPI
+        )
+    }
+
+    // provides instance for to do use case
+    @Provides
+    @Singleton
+    fun providesToDoUseCase(
+        toDoRepository: ToDoRepository
+    ) : ToDoUseCase {
+        return ToDoUseCase(
+            createToDoUseCase = CreateToDoUseCase(
+                toDoRepository = toDoRepository
+            ),
+            updateToDoUseCase = UpdateToDoUseCase(
+                toDoRepository = toDoRepository
             )
         )
     }

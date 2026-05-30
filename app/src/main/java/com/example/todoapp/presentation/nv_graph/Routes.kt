@@ -21,4 +21,5 @@ sealed class Routes(
     object TeamDetailRoutes : Routes(route = "team-detail-route")
 
     object ProjectByTeamRoutes : Routes(route = "project-by-team-route")
+    object ProjectToDoRoutes : Routes(route = "project-todo-route")
 }

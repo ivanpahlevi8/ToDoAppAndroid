@@ -22,6 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +43,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.todoapp.R
 import com.example.todoapp.core.value.Dimension
+import com.example.todoapp.data.dtos.ToDoPointerDto
 import com.example.todoapp.presentation.main_navigation.component.NavBarItem
 import com.example.todoapp.presentation.main_navigation.component.NavigationDrawer
 import com.example.todoapp.presentation.nv_graph.Routes
@@ -53,6 +56,9 @@ import com.example.todoapp.presentation.team_list.TeamListScreen
 import com.example.todoapp.presentation.team_list.TeamListViewModel
 import com.example.todoapp.presentation.team_project.TeamProjectScreen
 import com.example.todoapp.presentation.team_project.TeamProjectViewModel
+import com.example.todoapp.presentation.to_do.ToDoPointerState
+import com.example.todoapp.presentation.to_do.ToDoScreen
+import com.example.todoapp.presentation.to_do.ToDoViewModel
 import com.example.todoapp.presentation.user_connection.UserConnectionScreen
 import com.example.todoapp.presentation.user_connection.UserConnectionViewModel
 import kotlinx.coroutines.launch
@@ -295,6 +301,10 @@ fun MainNavigation(
 
                                                 // navigate to detail
                                                 Log.d("check", "Team id : $teamId")
+
+                                                navController.navigate(
+                                                    Routes.ProjectToDoRoutes.route
+                                                )
                                             }
                                         ) {
                                             Icon(
@@ -527,6 +537,36 @@ fun MainNavigation(
                             updateTeamProjectState = {
                                 newState -> projectTeamViewModel.updateCreateProjectTeamState(
                                     newState
+                                )
+                            }
+                        )
+                    }
+
+                    // route for project to do
+                    composable(
+                        route = Routes.ProjectToDoRoutes.route
+                    ) {
+                        val projectToDoViewMode : ToDoViewModel = hiltViewModel()
+
+                        val grabbedToDoList by projectToDoViewMode.grabbedToDoItem.collectAsState()
+
+                        val createToDo by projectToDoViewMode.createdToDo.collectAsState()
+                        val processedToDo by projectToDoViewMode.processedToDo.collectAsState()
+                        val finishedToDo by projectToDoViewMode.finishedToDo.collectAsState()
+
+                        ToDoScreen(
+                            grabbedToDoList = grabbedToDoList,
+                            onClick = {
+                                newVal : ToDoPointerDto -> projectToDoViewMode.sendMessage(
+                                    newVal
+                                )
+                            },
+                            createdToDoList = createToDo,
+                            processedToDoList = processedToDo,
+                            finishedToDoList = finishedToDo,
+                            updateToDoLocation = {
+                                item -> projectToDoViewMode.updateToDoPosition(
+                                    item
                                 )
                             }
                         )
