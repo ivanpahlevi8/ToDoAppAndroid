@@ -303,7 +303,7 @@ fun MainNavigation(
                                                 Log.d("check", "Team id : $teamId")
 
                                                 navController.navigate(
-                                                    Routes.ProjectToDoRoutes.route
+                                                    Routes.ProjectToDoRoutes.route + "/3"
                                                 )
                                             }
                                         ) {
@@ -544,7 +544,8 @@ fun MainNavigation(
 
                     // route for project to do
                     composable(
-                        route = Routes.ProjectToDoRoutes.route
+                        route = Routes.ProjectToDoRoutes.route + "/{projectId}",
+                        arguments = listOf(navArgument("projectId"){type= NavType.StringType})
                     ) {
                         val projectToDoViewMode : ToDoViewModel = hiltViewModel()
 
@@ -567,6 +568,11 @@ fun MainNavigation(
                             updateToDoLocation = {
                                 item -> projectToDoViewMode.updateToDoPosition(
                                     item
+                                )
+                            },
+                            onEvent = {
+                                event -> projectToDoViewMode.onEvent(
+                                    event
                                 )
                             }
                         )

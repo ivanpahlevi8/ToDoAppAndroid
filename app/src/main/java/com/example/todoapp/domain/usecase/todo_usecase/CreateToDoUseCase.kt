@@ -8,7 +8,7 @@ class CreateToDoUseCase(
 ) {
     suspend operator fun invoke(
         createToDoDto: CreateToDoDto
-    ) : String {
+    ) : CreateToDoDto {
         return toDoRepository.createToDo(
             createToDoDto = createToDoDto
         )

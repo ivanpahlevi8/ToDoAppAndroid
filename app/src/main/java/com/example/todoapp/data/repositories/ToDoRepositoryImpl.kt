@@ -1,5 +1,6 @@
 package com.example.todoapp.data.repositories
 
+import android.util.Log
 import com.example.todoapp.data.dtos.CreateToDoDto
 import com.example.todoapp.data.dtos.ResponseDto
 import com.example.todoapp.data.remote.ToDoRemoteAPI
@@ -11,7 +12,7 @@ import kotlin.coroutines.cancellation.CancellationException
 class ToDoRepositoryImpl(
     private val toDoRemoteAPI: ToDoRemoteAPI
 ) : ToDoRepository {
-    override suspend fun createToDo(createToDoDto: CreateToDoDto): String {
+    override suspend fun createToDo(createToDoDto: CreateToDoDto): CreateToDoDto {
         try{
             val response = toDoRemoteAPI.createToDo(
                 createToDoDto = createToDoDto
@@ -27,6 +28,7 @@ class ToDoRepositoryImpl(
                     throw Exception(parsedError.responseMessage)
 
                 } catch (jsonException: Exception) {
+                    Log.d("Check", errorBodyString)
                     throw Exception(jsonException.message ?: "Failed to parse error response")
                 }
             } else {

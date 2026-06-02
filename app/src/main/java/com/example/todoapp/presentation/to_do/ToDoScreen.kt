@@ -28,17 +28,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.todoapp.R
 import com.example.todoapp.core.value.Dimension
+import com.example.todoapp.data.dtos.CreateToDoDto
 import com.example.todoapp.data.dtos.ToDoPointerDto
+import com.example.todoapp.presentation.to_do.component.AddToDoDialog
 import com.example.todoapp.presentation.to_do.component.DragAndDropCompose
 
 @Composable
 fun ToDoScreen(
     onClick : (ToDoPointerDto) -> Unit,
-    grabbedToDoList : List<Int>,
+    grabbedToDoList : Set<Int>,
     createdToDoList : List<ToDoPointerDto>,
     processedToDoList : List<ToDoPointerDto>,
     finishedToDoList : List<ToDoPointerDto>,
     updateToDoLocation : (ToDoPointerDto) -> Unit,
+    onEvent : (ToDoEvent) -> Unit,
 ){
     var showAddToDo by remember { mutableStateOf(false) }
 
@@ -72,6 +75,7 @@ fun ToDoScreen(
     ) {
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(
                     it
                 )
@@ -85,6 +89,20 @@ fun ToDoScreen(
                 processedToDoList = processedToDoList,
                 finishedToDoList = finishedToDoList,
                 updateToDoLocation = updateToDoLocation
+            )
+
+            AddToDoDialog(
+                showDialog = showAddToDo,
+                onDismiss = {
+                    showAddToDo = false
+                },
+                onCreateDialog = {
+                    item -> onEvent(
+                        ToDoEvent.CreateToDo(
+                            item
+                        )
+                    )
+                }
             )
         }
     }

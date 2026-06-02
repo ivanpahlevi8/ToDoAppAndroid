@@ -37,7 +37,7 @@ import androidx.compose.foundation.lazy.items
 fun ToDoSpaceBox(
     modifier: Modifier,
     list: List<ToDoPointerDto>,
-    grabbedToDO : List<Int>,
+    grabbedToDO : Set<Int>,
     sendSocket : (ToDoPointerDto) -> Unit,
     spaceType : String,
     updateToDoLocation : (ToDoPointerDto) -> Unit,

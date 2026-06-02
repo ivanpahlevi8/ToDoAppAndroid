@@ -39,7 +39,7 @@ import com.google.gson.Gson
 fun ToDoCard(
     ticket: CreateToDoDto,
     onDeleteConfirmed: (CreateToDoDto) -> Unit,
-    grabbedToDo : List<Int>,
+    grabbedToDo : Set<Int>,
     sendToSocket : (ToDoPointerDto) -> Unit,
 ) {
     val showDeleteTicketDialog = remember { mutableStateOf(false) }

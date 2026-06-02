@@ -22,7 +22,7 @@ import com.example.todoapp.ui.theme.ToDoAppTheme
 @Composable
 fun DragAndDropCompose(
     sendSocket : (ToDoPointerDto) -> Unit,
-    grabbedToDoList : List<Int>,
+    grabbedToDoList : Set<Int>,
     createdToDoList : List<ToDoPointerDto>,
     processedToDoList : List<ToDoPointerDto>,
     finishedToDoList : List<ToDoPointerDto>,
@@ -77,7 +77,7 @@ fun DragAndDropComposePreview(){
         ) {
             DragAndDropCompose(
                 sendSocket = {},
-                grabbedToDoList = listOf(),
+                grabbedToDoList = setOf(),
                 createdToDoList = listOf(),
                 processedToDoList = listOf(),
                 finishedToDoList = listOf(),

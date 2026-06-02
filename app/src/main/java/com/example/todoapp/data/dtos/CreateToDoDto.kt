@@ -4,20 +4,20 @@ import com.google.gson.annotations.SerializedName
 
 data class CreateToDoDto(
     @SerializedName(value = "toDoId")
-    val toDoId : Int? = null,
+    var toDoId : Int? = null,
     
     @SerializedName(value = "projectId")
-    val toDoProjectId : Int? = null,
+    var toDoProjectId : Int? = null,
 
     @SerializedName(value = "itemName")
-    val toDoItemName : String,
+    var toDoItemName : String,
 
     @SerializedName(value = "itemDescription")
-    val toDoItemDescription : String,
+    var toDoItemDescription : String,
 
     @SerializedName(value = "itemState")
-    val toDoItemState : String? = null,
+    var toDoItemState : String? = null,
 
     @SerializedName(value = "createdAt")
-    val toDoCreatedAt : String? = null
+    var toDoCreatedAt : String? = null
 )

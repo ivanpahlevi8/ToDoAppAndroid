@@ -6,4 +6,5 @@ sealed class ToDoPointerState(
     object Grabbed : ToDoPointerState("GRABBED")
     object Dropped : ToDoPointerState("DROPPEPD")
     object Released : ToDoPointerState("RELEASED")
+    object Created : ToDoPointerState("CREATED")
 }
