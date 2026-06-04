@@ -1,4 +1,4 @@
-package com.example.todoapp.presentation.to_do.component
+package com.example.todoapp.presentation.project_to_do.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -31,7 +31,6 @@ import com.example.todoapp.R
 import com.example.todoapp.core.component.DialogInputTextField
 import com.example.todoapp.core.value.Dimension
 import com.example.todoapp.data.dtos.CreateToDoDto
-import kotlin.random.Random
 
 @Composable
 fun AddToDoDialog(
@@ -152,6 +151,8 @@ fun AddToDoDialog(
                                         toDoItemDescription = inputToDoDescription,
                                     )
                                 )
+
+                                onDismiss()
                             }
                             .padding(
                                 Dimension.SMALL_PADDING2

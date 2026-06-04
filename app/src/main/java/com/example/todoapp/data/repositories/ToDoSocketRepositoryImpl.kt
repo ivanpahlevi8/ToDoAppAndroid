@@ -18,7 +18,7 @@ class ToDoSocketRepositoryImpl : ToDoSocketRepository {
         socketListener: WebSocketListener
     ): WebSocket {
         val request = Request.Builder()
-            .url("wss://ivan-portofolio.xyz/socket/ws")
+            .url("wss://ivan-portofolio.xyz/socket/ws?projectId=$projectId")
             .build()
 
         val webSocket = client.newWebSocket(

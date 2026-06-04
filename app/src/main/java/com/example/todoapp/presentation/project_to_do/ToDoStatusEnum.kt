@@ -1,4 +1,4 @@
-package com.example.todoapp.presentation.to_do
+package com.example.todoapp.presentation.project_to_do
 
 enum class ToDoStatusEnum(
     val label : String

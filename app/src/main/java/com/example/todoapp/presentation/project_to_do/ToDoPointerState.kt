@@ -1,4 +1,4 @@
-package com.example.todoapp.presentation.to_do
+package com.example.todoapp.presentation.project_to_do
 
 sealed class ToDoPointerState(
     val name : String

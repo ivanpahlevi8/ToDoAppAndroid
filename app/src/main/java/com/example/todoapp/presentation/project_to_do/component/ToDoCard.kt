@@ -1,4 +1,4 @@
-package com.example.todoapp.presentation.to_do.component
+package com.example.todoapp.presentation.project_to_do.component
 
 import android.content.ClipData
 import android.util.Log
@@ -31,14 +31,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.todoapp.data.dtos.CreateToDoDto
 import com.example.todoapp.data.dtos.ToDoPointerDto
-import com.example.todoapp.presentation.to_do.ToDoPointerState
+import com.example.todoapp.presentation.project_to_do.ToDoPointerState
 import com.google.gson.Gson
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ToDoCard(
     ticket: CreateToDoDto,
-    onDeleteConfirmed: (CreateToDoDto) -> Unit,
     grabbedToDo : Set<Int>,
     sendToSocket : (ToDoPointerDto) -> Unit,
 ) {

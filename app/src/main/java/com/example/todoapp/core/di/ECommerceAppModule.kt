@@ -38,6 +38,7 @@ import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserLogI
 import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserLogOut
 import com.example.todoapp.domain.usecase.local_user_manager_usecase.SetUserOnBoardUseCase
 import com.example.todoapp.domain.usecase.project_usecase.CreateProjectWithinTeamUseCase
+import com.example.todoapp.domain.usecase.project_usecase.GetProjectDetailUseCase
 import com.example.todoapp.domain.usecase.project_usecase.GetProjectWithinTeamUseCase
 import com.example.todoapp.domain.usecase.project_usecase.ProjectUseCase
 import com.example.todoapp.domain.usecase.team_role_usecase.CreateTeamRoleUseCase
@@ -393,6 +394,9 @@ class ECommerceAppModule {
                 projectRemoteRepository = projectRemoteRepository,
             ),
             getProjectWithinTeamUseCase = GetProjectWithinTeamUseCase(
+                projectRemoteRepository = projectRemoteRepository
+            ),
+            getProjectDetailUseCase = GetProjectDetailUseCase(
                 projectRemoteRepository = projectRemoteRepository
             )
         )

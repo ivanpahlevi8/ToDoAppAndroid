@@ -8,4 +8,7 @@ interface ProjectRemoteRepository {
 
     // function to get all project within team
     suspend fun getAllProjectWithinTeam(teamId : Int) : List<CreateProjectDto>
+
+    // function to get detail project
+    suspend fun getDetailProject(projectId : Int) : CreateProjectDto
 }

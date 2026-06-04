@@ -1,19 +1,16 @@
 package com.example.todoapp.presentation.main_navigation
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -42,8 +39,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.todoapp.R
-import com.example.todoapp.core.value.Dimension
-import com.example.todoapp.data.dtos.ToDoPointerDto
 import com.example.todoapp.presentation.main_navigation.component.NavBarItem
 import com.example.todoapp.presentation.main_navigation.component.NavigationDrawer
 import com.example.todoapp.presentation.nv_graph.Routes
@@ -56,9 +51,8 @@ import com.example.todoapp.presentation.team_list.TeamListScreen
 import com.example.todoapp.presentation.team_list.TeamListViewModel
 import com.example.todoapp.presentation.team_project.TeamProjectScreen
 import com.example.todoapp.presentation.team_project.TeamProjectViewModel
-import com.example.todoapp.presentation.to_do.ToDoPointerState
-import com.example.todoapp.presentation.to_do.ToDoScreen
-import com.example.todoapp.presentation.to_do.ToDoViewModel
+import com.example.todoapp.presentation.project_to_do.ToDoScreen
+import com.example.todoapp.presentation.project_to_do.ToDoViewModel
 import com.example.todoapp.presentation.user_connection.UserConnectionScreen
 import com.example.todoapp.presentation.user_connection.UserConnectionViewModel
 import kotlinx.coroutines.launch
@@ -91,6 +85,7 @@ fun MainNavigation(
         getCurrentRoute == Routes.TeamListRoutes.route -> 3
         (getCurrentRoute?.startsWith(Routes.TeamDetailRoutes.route)) ?: false -> 4
         (getCurrentRoute?.startsWith(Routes.ProjectByTeamRoutes.route)) ?: false -> 5
+        (getCurrentRoute?.startsWith(Routes.ProjectToDoRoutes.route)) ?: false -> 6
         else -> 0
     }
 
@@ -189,7 +184,19 @@ fun MainNavigation(
                                             )
                                         )
                                     }
-
+                                    6 -> {
+                                        Text(
+                                            text = "Projects Detail",
+                                            style = MaterialTheme.typography.titleMedium.copy(
+                                                fontWeight = FontWeight.W600,
+                                                letterSpacing = 1.1.sp,
+                                                fontSize = 20.sp,
+                                            ),
+                                            color = colorResource(
+                                                id = R.color.text_title,
+                                            )
+                                        )
+                                    }
                                 }
                             },
                             navigationIcon = {
@@ -244,7 +251,7 @@ fun MainNavigation(
                                             )
                                         }
                                     }
-                                    5 -> {
+                                    5,6 -> {
                                         IconButton(onClick = {
                                             navController.popBackStack()
                                         }) {
@@ -289,37 +296,7 @@ fun MainNavigation(
                                             )
                                         }
                                     }
-                                    5 -> {
-                                        IconButton(
-                                            onClick = {
-                                                val currentEntry = navController.currentBackStackEntry
-
-                                                val teamIdString = currentEntry?.arguments?.getString("teamId") ?: "0"
-
-                                                // safely convert to Int
-                                                val teamId = teamIdString.toIntOrNull() ?: 0
-
-                                                // navigate to detail
-                                                Log.d("check", "Team id : $teamId")
-
-                                                navController.navigate(
-                                                    Routes.ProjectToDoRoutes.route + "/3"
-                                                )
-                                            }
-                                        ) {
-                                            Icon(
-                                                painter = painterResource(
-                                                    id = R.drawable.checklist_ic
-                                                ),
-                                                modifier = Modifier
-                                                    .size(20.dp),
-                                                tint = colorResource(
-                                                    id = R.color.text_title
-                                                ),
-                                                contentDescription = "Assignment Icon"
-                                            )
-                                        }
-                                    }
+                                    5,6 -> {}
                                     else -> {
                                         IconButton(
                                             onClick = {
@@ -527,7 +504,11 @@ fun MainNavigation(
 
                         TeamProjectScreen(
                             teamProjectState = projectTeamViewModel.getProjectTeamState.value,
-                            onProjectDetail = {},
+                            onProjectDetail = {
+                                projectId -> navController.navigate(
+                                    Routes.ProjectToDoRoutes.route + "/$projectId"
+                                )
+                            },
                             onEvent = {
                                 event -> projectTeamViewModel.onEvent(
                                     event = event
@@ -557,24 +538,30 @@ fun MainNavigation(
 
                         ToDoScreen(
                             grabbedToDoList = grabbedToDoList,
-                            onClick = {
-                                newVal : ToDoPointerDto -> projectToDoViewMode.sendMessage(
-                                    newVal
-                                )
-                            },
                             createdToDoList = createToDo,
                             processedToDoList = processedToDo,
                             finishedToDoList = finishedToDo,
-                            updateToDoLocation = {
-                                item -> projectToDoViewMode.updateToDoPosition(
-                                    item
-                                )
-                            },
                             onEvent = {
                                 event -> projectToDoViewMode.onEvent(
                                     event
                                 )
-                            }
+                            },
+                            updateToDoPosition = {
+                                toDoPointer -> projectToDoViewMode.updateToDoPosition(
+                                    toDoPointer
+                                )
+                            },
+                            addToDoState = projectToDoViewMode.createToDoState.value,
+                            updateToDoState = projectToDoViewMode.updateToDoItemState.value,
+                            updateAddToDoState = {
+                                newState -> projectToDoViewMode.updateAddToDoState(newState)
+                            },
+                            updateUpdateToDoState = {
+                                newState -> projectToDoViewMode.updateUpdateToDoState(
+                                    newState
+                                )
+                            },
+                            projectDetailState = projectToDoViewMode.projectDetailState.value,
                         )
                     }
                 }

@@ -3,6 +3,7 @@ package com.example.todoapp.data.remote
 import com.example.todoapp.data.dtos.CreateProjectDto
 import com.example.todoapp.data.dtos.ResponseDto
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -17,4 +18,9 @@ interface ProjectRemoteAPI {
     suspend fun getAllProjectWithinTeam(
         @Query("teamId") teamId : Int
     ) : ResponseDto<List<CreateProjectDto>>
+
+    @GET("api/Project/get-project")
+    suspend fun getProjectById(
+        @Query("projectId") projectId : Int
+    ) : ResponseDto<CreateProjectDto>
 }
