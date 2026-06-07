@@ -34,14 +34,11 @@ class ToDoViewModel @Inject constructor(
 ) : ViewModel() {
     private val _isConnected = MutableStateFlow(false)
     val isConnected: StateFlow<Boolean> = _isConnected
-    var webSocket : WebSocket? = null
+    private var webSocket : WebSocket? = null
 
     // create set state to track grabbed to do card
     private val _grabbedToDoItem = MutableStateFlow<Set<Int>>(emptySet())
     val grabbedToDoItem : StateFlow<Set<Int>> = _grabbedToDoItem
-
-    // create state for hold just create to do id
-    private var jusCreatedToDoId by mutableStateOf(0)
 
     // create state for add to do item to db
     private var _createToDoItemState by mutableStateOf<ToDoState>(ToDoState.IdleState)
@@ -64,6 +61,14 @@ class ToDoViewModel @Inject constructor(
     // create project detail state
     private var _projectDetailState by mutableStateOf<ProjectDetailState>(ProjectDetailState.LoadingState)
     val projectDetailState : State<ProjectDetailState> get() = derivedStateOf { _projectDetailState }
+
+    // create delete to do state
+    private var _deleteToDoState by mutableStateOf<ToDoProjectState>(ToDoProjectState.IdleState)
+    val deleteToDoState : State<ToDoProjectState> get() = derivedStateOf { _deleteToDoState }
+
+    // create get all to do state
+    private var _getAllToDoState by mutableStateOf<ToDoProjectState>(ToDoProjectState.LoadingState)
+    val getAllToDoState : State<ToDoProjectState> get() = derivedStateOf { _getAllToDoState }
 
     // get project id from route
     private val getProjectId = (savedStateHandle.get<String>("projectId") ?: "0").toInt()
@@ -153,6 +158,49 @@ class ToDoViewModel @Inject constructor(
                     errMsg = errMsg
                 )
             }
+
+            // init data for to do list
+            try{
+                val getData = toDoUseCase.getToDoWithinProjectUseCase(
+                    projectId = getProjectId
+                )
+
+                // loop through all data
+                for (getToDoData in getData) {
+                    if(getToDoData.toDoItemState == ToDoStatusEnum.CREATED.label){
+                        _createdToDo.update {
+                            currList -> currList + ToDoPointerDto(
+                                toDoPointerStatus = ToDoStatusEnum.CREATED.label,
+                                toDoItem = getToDoData
+                            )
+                        }
+                    } else if(getToDoData.toDoItemState == ToDoStatusEnum.PROCESSED.label) {
+                        _processedToDo.update {
+                                currList -> currList + ToDoPointerDto(
+                                toDoPointerStatus = ToDoStatusEnum.PROCESSED.label,
+                                toDoItem = getToDoData
+                            )
+                        }
+                    } else {
+                        _finishedToDo.update {
+                                currList -> currList + ToDoPointerDto(
+                                toDoPointerStatus = ToDoStatusEnum.FINISHED.label,
+                                toDoItem = getToDoData
+                            )
+                        }
+                    }
+                }
+
+                _getAllToDoState = ToDoProjectState.DataState(
+                    data = getData
+                )
+            } catch (e : Exception) {
+                val errMsg = "Error Happen : ${e.message}, ${e.stackTrace}"
+
+                _getAllToDoState = ToDoProjectState.ErrorState(
+                    errMsg = errMsg
+                )
+            }
         }
     }
 
@@ -220,6 +268,9 @@ class ToDoViewModel @Inject constructor(
                         // send message pointer as the item to do is being dropped
                         sendMessage(getToDoPointer)
 
+                        // update state on to do item
+                        getToDoPointer.toDoItem.toDoItemState = getToDoPointer.targetToDoState
+
                         // update to do on database
                         toDoUseCase.updateToDoUseCase(
                             getToDoPointer.toDoItem
@@ -232,6 +283,29 @@ class ToDoViewModel @Inject constructor(
 
                         _updateToDoItemState = ToDoState.ErrorState(
                             errMsg = errMsg
+                        )
+                    }
+                }
+            }
+
+            is ToDoEvent.DeleteToDo -> {
+                viewModelScope.launch {
+                    // get to do id
+                    val getToDoId = event.toDoInt
+
+                    try {
+                        val data = toDoUseCase.deleteToDoUseCase(
+                            toDoId = getToDoId
+                        )
+
+                        _deleteToDoState = ToDoProjectState.DataState(
+                            data
+                        )
+                    } catch (e : Exception) {
+                        val errMsg = "Error Hapen : ${e.message}, ${e.stackTrace}"
+
+                        _deleteToDoState = ToDoProjectState.ErrorState(
+                            errMsg
                         )
                     }
                 }

@@ -562,6 +562,7 @@ fun MainNavigation(
                                 )
                             },
                             projectDetailState = projectToDoViewMode.projectDetailState.value,
+                            getAllToDoState = projectToDoViewMode.getAllToDoState.value,
                         )
                     }
                 }

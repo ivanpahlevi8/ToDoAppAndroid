@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.draganddrop.dragAndDropSource
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,14 +38,14 @@ import com.google.gson.Gson
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ToDoCard(
-    ticket: CreateToDoDto,
+    toDo: CreateToDoDto,
     grabbedToDo : Set<Int>,
     sendToSocket : (ToDoPointerDto) -> Unit,
 ) {
     val showDeleteTicketDialog = remember { mutableStateOf(false) }
 
     // 1. Check if THIS specific ticket is locked by someone else
-    val isLocked = grabbedToDo.contains(ticket.toDoId)
+    val isLocked = grabbedToDo.contains(toDo.toDoId)
 
     // 2. Change visuals based on state
     val backgroundColor = if (isLocked) Color.LightGray else Color.White
@@ -63,17 +64,16 @@ fun ToDoCard(
                     Modifier.dragAndDropSource(block = {
                         detectTapGestures(
                             onLongPress = {
-                                Log.d("CHECK", "Grabbed local on id : ${ticket.toDoId}")
                                 // send state to websocket
                                 sendToSocket(
                                     ToDoPointerDto(
                                         toDoPointerStatus = ToDoPointerState.Grabbed.name,
-                                        toDoItem = ticket
+                                        toDoItem = toDo
                                     )
                                 )
 
                                 val gson = Gson()
-                                val jsonString = gson.toJson(ticket)
+                                val jsonString = gson.toJson(toDo)
 
                                 startTransfer(
                                     DragAndDropTransferData(
@@ -89,38 +89,11 @@ fun ToDoCard(
         Column(
             modifier = Modifier
                 .padding(8.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start,
         ) {
-            Row {
-                Text(
-                    text = ticket.toDoItemName,
-                    modifier = Modifier.weight(1f),
-                    fontWeight = FontWeight.Bold
-                )
-                if (ticket.toDoItemState == "DONE") {
-                    Icon(
-                        Icons.Filled.Delete,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .clickable {
-                                showDeleteTicketDialog.value = true
-                            })
-                }
-            }
-
-            Spacer(modifier = Modifier.height(50.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "")
-                ToDoCardContainer(
-                    text = "2 days"
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Row {
-                Text(text = "")
-                ToDoCardContainer(text = ticket.toDoItemName.toString())
-            }
-            Spacer(modifier = Modifier.height(8.dp))
+            
         }
 
     }

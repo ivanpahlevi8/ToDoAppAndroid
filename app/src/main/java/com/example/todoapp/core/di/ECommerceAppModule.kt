@@ -56,6 +56,8 @@ import com.example.todoapp.domain.usecase.todo_socket_usecase.ConnectToServerUse
 import com.example.todoapp.domain.usecase.todo_socket_usecase.DisConnectToServerUseCase
 import com.example.todoapp.domain.usecase.todo_socket_usecase.ToDoSocketUseCase
 import com.example.todoapp.domain.usecase.todo_usecase.CreateToDoUseCase
+import com.example.todoapp.domain.usecase.todo_usecase.DeleteToDoUseCase
+import com.example.todoapp.domain.usecase.todo_usecase.GetToDoWithinProjectUseCase
 import com.example.todoapp.domain.usecase.todo_usecase.ToDoUseCase
 import com.example.todoapp.domain.usecase.todo_usecase.UpdateToDoUseCase
 import com.example.todoapp.domain.usecase.user_connection_usecase.AcceptUserConnectionUseCase
@@ -464,6 +466,12 @@ class ECommerceAppModule {
                 toDoRepository = toDoRepository
             ),
             updateToDoUseCase = UpdateToDoUseCase(
+                toDoRepository = toDoRepository
+            ),
+            getToDoWithinProjectUseCase = GetToDoWithinProjectUseCase(
+                toDoRepository = toDoRepository
+            ),
+            deleteToDoUseCase = DeleteToDoUseCase(
                 toDoRepository = toDoRepository
             )
         )

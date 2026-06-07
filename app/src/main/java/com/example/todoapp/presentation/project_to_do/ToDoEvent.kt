@@ -6,5 +6,6 @@ import com.example.todoapp.data.dtos.ToDoPointerDto
 sealed class ToDoEvent {
     data class CreateToDo(val toDoDto: CreateToDoDto) : ToDoEvent()
     data class UpdateToDo(val toDoPointer: ToDoPointerDto) : ToDoEvent()
+    data class DeleteToDo(val toDoInt : Int) : ToDoEvent()
     data class OnGrabbedItem(val toDoPointer: ToDoPointerDto) : ToDoEvent()
 }

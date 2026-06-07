@@ -25,6 +25,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.todoapp.R
 import com.example.todoapp.core.component.ErrorDialog
 import com.example.todoapp.core.component.LoadingDialog
@@ -34,6 +35,7 @@ import com.example.todoapp.presentation.project_to_do.component.AddToDoDialog
 import com.example.todoapp.presentation.project_to_do.component.ProjectInfoCard
 import com.example.todoapp.presentation.project_to_do.component.ProjectItemCardShimmer
 import com.example.todoapp.presentation.project_to_do.component.ToDoPage
+import com.example.todoapp.presentation.project_to_do.component.ToDoPageShimmer
 
 @Composable
 fun ToDoScreen(
@@ -48,6 +50,7 @@ fun ToDoScreen(
     updateToDoState : ToDoState,
     updateUpdateToDoState : (ToDoState) -> Unit,
     projectDetailState: ProjectDetailState,
+    getAllToDoState : ToDoProjectState,
 ){
     var showAddToDo by remember { mutableStateOf(false) }
 
@@ -124,18 +127,40 @@ fun ToDoScreen(
                     )
             )
 
-            ToDoPage(
-                grabbedToDoList = grabbedToDoList,
-                onEvent = onEvent,
-                createdToDoList = createdToDoList,
-                processedToDoList = processedToDoList,
-                finishedToDoList = finishedToDoList,
-                updateToDoLocation = {
-                    toDoPointerDto -> updateToDoPosition(
-                        toDoPointerDto
+            when(getAllToDoState){
+                is ToDoProjectState.DataState<*> -> {
+                    ToDoPage(
+                        grabbedToDoList = grabbedToDoList,
+                        onEvent = onEvent,
+                        createdToDoList = createdToDoList,
+                        processedToDoList = processedToDoList,
+                        finishedToDoList = finishedToDoList,
+                        updateToDoLocation = {
+                                toDoPointerDto -> updateToDoPosition(
+                            toDoPointerDto
+                        )
+                        }
                     )
                 }
-            )
+                is ToDoProjectState.ErrorState -> {
+                    val errMsg = getAllToDoState.errMsg
+
+                    Text(
+                        text = errMsg,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.W700,
+                            fontSize = 18.sp,
+                        ),
+                        color = colorResource(
+                            id = R.color.error_color
+                        )
+                    )
+                }
+                is ToDoProjectState.LoadingState -> {
+                    ToDoPageShimmer()
+                }
+                is ToDoProjectState.IdleState -> {}
+            }
 
             AddToDoDialog(
                 showDialog = showAddToDo,

@@ -2,5 +2,7 @@ package com.example.todoapp.domain.usecase.todo_usecase
 
 data class ToDoUseCase(
     val createToDoUseCase: CreateToDoUseCase,
-    val updateToDoUseCase: UpdateToDoUseCase
+    val updateToDoUseCase: UpdateToDoUseCase,
+    val getToDoWithinProjectUseCase: GetToDoWithinProjectUseCase,
+    val deleteToDoUseCase: DeleteToDoUseCase
 )
