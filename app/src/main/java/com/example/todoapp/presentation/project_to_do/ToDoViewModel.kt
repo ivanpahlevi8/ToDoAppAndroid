@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todoapp.data.dtos.CreateToDoDto
 import com.example.todoapp.data.dtos.ToDoPointerDto
 import com.example.todoapp.domain.usecase.project_usecase.ProjectUseCase
 import com.example.todoapp.domain.usecase.todo_socket_usecase.ToDoSocketUseCase
@@ -63,8 +64,8 @@ class ToDoViewModel @Inject constructor(
     val projectDetailState : State<ProjectDetailState> get() = derivedStateOf { _projectDetailState }
 
     // create delete to do state
-    private var _deleteToDoState by mutableStateOf<ToDoProjectState>(ToDoProjectState.IdleState)
-    val deleteToDoState : State<ToDoProjectState> get() = derivedStateOf { _deleteToDoState }
+    private var _deleteToDoState by mutableStateOf<ToDoState>(ToDoState.IdleState)
+    val deleteToDoState : State<ToDoState> get() = derivedStateOf { _deleteToDoState }
 
     // create get all to do state
     private var _getAllToDoState by mutableStateOf<ToDoProjectState>(ToDoProjectState.LoadingState)
@@ -118,6 +119,11 @@ class ToDoViewModel @Inject constructor(
                                         _createdToDo.update {
                                             currList -> currList + toDoPointerJson
                                         }
+                                    }
+                                    ToDoPointerState.Deleted.name -> {
+                                        Log.d("CHECK", "On Delete from socket incoming")
+                                        // incoming socket for delete, delete to do position
+                                        deleteToDoPosition(toDoPointer = toDoPointerJson)
                                     }
                                 }
                             }
@@ -291,20 +297,36 @@ class ToDoViewModel @Inject constructor(
             is ToDoEvent.DeleteToDo -> {
                 viewModelScope.launch {
                     // get to do id
-                    val getToDoId = event.toDoInt
+                    val getToDoPointer = event.toDoPointer
+
+                    // send delete to socket
+                    if(getToDoPointer != null) {
+                        sendMessage(
+                            toDoPointer = getToDoPointer
+                        )
+                    }
+
+                    // update state
+                    _deleteToDoState = ToDoState.LoadingState
+
+                    // add some delay
+                    delay(500)
 
                     try {
-                        val data = toDoUseCase.deleteToDoUseCase(
-                            toDoId = getToDoId
+                        toDoUseCase.deleteToDoUseCase(
+                            toDoId = getToDoPointer?.toDoItem?.toDoId ?: 0
                         )
 
-                        _deleteToDoState = ToDoProjectState.DataState(
-                            data
+                        // delete to do on local
+                        deleteToDoPosition(
+                            toDoPointer = getToDoPointer
                         )
+
+                        _deleteToDoState = ToDoState.IdleState
                     } catch (e : Exception) {
                         val errMsg = "Error Hapen : ${e.message}, ${e.stackTrace}"
 
-                        _deleteToDoState = ToDoProjectState.ErrorState(
+                        _deleteToDoState = ToDoState.ErrorState(
                             errMsg
                         )
                     }
@@ -313,6 +335,46 @@ class ToDoViewModel @Inject constructor(
 
             is ToDoEvent.OnGrabbedItem -> {
                 sendMessage(event.toDoPointer)
+            }
+        }
+    }
+
+    // create delete to do card position for local
+    fun deleteToDoPosition(
+        toDoPointer: ToDoPointerDto?
+    ) {
+        if(toDoPointer != null) {
+            val targetId = toDoPointer.toDoItem.toDoId
+
+            Log.d("CHECK", "To do pointer status : ${toDoPointer.targetToDoState}")
+
+            when(toDoPointer.targetToDoState) {
+                ToDoStatusEnum.CREATED.label -> {
+                    // remove from created list
+                    _createdToDo.update {
+                        currList -> currList.filter {
+                            it.toDoItem.toDoId == targetId
+                        }
+                    }
+                }
+
+                ToDoStatusEnum.PROCESSED.label -> {
+                    // remove from processed list
+                    _processedToDo.update {
+                            currList -> currList.filter {
+                                it.toDoItem.toDoId == targetId
+                        }
+                    }
+                }
+
+                ToDoStatusEnum.FINISHED.label -> {
+                    // remove from finished list
+                    _finishedToDo.update {
+                            currList -> currList.filter {
+                                it.toDoItem.toDoId == targetId
+                        }
+                    }
+                }
             }
         }
     }

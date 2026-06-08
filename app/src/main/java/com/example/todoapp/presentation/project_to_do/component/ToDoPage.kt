@@ -29,6 +29,7 @@ fun ToDoPage(
     processedToDoList : List<ToDoPointerDto>,
     finishedToDoList : List<ToDoPointerDto>,
     updateToDoLocation : (ToDoPointerDto) -> Unit,
+    onDeleteToDo : (ToDoPointerDto) -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -59,7 +60,8 @@ fun ToDoPage(
                         )
                     )
                 },
-                colorId = R.color.time_line_card_color4
+                colorId = R.color.time_line_card_color4,
+                onDeleteToDo = onDeleteToDo
             )
             VerticalDivider()
             ToDoSpaceBox(
@@ -80,7 +82,8 @@ fun ToDoPage(
                         )
                     )
                 },
-                colorId = R.color.time_line_card_color5
+                colorId = R.color.time_line_card_color5,
+                onDeleteToDo = onDeleteToDo
             )
             VerticalDivider()
             ToDoSpaceBox(
@@ -101,7 +104,8 @@ fun ToDoPage(
                         )
                     )
                 },
-                colorId = R.color.time_line_card_color6
+                colorId = R.color.time_line_card_color6,
+                onDeleteToDo = onDeleteToDo
             )
         }
     }
@@ -127,7 +131,8 @@ fun DragAndDropComposePreview(){
                 processedToDoList = listOf(),
                 finishedToDoList = listOf(),
                 updateToDoLocation = {},
-                onEvent = {}
+                onEvent = {},
+                onDeleteToDo = {}
             )
         }
     }

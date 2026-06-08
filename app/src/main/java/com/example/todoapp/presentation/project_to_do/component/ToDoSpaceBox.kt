@@ -52,6 +52,7 @@ fun ToDoSpaceBox(
     spaceType : String,
     updateToDoLocation : (ToDoPointerDto) -> Unit,
     updateToDoDb : (ToDoPointerDto) -> Unit,
+    onDeleteToDo : (ToDoPointerDto) -> Unit,
     @ColorRes colorId : Int,
 ){
     val titleStyle = remember { mutableStateOf(FontWeight.Normal) }
@@ -180,9 +181,19 @@ fun ToDoSpaceBox(
             ) { item ->
                 if (list.isNotEmpty()) {
                     ToDoCard(
-                        ticket = item.toDoItem,
+                        toDo = item.toDoItem,
                         sendToSocket = onGrabbedItem,
-                        grabbedToDo = grabbedToDO
+                        grabbedToDo = grabbedToDO,
+                        onDeleteToDo = {
+                            itemPointer ->
+                            // update pointer first
+                            itemPointer.targetToDoState = spaceType
+
+                            // do on delete
+                            onDeleteToDo(
+                                itemPointer
+                            )
+                        }
                     )
                 }
             }

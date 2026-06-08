@@ -1,6 +1,7 @@
 package com.example.todoapp.presentation.project_to_do
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -17,6 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todoapp.R
+import com.example.todoapp.core.component.CustomAlertDialog
 import com.example.todoapp.core.component.ErrorDialog
 import com.example.todoapp.core.component.LoadingDialog
 import com.example.todoapp.core.value.Dimension
@@ -44,6 +47,7 @@ fun ToDoScreen(
     processedToDoList : List<ToDoPointerDto>,
     finishedToDoList : List<ToDoPointerDto>,
     updateToDoPosition : (ToDoPointerDto) -> Unit,
+    deleteToDoPosition : (ToDoPointerDto?) -> Unit,
     onEvent : (ToDoEvent) -> Unit,
     addToDoState : ToDoState,
     updateAddToDoState : (ToDoState) -> Unit,
@@ -51,8 +55,13 @@ fun ToDoScreen(
     updateUpdateToDoState : (ToDoState) -> Unit,
     projectDetailState: ProjectDetailState,
     getAllToDoState : ToDoProjectState,
+    deleteToDoState : ToDoState,
 ){
     var showAddToDo by remember { mutableStateOf(false) }
+    var selectedToDoId by remember { mutableStateOf<ToDoPointerDto?>(null) }
+
+    // create state for show and unshow delete dialog confirmation
+    var showDeleteDialogConfirmation by remember { mutableStateOf(false) }
 
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
@@ -137,8 +146,17 @@ fun ToDoScreen(
                         finishedToDoList = finishedToDoList,
                         updateToDoLocation = {
                                 toDoPointerDto -> updateToDoPosition(
-                            toDoPointerDto
-                        )
+                                toDoPointerDto
+                            )
+                        },
+                        onDeleteToDo = {
+                            toDoId ->
+                            // set selected delete id
+                            selectedToDoId = toDoId
+
+                            // show delete to do dialog confirmation
+                            Log.d("CHECK", "Show dialog confirmation")
+                            showDeleteDialogConfirmation = true
                         }
                     )
                 }
@@ -179,7 +197,6 @@ fun ToDoScreen(
             // check state for add to do
             when(addToDoState) {
                 is ToDoState.LoadingState -> {
-                    Log.d("CHECK", "On Loading")
                     // show loading dialog
                     LoadingDialog()
                 }
@@ -215,6 +232,54 @@ fun ToDoScreen(
                         ToDoState.IdleState
                     )
                 }
+            }
+
+            when(deleteToDoState) {
+                is ToDoState.LoadingState -> {
+                    // show loading dialog
+                    LoadingDialog()
+                }
+                is ToDoState.ErrorState -> {
+                    // show error message
+                    ErrorDialog(
+                        errMsg = deleteToDoState.errMsg,
+                        onDismiss = {}
+                    )
+                }
+                is ToDoState.IdleState -> {
+                    updateUpdateToDoState(
+                        ToDoState.IdleState
+                    )
+                }
+            }
+
+
+            // check state for show confirmation dialog to do
+            AnimatedVisibility(
+                showDeleteDialogConfirmation
+            ) {
+                CustomAlertDialog(
+                    title = "Warning!!!",
+                    content = "Are you sure want to delete to do with name ${selectedToDoId?.toDoItem?.toDoItemName}",
+                    onCancel = {
+                        showDeleteDialogConfirmation = false
+                    },
+                    onApprove = {
+                        // update to do
+                        deleteToDoPosition(
+                            selectedToDoId
+                        )
+
+                        onEvent(
+                            ToDoEvent.DeleteToDo(
+                                toDoPointer = selectedToDoId
+                            )
+                        )
+
+                        // un show dialog
+                        showDeleteDialogConfirmation = false
+                    }
+                )
             }
         }
     }

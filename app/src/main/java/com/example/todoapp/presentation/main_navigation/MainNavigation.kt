@@ -551,6 +551,11 @@ fun MainNavigation(
                                     toDoPointer
                                 )
                             },
+                            deleteToDoPosition = {
+                                toDoPointer -> projectToDoViewMode.deleteToDoPosition(
+                                    toDoPointer = toDoPointer
+                                )
+                            },
                             addToDoState = projectToDoViewMode.createToDoState.value,
                             updateToDoState = projectToDoViewMode.updateToDoItemState.value,
                             updateAddToDoState = {
@@ -563,6 +568,7 @@ fun MainNavigation(
                             },
                             projectDetailState = projectToDoViewMode.projectDetailState.value,
                             getAllToDoState = projectToDoViewMode.getAllToDoState.value,
+                            deleteToDoState = projectToDoViewMode.deleteToDoState.value
                         )
                     }
                 }
