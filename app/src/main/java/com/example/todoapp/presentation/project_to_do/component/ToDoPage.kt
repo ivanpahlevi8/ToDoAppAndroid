@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.todoapp.R
 import com.example.todoapp.core.value.Dimension
+import com.example.todoapp.data.dtos.CreateToDoDto
 import com.example.todoapp.data.dtos.ToDoPointerDto
 import com.example.todoapp.presentation.project_to_do.ToDoEvent
 import com.example.todoapp.presentation.project_to_do.ToDoStatusEnum
@@ -30,6 +31,7 @@ fun ToDoPage(
     finishedToDoList : List<ToDoPointerDto>,
     updateToDoLocation : (ToDoPointerDto) -> Unit,
     onDeleteToDo : (ToDoPointerDto) -> Unit,
+    onDetailToDo : (CreateToDoDto) -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -61,7 +63,8 @@ fun ToDoPage(
                     )
                 },
                 colorId = R.color.time_line_card_color4,
-                onDeleteToDo = onDeleteToDo
+                onDeleteToDo = onDeleteToDo,
+                onDetailToDo = onDetailToDo
             )
             VerticalDivider()
             ToDoSpaceBox(
@@ -83,7 +86,8 @@ fun ToDoPage(
                     )
                 },
                 colorId = R.color.time_line_card_color5,
-                onDeleteToDo = onDeleteToDo
+                onDeleteToDo = onDeleteToDo,
+                onDetailToDo = onDetailToDo
             )
             VerticalDivider()
             ToDoSpaceBox(
@@ -105,7 +109,8 @@ fun ToDoPage(
                     )
                 },
                 colorId = R.color.time_line_card_color6,
-                onDeleteToDo = onDeleteToDo
+                onDeleteToDo = onDeleteToDo,
+                onDetailToDo = onDetailToDo
             )
         }
     }
@@ -132,7 +137,8 @@ fun DragAndDropComposePreview(){
                 finishedToDoList = listOf(),
                 updateToDoLocation = {},
                 onEvent = {},
-                onDeleteToDo = {}
+                onDeleteToDo = {},
+                onDetailToDo = {}
             )
         }
     }

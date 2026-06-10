@@ -53,6 +53,7 @@ fun ToDoSpaceBox(
     updateToDoLocation : (ToDoPointerDto) -> Unit,
     updateToDoDb : (ToDoPointerDto) -> Unit,
     onDeleteToDo : (ToDoPointerDto) -> Unit,
+    onDetailToDo : (CreateToDoDto) -> Unit,
     @ColorRes colorId : Int,
 ){
     val titleStyle = remember { mutableStateOf(FontWeight.Normal) }
@@ -193,7 +194,8 @@ fun ToDoSpaceBox(
                             onDeleteToDo(
                                 itemPointer
                             )
-                        }
+                        },
+                        onDetailToDO = onDetailToDo
                     )
                 }
             }

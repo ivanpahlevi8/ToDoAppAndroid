@@ -33,10 +33,12 @@ import com.example.todoapp.core.component.CustomAlertDialog
 import com.example.todoapp.core.component.ErrorDialog
 import com.example.todoapp.core.component.LoadingDialog
 import com.example.todoapp.core.value.Dimension
+import com.example.todoapp.data.dtos.CreateToDoDto
 import com.example.todoapp.data.dtos.ToDoPointerDto
 import com.example.todoapp.presentation.project_to_do.component.AddToDoDialog
 import com.example.todoapp.presentation.project_to_do.component.ProjectInfoCard
 import com.example.todoapp.presentation.project_to_do.component.ProjectItemCardShimmer
+import com.example.todoapp.presentation.project_to_do.component.ToDoDetailDialog
 import com.example.todoapp.presentation.project_to_do.component.ToDoPage
 import com.example.todoapp.presentation.project_to_do.component.ToDoPageShimmer
 
@@ -60,8 +62,13 @@ fun ToDoScreen(
     var showAddToDo by remember { mutableStateOf(false) }
     var selectedToDoId by remember { mutableStateOf<ToDoPointerDto?>(null) }
 
+    var selectedToDoDetail by remember { mutableStateOf<CreateToDoDto?>(null) }
+
     // create state for show and unshow delete dialog confirmation
     var showDeleteDialogConfirmation by remember { mutableStateOf(false) }
+
+    // state for show and unshow to do detail
+    var showToDoDetailDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
@@ -157,6 +164,14 @@ fun ToDoScreen(
                             // show delete to do dialog confirmation
                             Log.d("CHECK", "Show dialog confirmation")
                             showDeleteDialogConfirmation = true
+                        },
+                        onDetailToDo = {
+                            toDo ->
+                            // set selected to do
+                            selectedToDoDetail = toDo
+
+                            // show to do dialog
+                            showToDoDetailDialog = true
                         }
                     )
                 }
@@ -201,7 +216,7 @@ fun ToDoScreen(
                     LoadingDialog()
                 }
                 is ToDoState.ErrorState -> {
-                    // show error messsage
+                    // show error message
                     ErrorDialog(
                         errMsg = addToDoState.errMsg,
                         onDismiss = {}
@@ -281,6 +296,17 @@ fun ToDoScreen(
                     }
                 )
             }
+
+            ToDoDetailDialog(
+                toDoDto = selectedToDoDetail ?: CreateToDoDto(
+                    toDoItemName = "",
+                    toDoItemDescription = ""
+                ),
+                showDialog = showToDoDetailDialog,
+                onDismiss = {
+                    showToDoDetailDialog = false
+                }
+            )
         }
     }
 }

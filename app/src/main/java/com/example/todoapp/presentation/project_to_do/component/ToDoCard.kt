@@ -56,13 +56,12 @@ fun ToDoCard(
     grabbedToDo : Set<Int>,
     sendToSocket : (ToDoPointerDto) -> Unit,
     onDeleteToDo : (ToDoPointerDto) -> Unit,
+    onDetailToDO : (CreateToDoDto) -> Unit,
 ) {
-    val showDeleteTicketDialog = remember { mutableStateOf(false) }
-
-    // 1. Check if THIS specific ticket is locked by someone else
+    // Check if THIS specific ticket is locked by someone else
     val isLocked = grabbedToDo.contains(toDo.toDoId)
 
-    // 2. Change visuals based on state
+    // Change visuals based on state
     val backgroundColor = if (isLocked) Color.LightGray else Color.White
     val contentAlpha = if (isLocked) 0.5f else 1f
 
@@ -234,6 +233,9 @@ fun ToDoCard(
                         )
                         .clickable {
                             // on detail
+                            onDetailToDO(
+                                toDo
+                            )
                         }
                         .padding(
                             2.dp
